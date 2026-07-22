@@ -7,28 +7,22 @@ export const componentStyles = css`
 
   .spb-carousel {
     position: relative;
+  }
+
+  .spb-swiper {
+    position: relative;
     overflow: hidden;
     border-radius: var(--section-radius, 20px);
     border: 1px solid var(--border-color, #e6e0d6);
     box-shadow: 0 14px 34px rgba(90, 70, 40, 0.1);
-    touch-action: pan-y;
-    cursor: grab;
-    user-select: none;
-    -webkit-user-select: none;
   }
 
-  .spb-carousel:active {
-    cursor: grabbing;
-  }
-
-  .spb-track {
-    display: flex;
-    transition: transform 0.28s ease;
+  .spb-slide-wrap {
+    height: auto;
   }
 
   .spb-slide {
     position: relative;
-    flex: 0 0 100%;
     min-height: 320px;
     max-height: 520px;
     aspect-ratio: 21 / 9;
@@ -45,17 +39,17 @@ export const componentStyles = css`
     height: 100%;
     object-fit: cover;
     display: block;
-    transition: transform 0.28s ease;
-  }
-
-  .spb-slide.is-active .spb-slide__bg {
-    transform: scale(1.03);
+    pointer-events: none;
   }
 
   .spb-slide__overlay {
     position: absolute;
     inset: 0;
-    background: color-mix(in srgb, var(--text-color, #1f1a14) calc(var(--spb-overlay, 0.45) * 100%), transparent);
+    background: color-mix(
+      in srgb,
+      var(--text-color, #1f1a14) calc(var(--spb-overlay, 0.45) * 100%),
+      transparent
+    );
     pointer-events: none;
   }
 
@@ -78,7 +72,8 @@ export const componentStyles = css`
     letter-spacing: 0.03em;
     line-height: 1.25;
     color: var(--card-bg, #fff);
-    text-shadow: 0 2px 12px color-mix(in srgb, var(--text-color, #1f1a14) 35%, transparent);
+    text-shadow: 0 2px 12px
+      color-mix(in srgb, var(--text-color, #1f1a14) 35%, transparent);
   }
 
   .spb-slide__sub {
@@ -89,6 +84,7 @@ export const componentStyles = css`
     max-width: 32rem;
   }
 
+  /* Navigation arrows */
   .spb-nav {
     position: absolute;
     top: 50%;
@@ -104,8 +100,59 @@ export const componentStyles = css`
     inset-inline-end: 0.75rem;
   }
 
-  .spb-nav.fs-icon-btn--on-media:hover {
-    transform: translateY(calc(-50% - 1px));
+  .spb-nav.swiper-button-disabled {
+    opacity: 0.35;
+    pointer-events: none;
+  }
+
+  /* Pagination dots */
+  .spb-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 0.75rem;
+  }
+
+  .spb-dot {
+    display: inline-block;
+    width: 0.45rem;
+    height: 0.45rem;
+    min-width: 0;
+    min-height: 0;
+    padding: 0;
+    margin: 0 !important;
+    border: 0;
+    border-radius: 999px;
+    background: color-mix(
+      in srgb,
+      var(--accent-color, var(--fs-store-primary)) 28%,
+      transparent
+    );
+    cursor: pointer;
+    opacity: 1;
+    transition: width 0.2s ease, background 0.2s ease;
+  }
+
+  .spb-dot.is-active {
+    width: 1rem;
+    background: var(--accent-color, var(--fs-store-primary));
+  }
+
+  /* Rise animation */
+  .fs-animate .spb-swiper {
+    animation: spb-rise 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @keyframes spb-rise {
+    from {
+      opacity: 0;
+      transform: translateY(14px) scale(0.985);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
   }
 
   @media (max-width: 639px) {
@@ -113,18 +160,34 @@ export const componentStyles = css`
       min-height: 240px;
       aspect-ratio: 16 / 9;
     }
+
+    .spb-nav {
+      display: none;
+    }
+
+    .spb-dots {
+      margin-top: 0.6rem;
+      gap: 0.28rem;
+    }
+
+    .spb-dot {
+      width: 0.35rem;
+      height: 0.35rem;
+    }
+
+    .spb-dot.is-active {
+      width: 0.8rem;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .spb-track,
-    .spb-slide__bg,
-    .spb-nav {
+    .spb-nav,
+    .spb-dot {
       transition: none;
     }
 
-    .spb-slide.is-active .spb-slide__bg,
-    .spb-nav.fs-icon-btn--on-media:hover {
-      transform: translateY(-50%);
+    .fs-animate .spb-swiper {
+      animation: none;
     }
   }
 `;

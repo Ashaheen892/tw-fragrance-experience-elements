@@ -1,7 +1,6 @@
 import { html, LitElement, nothing } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import { keyed } from 'lit/directives/keyed.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import {
   isExternalUrl,
@@ -11,151 +10,148 @@ import {
   themeStyleMap,
 } from '../../utils/helpers.js';
 import { localizedString } from '../../utils/localizedString.js';
-import { sharedSectionCss } from '../../utils/sharedStyles.js';
 import { renderCommerceOutcome } from '../../utils/commerceOutcome.js';
+import {
+  Autoplay,
+  destroyFsSwiper,
+  fsSwiperCss,
+  mountFsSwiper,
+  type Swiper,
+} from '../../utils/fsSwiper.js';
+import { sharedSectionCss } from '../../utils/sharedStyles.js';
 import { componentStyles } from './styles.js';
 import { parseBanners } from './utils.js';
 import type { PromoBanner } from './types.js';
 
-export default class ScentPromoBanners extends LitElement {
+const AUTOPLAY_MS = 5000;
 
+export default class ScentPromoBanners extends LitElement {
   @property({ type: Object })
   config: Record<string, unknown> = {};
 
-  @state() private activeIndex = 0;
-  private autoTimer = 0;
+  @state() private swiperReady = false;
 
-  private boundLangHandler = () => this.requestUpdate();
+  private boundLangHandler = () => {
+    this.requestUpdate();
+    queueMicrotask(() => this.remountSwiper());
+  };
+  private swiper: Swiper | null = null;
+  private remountTimer: ReturnType<typeof setTimeout> | null = null;
 
-  static styles = [sharedSectionCss, componentStyles];
+  static styles = [sharedSectionCss, fsSwiperCss, componentStyles];
 
   connectedCallback(): void {
     super.connectedCallback();
     window.addEventListener('language-changed', this.boundLangHandler);
-    this.startAuto();
   }
 
   disconnectedCallback(): void {
     window.removeEventListener('language-changed', this.boundLangHandler);
-    this.stopAuto();
+    if (this.remountTimer) clearTimeout(this.remountTimer);
+    destroyFsSwiper(this.swiper);
+    this.swiper = null;
     super.disconnectedCallback();
   }
 
+  protected firstUpdated(): void {
+    this.remountSwiper();
+  }
+
   updated(changed: Map<string, unknown>): void {
-    if (changed.has('config')) {
-      const banners = this.banners;
-      if (this.activeIndex >= banners.length) {
-        this.activeIndex = 0;
-      }
-      this.startAuto();
-    }
+    if (changed.has('config')) this.scheduleRemount();
   }
 
-  private get banners(): PromoBanner[] {
-    return parseBanners(this.config?.spb_banners);
+  private scheduleRemount(): void {
+    if (this.remountTimer) clearTimeout(this.remountTimer);
+    this.remountTimer = setTimeout(() => this.remountSwiper(), 0);
   }
 
-  private startAuto(): void {
-    this.stopAuto();
-    if (this.banners.length <= 1 || prefersReducedMotion()) return;
-    const interval = Math.max(3000, Number(this.config?.spb_interval) || 5000);
-    this.autoTimer = window.setInterval(() => this.next(), interval);
+  private remountSwiper(): void {
+    destroyFsSwiper(this.swiper);
+    this.swiper = null;
+    this.swiperReady = false;
+
+    const banners = parseBanners(this.config?.spb_banners);
+    const root = this.renderRoot.querySelector('.spb-swiper') as HTMLElement | null;
+    if (!root || banners.length < 1) return;
+
+    const multi = banners.length > 1;
+    const interval = Math.max(3000, Number(this.config?.spb_interval) || AUTOPLAY_MS);
+    const autoplayOn = multi && !prefersReducedMotion();
+    const prevEl = root.querySelector('.spb-nav--prev') as HTMLElement | null;
+    const nextEl = root.querySelector('.spb-nav--next') as HTMLElement | null;
+    const pagEl = this.renderRoot.querySelector('.spb-dots') as HTMLElement | null;
+    const rtl = getComputedStyle(this).direction !== 'ltr';
+
+    this.swiper = mountFsSwiper(root, {
+      rtl,
+      modules: autoplayOn ? [Autoplay] : [],
+      slidesPerView: 1,
+      spaceBetween: 0,
+      speed: 480,
+      loop: multi,
+      watchOverflow: true,
+      navigation: multi
+        ? {
+            prevEl: prevEl || undefined,
+            nextEl: nextEl || undefined,
+          }
+        : undefined,
+      pagination: multi && pagEl
+        ? {
+            el: pagEl,
+            clickable: true,
+            bulletClass: 'spb-dot',
+            bulletActiveClass: 'is-active',
+          }
+        : undefined,
+      autoplay: autoplayOn
+        ? {
+            delay: interval,
+            disableOnInteraction: false,
+            pauseOnMouseEnter: true,
+          }
+        : false,
+    });
+
+    this.swiperReady = true;
   }
-
-  private stopAuto(): void {
-    if (this.autoTimer) {
-      window.clearInterval(this.autoTimer);
-      this.autoTimer = 0;
-    }
-  }
-
-  private goTo(index: number): void {
-    this.activeIndex = index;
-    this.startAuto();
-  }
-
-  private prev(): void {
-    const len = this.banners.length;
-    this.goTo((this.activeIndex - 1 + len) % len);
-  }
-
-  private next(): void {
-    this.goTo((this.activeIndex + 1) % this.banners.length);
-  }
-
-  private swipeStartX: number | null = null;
-
-  private onPointerDown = (e: PointerEvent) => {
-    if (e.pointerType === 'mouse' && e.button !== 0) return;
-    this.swipeStartX = e.clientX;
-    this.stopAuto();
-  };
-
-  private onPointerUp = (e: PointerEvent) => {
-    const startX = this.swipeStartX;
-    this.swipeStartX = null;
-    this.startAuto();
-    if (startX == null) return;
-    const dx = e.clientX - startX;
-    if (Math.abs(dx) < 40) return;
-    const rtl = getComputedStyle(this).direction === 'rtl';
-    const forward = rtl ? dx > 0 : dx < 0;
-    if (forward) this.next();
-    else this.prev();
-  };
-
-  private onPointerCancel = () => {
-    this.swipeStartX = null;
-    this.startAuto();
-  };
-
-  private onDragStart = (e: Event) => e.preventDefault();
 
   private renderSlide(banner: PromoBanner, index: number) {
-    const active = index === this.activeIndex;
+    const external = banner.ctaLink ? isExternalUrl(banner.ctaLink) : false;
     return html`
-      <div
-        class=${classMap({ 'spb-slide': true, 'is-active': active })}
-        role="tabpanel"
-        aria-hidden=${!active ? 'true' : 'false'}
-      >
+      <div class="spb-slide">
         ${banner.image
-          ? html`<img class="spb-slide__bg" src=${banner.image} alt="" loading=${index === 0 ? 'eager' : 'lazy'} decoding="async" />`
+          ? html`<img
+              class="spb-slide__bg"
+              src=${banner.image}
+              alt=""
+              loading=${index === 0 ? 'eager' : 'lazy'}
+              decoding="async"
+              draggable="false"
+            />`
           : nothing}
-        <div class="spb-slide__overlay" style=${styleMap({ '--spb-overlay': `${banner.overlayOpacity / 100}` })}></div>
-        ${active
-          ? keyed(index, html`<div class="spb-slide__content fs-fade-swap">
-              ${banner.heading
-                ? html`<h3 class="spb-slide__heading">${banner.heading}</h3>`
-                : nothing}
-              ${banner.subheading
-                ? html`<p class="spb-slide__sub">${banner.subheading}</p>`
-                : nothing}
-              ${banner.ctaLabel && banner.ctaLink
-                ? html`<a
-                    class="fs-btn fs-tap"
-                    href=${banner.ctaLink}
-                    target=${isExternalUrl(banner.ctaLink) ? '_blank' : nothing}
-                    rel=${isExternalUrl(banner.ctaLink) ? 'noopener noreferrer' : nothing}
-                  >${banner.ctaLabel}</a>`
-                : nothing}
-            </div>`)
-          : html`<div class="spb-slide__content">
-              ${banner.heading
-                ? html`<h3 class="spb-slide__heading">${banner.heading}</h3>`
-                : nothing}
-              ${banner.subheading
-                ? html`<p class="spb-slide__sub">${banner.subheading}</p>`
-                : nothing}
-              ${banner.ctaLabel && banner.ctaLink
-                ? html`<a
-                    class="fs-btn fs-tap"
-                    href=${banner.ctaLink}
-                    target=${isExternalUrl(banner.ctaLink) ? '_blank' : nothing}
-                    rel=${isExternalUrl(banner.ctaLink) ? 'noopener noreferrer' : nothing}
-                  >${banner.ctaLabel}</a>`
-                : nothing}
-            </div>`}
+        <div
+          class="spb-slide__overlay"
+          style=${styleMap({ '--spb-overlay': `${banner.overlayOpacity / 100}` })}
+        ></div>
+        <div class="spb-slide__content">
+          ${banner.heading
+            ? html`<h3 class="spb-slide__heading">${banner.heading}</h3>`
+            : nothing}
+          ${banner.subheading
+            ? html`<p class="spb-slide__sub">${banner.subheading}</p>`
+            : nothing}
+          ${banner.ctaLabel && banner.ctaLink
+            ? html`<a
+                class="fs-btn fs-tap"
+                href=${banner.ctaLink}
+                target=${external ? '_blank' : nothing}
+                rel=${external ? 'noopener noreferrer' : nothing}
+                draggable="false"
+              >${banner.ctaLabel}</a>`
+            : nothing}
+        </div>
       </div>
     `;
   }
@@ -166,7 +162,8 @@ export default class ScentPromoBanners extends LitElement {
     const animate = theme.animate && !prefersReducedMotion();
     const title = localizedString(c.spb_title as string);
     const desc = localizedString(c.spb_desc as string);
-    const banners = this.banners;
+    const banners = parseBanners(c.spb_banners);
+    const multi = banners.length > 1;
 
     if (!banners.length) {
       return html`<div class="fs-empty" role="status">
@@ -191,27 +188,48 @@ export default class ScentPromoBanners extends LitElement {
               </div>`
             : nothing}
 
-          <div
-            class="spb-carousel"
-            role="region"
-            aria-roledescription="carousel"
-            @pointerdown=${this.onPointerDown}
-            @pointerup=${this.onPointerUp}
-            @pointercancel=${this.onPointerCancel}
-            @dragstart=${this.onDragStart}
-          >
+          <div class="spb-carousel">
             <div
-              class="spb-track"
-              style=${styleMap({ transform: `translateX(${-this.activeIndex * 100}%)` })}
+              class=${classMap({
+                swiper: true,
+                'spb-swiper': true,
+                'is-ready': this.swiperReady,
+              })}
+              role="region"
+              aria-roledescription="carousel"
+              aria-label=${title || t('بانرات ترويجية', 'Promotional banners')}
             >
-              ${banners.map((b, i) => this.renderSlide(b, i))}
+              <div class="swiper-wrapper">
+                ${banners.map(
+                  (banner, i) => html`
+                    <div class="swiper-slide spb-slide-wrap">
+                      ${this.renderSlide(banner, i)}
+                    </div>
+                  `
+                )}
+              </div>
+
+              ${multi
+                ? html`
+                    <button
+                      type="button"
+                      class="spb-nav spb-nav--prev fs-icon-btn fs-icon-btn--on-media fs-tap"
+                      aria-label=${t('السابق', 'Previous')}
+                    >‹</button>
+                    <button
+                      type="button"
+                      class="spb-nav spb-nav--next fs-icon-btn fs-icon-btn--on-media fs-tap"
+                      aria-label=${t('التالي', 'Next')}
+                    >›</button>
+                  `
+                : nothing}
             </div>
 
-            ${banners.length > 1
-              ? html`
-                <button type="button" class="spb-nav spb-nav--prev fs-icon-btn fs-icon-btn--on-media fs-tap" aria-label=${t('السابق', 'Previous')} @click=${() => this.prev()}>‹</button>
-                <button type="button" class="spb-nav spb-nav--next fs-icon-btn fs-icon-btn--on-media fs-tap" aria-label=${t('التالي', 'Next')} @click=${() => this.next()}>›</button>
-              `
+            ${multi
+              ? html`<div
+                  class="spb-dots"
+                  aria-label=${t('شرائح العرض', 'Promo slides')}
+                ></div>`
               : nothing}
           </div>
 

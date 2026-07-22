@@ -16,3 +16,8 @@ interface HTMLElementTagNameMap {
   'custom-salla-product-card': HTMLElement & { product?: unknown };
   'salla-product-options': HTMLElement;
 }
+
+declare module '*.css?inline' {
+  const css: string;
+  export default css;
+}

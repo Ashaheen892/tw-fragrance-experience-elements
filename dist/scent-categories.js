@@ -3,54 +3,9 @@ var __name = (target, value) => __defProp(target, "name", { value, configurable:
 import { css, html, LitElement, nothing } from "lit";
 import { property, state } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
-import { ref } from "lit/directives/ref.js";
 import { styleMap } from "lit/directives/style-map.js";
+import { f as fsSwiperCss, d as destroyFsSwiper, m as mountFsSwiper } from "./fsSwiper-BQLtGSuN.js";
 import { t, g as getRadioValue, n as normalizeCollection, e as extractLink, l as localizedString, a as extractImageUrl, s as sharedSectionCss, i as isExternalUrl, r as readSectionTheme, p as prefersReducedMotion, b as themeStyleMap, c as renderCommerceOutcome } from "./commerceOutcome-DYfJre3y.js";
-const CLEANUP_KEY = "__fsDragScrollCleanup", DRAG_THRESHOLD_PX = 6;
-function enableDragScroll(el) {
-  var _a;
-  if (!el) return;
-  const host = el;
-  (_a = host[CLEANUP_KEY]) == null || _a.call(host);
-  let pointerId = null, startX = 0, startScrollLeft = 0, dragged = !1;
-  const onPointerDown = /* @__PURE__ */ __name((event) => {
-    event.pointerType !== "mouse" || event.button !== 0 || host.scrollWidth <= host.clientWidth || (pointerId = event.pointerId, startX = event.clientX, startScrollLeft = host.scrollLeft, dragged = !1, host.style.scrollSnapType = "none", host.style.cursor = "grabbing");
-  }, "onPointerDown"), onPointerMove = /* @__PURE__ */ __name((event) => {
-    if (pointerId === null || event.pointerId !== pointerId) return;
-    const dx = event.clientX - startX;
-    if (!dragged && Math.abs(dx) > DRAG_THRESHOLD_PX) {
-      dragged = !0;
-      try {
-        host.setPointerCapture(pointerId);
-      } catch {
-      }
-    }
-    dragged && (event.preventDefault(), host.scrollLeft = startScrollLeft - dx);
-  }, "onPointerMove"), endDrag = /* @__PURE__ */ __name((event) => {
-    if (!(pointerId === null || event.pointerId !== pointerId)) {
-      if (dragged)
-        try {
-          host.releasePointerCapture(pointerId);
-        } catch {
-        }
-      if (pointerId = null, host.style.scrollSnapType = "", host.style.cursor = "", dragged) {
-        const suppressClick = /* @__PURE__ */ __name((clickEvent) => {
-          clickEvent.preventDefault(), clickEvent.stopPropagation();
-        }, "suppressClick");
-        host.addEventListener("click", suppressClick, { capture: !0, once: !0 }), window.setTimeout(() => {
-          host.removeEventListener("click", suppressClick, { capture: !0 });
-        }, 0);
-      }
-      dragged = !1;
-    }
-  }, "endDrag"), onDragStart = /* @__PURE__ */ __name((event) => {
-    event.preventDefault();
-  }, "onDragStart");
-  host.addEventListener("pointerdown", onPointerDown), host.addEventListener("pointermove", onPointerMove), host.addEventListener("pointerup", endDrag), host.addEventListener("pointercancel", endDrag), host.addEventListener("dragstart", onDragStart, { capture: !0 }), host.style.touchAction = "pan-x pan-y", host.scrollWidth > host.clientWidth && (host.style.cursor = "grab"), host[CLEANUP_KEY] = () => {
-    host.removeEventListener("pointerdown", onPointerDown), host.removeEventListener("pointermove", onPointerMove), host.removeEventListener("pointerup", endDrag), host.removeEventListener("pointercancel", endDrag), host.removeEventListener("dragstart", onDragStart, { capture: !0 });
-  };
-}
-__name(enableDragScroll, "enableDragScroll");
 const componentStyles = css`
   :host {
     direction: inherit;
@@ -150,16 +105,16 @@ const componentStyles = css`
     }
   }
 
-  .scat-track--slider {
-    display: flex;
-    gap: 0.85rem;
-    padding-bottom: 0.35rem;
+  .scat-swiper {
+    overflow: hidden;
   }
 
-  .scat-track--slider .scat-track__item {
-    flex: 0 0 auto;
+  .scat-swiper .swiper-slide {
+    width: auto;
+  }
+
+  .scat-swiper .scat-track__item {
     width: min(72vw, 16.5rem);
-    scroll-snap-align: start;
   }
 
   .scat-card {
@@ -413,16 +368,26 @@ var __defProp2 = Object.defineProperty, __decorateClass = /* @__PURE__ */ __name
 }, "__decorateClass");
 const GRID_SVG = html`<svg class="scat-toggle__icon" viewBox="0 0 16 16" aria-hidden="true"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>`, SLIDER_SVG = html`<svg class="scat-toggle__icon" viewBox="0 0 16 16" aria-hidden="true"><rect x="1" y="3" width="14" height="4" rx="1"/><rect x="1" y="9" width="14" height="4" rx="1"/></svg>`, _ScentCategories = class _ScentCategories extends LitElement {
   constructor() {
-    super(...arguments), this.config = {}, this.layout = "slider", this.boundLangHandler = () => this.requestUpdate();
+    super(...arguments), this.config = {}, this.layout = "slider", this.boundLangHandler = () => {
+      this.requestUpdate(), queueMicrotask(() => this.remountSwiper());
+    };
   }
   connectedCallback() {
     super.connectedCallback(), window.addEventListener("language-changed", this.boundLangHandler), this.layout = resolveLayout(this.config || {});
   }
   disconnectedCallback() {
-    window.removeEventListener("language-changed", this.boundLangHandler), super.disconnectedCallback();
+    window.removeEventListener("language-changed", this.boundLangHandler), destroyFsSwiper(this.swiper), this.swiper = void 0, super.disconnectedCallback();
   }
   updated(changed) {
-    changed.has("config") && (this.layout = resolveLayout(this.config || {}));
+    changed.has("config") && (this.layout = resolveLayout(this.config || {})), this.updateComplete.then(() => this.remountSwiper());
+  }
+  remountSwiper() {
+    if (destroyFsSwiper(this.swiper), this.swiper = void 0, this.layout !== "slider") return;
+    const root = this.renderRoot.querySelector(".scat-swiper");
+    !root || !this.categories.length || (this.swiper = mountFsSwiper(root, {
+      slidesPerView: "auto",
+      spaceBetween: 16
+    }));
   }
   setLayout(next) {
     this.layout = next;
@@ -506,23 +471,20 @@ const GRID_SVG = html`<svg class="scat-toggle__icon" viewBox="0 0 16 16" aria-hi
           </div>
         </div>
 
-        <div
-          class=${classMap({
-      "scat-track": !0,
-      "scat-track--slider": isSlider,
-      "scat-track--grid": !isSlider,
-      "fs-scroll-x": isSlider
-    })}
-          role="list"
-          aria-label=${t("تصنيفات العطور", "Scent categories")}
-          ${ref((el) => {
-      el instanceof HTMLElement && isSlider && enableDragScroll(el);
-    })}
-        >
-          ${categories.map(
+        ${isSlider ? html`
+            <div class="swiper scat-swiper">
+              <div class="swiper-wrapper">
+                ${categories.map(
+      (cat) => html`<div class="swiper-slide scat-track__item" role="listitem">${this.renderCard(cat)}</div>`
+    )}
+              </div>
+            </div>` : html`
+            <div class="scat-track scat-track--grid" role="list"
+              aria-label=${t("تصنيفات العطور", "Scent categories")}>
+              ${categories.map(
       (cat) => html`<div class="scat-track__item" role="listitem">${this.renderCard(cat)}</div>`
     )}
-        </div>
+            </div>`}
       </div>
 
       ${renderCommerceOutcome({ config: c, prefix: "scat_" })}
@@ -533,7 +495,7 @@ const GRID_SVG = html`<svg class="scat-toggle__icon" viewBox="0 0 16 16" aria-hi
       `);
   }
 };
-__name(_ScentCategories, "ScentCategories"), _ScentCategories.styles = [sharedSectionCss, componentStyles];
+__name(_ScentCategories, "ScentCategories"), _ScentCategories.styles = [sharedSectionCss, fsSwiperCss, componentStyles];
 let ScentCategories = _ScentCategories;
 __decorateClass([
   property({ type: Object })

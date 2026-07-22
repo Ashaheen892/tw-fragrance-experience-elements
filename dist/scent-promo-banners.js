@@ -3,9 +3,9 @@ var __name = (target, value) => __defProp(target, "name", { value, configurable:
 import { css, LitElement, nothing, html } from "lit";
 import { property, state } from "lit/decorators.js";
 import { classMap } from "lit/directives/class-map.js";
-import { keyed } from "lit/directives/keyed.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { t, n as normalizeCollection, f as toNumber, e as extractLink, l as localizedString, a as extractImageUrl, s as sharedSectionCss, p as prefersReducedMotion, i as isExternalUrl, r as readSectionTheme, b as themeStyleMap, c as renderCommerceOutcome } from "./commerceOutcome-DYfJre3y.js";
+import { f as fsSwiperCss, d as destroyFsSwiper, m as mountFsSwiper, A as Autoplay } from "./fsSwiper-BQLtGSuN.js";
 const componentStyles = css`
   :host {
     direction: inherit;
@@ -13,28 +13,22 @@ const componentStyles = css`
 
   .spb-carousel {
     position: relative;
+  }
+
+  .spb-swiper {
+    position: relative;
     overflow: hidden;
     border-radius: var(--section-radius, 20px);
     border: 1px solid var(--border-color, #e6e0d6);
     box-shadow: 0 14px 34px rgba(90, 70, 40, 0.1);
-    touch-action: pan-y;
-    cursor: grab;
-    user-select: none;
-    -webkit-user-select: none;
   }
 
-  .spb-carousel:active {
-    cursor: grabbing;
-  }
-
-  .spb-track {
-    display: flex;
-    transition: transform 0.28s ease;
+  .spb-slide-wrap {
+    height: auto;
   }
 
   .spb-slide {
     position: relative;
-    flex: 0 0 100%;
     min-height: 320px;
     max-height: 520px;
     aspect-ratio: 21 / 9;
@@ -51,17 +45,17 @@ const componentStyles = css`
     height: 100%;
     object-fit: cover;
     display: block;
-    transition: transform 0.28s ease;
-  }
-
-  .spb-slide.is-active .spb-slide__bg {
-    transform: scale(1.03);
+    pointer-events: none;
   }
 
   .spb-slide__overlay {
     position: absolute;
     inset: 0;
-    background: color-mix(in srgb, var(--text-color, #1f1a14) calc(var(--spb-overlay, 0.45) * 100%), transparent);
+    background: color-mix(
+      in srgb,
+      var(--text-color, #1f1a14) calc(var(--spb-overlay, 0.45) * 100%),
+      transparent
+    );
     pointer-events: none;
   }
 
@@ -84,7 +78,8 @@ const componentStyles = css`
     letter-spacing: 0.03em;
     line-height: 1.25;
     color: var(--card-bg, #fff);
-    text-shadow: 0 2px 12px color-mix(in srgb, var(--text-color, #1f1a14) 35%, transparent);
+    text-shadow: 0 2px 12px
+      color-mix(in srgb, var(--text-color, #1f1a14) 35%, transparent);
   }
 
   .spb-slide__sub {
@@ -95,6 +90,7 @@ const componentStyles = css`
     max-width: 32rem;
   }
 
+  /* Navigation arrows */
   .spb-nav {
     position: absolute;
     top: 50%;
@@ -110,8 +106,59 @@ const componentStyles = css`
     inset-inline-end: 0.75rem;
   }
 
-  .spb-nav.fs-icon-btn--on-media:hover {
-    transform: translateY(calc(-50% - 1px));
+  .spb-nav.swiper-button-disabled {
+    opacity: 0.35;
+    pointer-events: none;
+  }
+
+  /* Pagination dots */
+  .spb-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 0.75rem;
+  }
+
+  .spb-dot {
+    display: inline-block;
+    width: 0.45rem;
+    height: 0.45rem;
+    min-width: 0;
+    min-height: 0;
+    padding: 0;
+    margin: 0 !important;
+    border: 0;
+    border-radius: 999px;
+    background: color-mix(
+      in srgb,
+      var(--accent-color, var(--fs-store-primary)) 28%,
+      transparent
+    );
+    cursor: pointer;
+    opacity: 1;
+    transition: width 0.2s ease, background 0.2s ease;
+  }
+
+  .spb-dot.is-active {
+    width: 1rem;
+    background: var(--accent-color, var(--fs-store-primary));
+  }
+
+  /* Rise animation */
+  .fs-animate .spb-swiper {
+    animation: spb-rise 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @keyframes spb-rise {
+    from {
+      opacity: 0;
+      transform: translateY(14px) scale(0.985);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
   }
 
   @media (max-width: 639px) {
@@ -119,18 +166,34 @@ const componentStyles = css`
       min-height: 240px;
       aspect-ratio: 16 / 9;
     }
+
+    .spb-nav {
+      display: none;
+    }
+
+    .spb-dots {
+      margin-top: 0.6rem;
+      gap: 0.28rem;
+    }
+
+    .spb-dot {
+      width: 0.35rem;
+      height: 0.35rem;
+    }
+
+    .spb-dot.is-active {
+      width: 0.8rem;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .spb-track,
-    .spb-slide__bg,
-    .spb-nav {
+    .spb-nav,
+    .spb-dot {
       transition: none;
     }
 
-    .spb-slide.is-active .spb-slide__bg,
-    .spb-nav.fs-icon-btn--on-media:hover {
-      transform: translateY(-50%);
+    .fs-animate .spb-swiper {
+      animation: none;
     }
   }
 `, DEFAULTS = [
@@ -180,89 +243,90 @@ var __defProp2 = Object.defineProperty, __decorateClass = /* @__PURE__ */ __name
     (decorator = decorators[i]) && (result = decorator(target, key, result) || result);
   return result && __defProp2(target, key, result), result;
 }, "__decorateClass");
-const _ScentPromoBanners = class _ScentPromoBanners extends LitElement {
+const AUTOPLAY_MS = 5e3, _ScentPromoBanners = class _ScentPromoBanners extends LitElement {
   constructor() {
-    super(...arguments), this.config = {}, this.activeIndex = 0, this.autoTimer = 0, this.boundLangHandler = () => this.requestUpdate(), this.swipeStartX = null, this.onPointerDown = (e) => {
-      e.pointerType === "mouse" && e.button !== 0 || (this.swipeStartX = e.clientX, this.stopAuto());
-    }, this.onPointerUp = (e) => {
-      const startX = this.swipeStartX;
-      if (this.swipeStartX = null, this.startAuto(), startX == null) return;
-      const dx = e.clientX - startX;
-      if (Math.abs(dx) < 40) return;
-      (getComputedStyle(this).direction === "rtl" ? dx > 0 : dx < 0) ? this.next() : this.prev();
-    }, this.onPointerCancel = () => {
-      this.swipeStartX = null, this.startAuto();
-    }, this.onDragStart = (e) => e.preventDefault();
+    super(...arguments), this.config = {}, this.swiperReady = !1, this.boundLangHandler = () => {
+      this.requestUpdate(), queueMicrotask(() => this.remountSwiper());
+    }, this.swiper = null, this.remountTimer = null;
   }
   connectedCallback() {
-    super.connectedCallback(), window.addEventListener("language-changed", this.boundLangHandler), this.startAuto();
+    super.connectedCallback(), window.addEventListener("language-changed", this.boundLangHandler);
   }
   disconnectedCallback() {
-    window.removeEventListener("language-changed", this.boundLangHandler), this.stopAuto(), super.disconnectedCallback();
+    window.removeEventListener("language-changed", this.boundLangHandler), this.remountTimer && clearTimeout(this.remountTimer), destroyFsSwiper(this.swiper), this.swiper = null, super.disconnectedCallback();
+  }
+  firstUpdated() {
+    this.remountSwiper();
   }
   updated(changed) {
-    if (changed.has("config")) {
-      const banners = this.banners;
-      this.activeIndex >= banners.length && (this.activeIndex = 0), this.startAuto();
-    }
+    changed.has("config") && this.scheduleRemount();
   }
-  get banners() {
-    var _a;
-    return parseBanners((_a = this.config) == null ? void 0 : _a.spb_banners);
+  scheduleRemount() {
+    this.remountTimer && clearTimeout(this.remountTimer), this.remountTimer = setTimeout(() => this.remountSwiper(), 0);
   }
-  startAuto() {
-    var _a;
-    if (this.stopAuto(), this.banners.length <= 1 || prefersReducedMotion()) return;
-    const interval = Math.max(3e3, Number((_a = this.config) == null ? void 0 : _a.spb_interval) || 5e3);
-    this.autoTimer = window.setInterval(() => this.next(), interval);
-  }
-  stopAuto() {
-    this.autoTimer && (window.clearInterval(this.autoTimer), this.autoTimer = 0);
-  }
-  goTo(index) {
-    this.activeIndex = index, this.startAuto();
-  }
-  prev() {
-    const len = this.banners.length;
-    this.goTo((this.activeIndex - 1 + len) % len);
-  }
-  next() {
-    this.goTo((this.activeIndex + 1) % this.banners.length);
+  remountSwiper() {
+    var _a, _b;
+    destroyFsSwiper(this.swiper), this.swiper = null, this.swiperReady = !1;
+    const banners = parseBanners((_a = this.config) == null ? void 0 : _a.spb_banners), root = this.renderRoot.querySelector(".spb-swiper");
+    if (!root || banners.length < 1) return;
+    const multi = banners.length > 1, interval = Math.max(3e3, Number((_b = this.config) == null ? void 0 : _b.spb_interval) || AUTOPLAY_MS), autoplayOn = multi && !prefersReducedMotion(), prevEl = root.querySelector(".spb-nav--prev"), nextEl = root.querySelector(".spb-nav--next"), pagEl = this.renderRoot.querySelector(".spb-dots"), rtl = getComputedStyle(this).direction !== "ltr";
+    this.swiper = mountFsSwiper(root, {
+      rtl,
+      modules: autoplayOn ? [Autoplay] : [],
+      slidesPerView: 1,
+      spaceBetween: 0,
+      speed: 480,
+      loop: multi,
+      watchOverflow: !0,
+      navigation: multi ? {
+        prevEl: prevEl || void 0,
+        nextEl: nextEl || void 0
+      } : void 0,
+      pagination: multi && pagEl ? {
+        el: pagEl,
+        clickable: !0,
+        bulletClass: "spb-dot",
+        bulletActiveClass: "is-active"
+      } : void 0,
+      autoplay: autoplayOn ? {
+        delay: interval,
+        disableOnInteraction: !1,
+        pauseOnMouseEnter: !0
+      } : !1
+    }), this.swiperReady = !0;
   }
   renderSlide(banner, index) {
-    const active = index === this.activeIndex;
+    const external = banner.ctaLink ? isExternalUrl(banner.ctaLink) : !1;
     return html`
-      <div
-        class=${classMap({ "spb-slide": !0, "is-active": active })}
-        role="tabpanel"
-        aria-hidden=${active ? "false" : "true"}
-      >
-        ${banner.image ? html`<img class="spb-slide__bg" src=${banner.image} alt="" loading=${index === 0 ? "eager" : "lazy"} decoding="async" />` : nothing}
-        <div class="spb-slide__overlay" style=${styleMap({ "--spb-overlay": `${banner.overlayOpacity / 100}` })}></div>
-        ${active ? keyed(index, html`<div class="spb-slide__content fs-fade-swap">
-              ${banner.heading ? html`<h3 class="spb-slide__heading">${banner.heading}</h3>` : nothing}
-              ${banner.subheading ? html`<p class="spb-slide__sub">${banner.subheading}</p>` : nothing}
-              ${banner.ctaLabel && banner.ctaLink ? html`<a
-                    class="fs-btn fs-tap"
-                    href=${banner.ctaLink}
-                    target=${isExternalUrl(banner.ctaLink) ? "_blank" : nothing}
-                    rel=${isExternalUrl(banner.ctaLink) ? "noopener noreferrer" : nothing}
-                  >${banner.ctaLabel}</a>` : nothing}
-            </div>`) : html`<div class="spb-slide__content">
-              ${banner.heading ? html`<h3 class="spb-slide__heading">${banner.heading}</h3>` : nothing}
-              ${banner.subheading ? html`<p class="spb-slide__sub">${banner.subheading}</p>` : nothing}
-              ${banner.ctaLabel && banner.ctaLink ? html`<a
-                    class="fs-btn fs-tap"
-                    href=${banner.ctaLink}
-                    target=${isExternalUrl(banner.ctaLink) ? "_blank" : nothing}
-                    rel=${isExternalUrl(banner.ctaLink) ? "noopener noreferrer" : nothing}
-                  >${banner.ctaLabel}</a>` : nothing}
-            </div>`}
+      <div class="spb-slide">
+        ${banner.image ? html`<img
+              class="spb-slide__bg"
+              src=${banner.image}
+              alt=""
+              loading=${index === 0 ? "eager" : "lazy"}
+              decoding="async"
+              draggable="false"
+            />` : nothing}
+        <div
+          class="spb-slide__overlay"
+          style=${styleMap({ "--spb-overlay": `${banner.overlayOpacity / 100}` })}
+        ></div>
+        <div class="spb-slide__content">
+          ${banner.heading ? html`<h3 class="spb-slide__heading">${banner.heading}</h3>` : nothing}
+          ${banner.subheading ? html`<p class="spb-slide__sub">${banner.subheading}</p>` : nothing}
+          ${banner.ctaLabel && banner.ctaLink ? html`<a
+                class="fs-btn fs-tap"
+                href=${banner.ctaLink}
+                target=${external ? "_blank" : nothing}
+                rel=${external ? "noopener noreferrer" : nothing}
+                draggable="false"
+              >${banner.ctaLabel}</a>` : nothing}
+        </div>
       </div>
     `;
   }
   render() {
-    const c = this.config || {}, theme = readSectionTheme(c, "spb_"), animate = theme.animate && !prefersReducedMotion(), title = localizedString(c.spb_title), desc = localizedString(c.spb_desc), banners = this.banners;
+    const c = this.config || {}, theme = readSectionTheme(c, "spb_"), animate = theme.animate && !prefersReducedMotion(), title = localizedString(c.spb_title), desc = localizedString(c.spb_desc), banners = parseBanners(c.spb_banners), multi = banners.length > 1;
     return banners.length ? html`
       <section
         class=${classMap({ "fs-section": !0, "fs-animate": animate })}
@@ -275,26 +339,45 @@ const _ScentPromoBanners = class _ScentPromoBanners extends LitElement {
                 ${desc ? html`<p class="fs-desc">${desc}</p>` : nothing}
               </div>` : nothing}
 
-          <div
-            class="spb-carousel"
-            role="region"
-            aria-roledescription="carousel"
-            @pointerdown=${this.onPointerDown}
-            @pointerup=${this.onPointerUp}
-            @pointercancel=${this.onPointerCancel}
-            @dragstart=${this.onDragStart}
-          >
+          <div class="spb-carousel">
             <div
-              class="spb-track"
-              style=${styleMap({ transform: `translateX(${-this.activeIndex * 100}%)` })}
+              class=${classMap({
+      swiper: !0,
+      "spb-swiper": !0,
+      "is-ready": this.swiperReady
+    })}
+              role="region"
+              aria-roledescription="carousel"
+              aria-label=${title || t("بانرات ترويجية", "Promotional banners")}
             >
-              ${banners.map((b, i) => this.renderSlide(b, i))}
+              <div class="swiper-wrapper">
+                ${banners.map(
+      (banner, i) => html`
+                    <div class="swiper-slide spb-slide-wrap">
+                      ${this.renderSlide(banner, i)}
+                    </div>
+                  `
+    )}
+              </div>
+
+              ${multi ? html`
+                    <button
+                      type="button"
+                      class="spb-nav spb-nav--prev fs-icon-btn fs-icon-btn--on-media fs-tap"
+                      aria-label=${t("السابق", "Previous")}
+                    >‹</button>
+                    <button
+                      type="button"
+                      class="spb-nav spb-nav--next fs-icon-btn fs-icon-btn--on-media fs-tap"
+                      aria-label=${t("التالي", "Next")}
+                    >›</button>
+                  ` : nothing}
             </div>
 
-            ${banners.length > 1 ? html`
-                <button type="button" class="spb-nav spb-nav--prev fs-icon-btn fs-icon-btn--on-media fs-tap" aria-label=${t("السابق", "Previous")} @click=${() => this.prev()}>‹</button>
-                <button type="button" class="spb-nav spb-nav--next fs-icon-btn fs-icon-btn--on-media fs-tap" aria-label=${t("التالي", "Next")} @click=${() => this.next()}>›</button>
-              ` : nothing}
+            ${multi ? html`<div
+                  class="spb-dots"
+                  aria-label=${t("شرائح العرض", "Promo slides")}
+                ></div>` : nothing}
           </div>
 
           ${renderCommerceOutcome({ config: c, prefix: "spb_" })}
@@ -308,14 +391,14 @@ const _ScentPromoBanners = class _ScentPromoBanners extends LitElement {
       </div>`;
   }
 };
-__name(_ScentPromoBanners, "ScentPromoBanners"), _ScentPromoBanners.styles = [sharedSectionCss, componentStyles];
+__name(_ScentPromoBanners, "ScentPromoBanners"), _ScentPromoBanners.styles = [sharedSectionCss, fsSwiperCss, componentStyles];
 let ScentPromoBanners = _ScentPromoBanners;
 __decorateClass([
   property({ type: Object })
 ], ScentPromoBanners.prototype, "config");
 __decorateClass([
   state()
-], ScentPromoBanners.prototype, "activeIndex");
+], ScentPromoBanners.prototype, "swiperReady");
 typeof ScentPromoBanners < "u" && ScentPromoBanners.registerSallaComponent("salla-scent-promo-banners");
 export {
   ScentPromoBanners as default

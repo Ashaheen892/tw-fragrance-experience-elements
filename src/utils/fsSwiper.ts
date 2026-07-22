@@ -1,21 +1,28 @@
 /**
  * Shared Swiper.js bootstrap for Twilight elements.
- * All product / content sliders should go through this helper.
+ * All content carousels / horizontal product-style sliders must use this helper.
+ * (Before/after comparison range controls are NOT carousels — keep them custom.)
  */
+import { unsafeCSS, type CSSResult } from 'lit';
 import Swiper from 'swiper';
-import { Navigation, Pagination, A11y } from 'swiper/modules';
+import { A11y, Autoplay, Navigation, Pagination } from 'swiper/modules';
 import type { SwiperOptions } from 'swiper/types';
-
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
+import swiperCore from 'swiper/css?inline';
+import swiperNav from 'swiper/css/navigation?inline';
+import swiperPag from 'swiper/css/pagination?inline';
 
 export type FsSwiperOptions = SwiperOptions & {
   /** Force RTL; defaults to document/host direction. */
   rtl?: boolean;
 };
 
+/** Swiper CSS for Lit shadow roots (document-injected CSS does not pierce). */
+export const fsSwiperCss: CSSResult = unsafeCSS(
+  `${swiperCore}\n${swiperNav}\n${swiperPag}`
+);
+
 const DIR_ATTR = 'dir';
+const DRAG_GUARD_FLAG = 'fsSwiperDragGuard';
 
 function resolveRtl(el: HTMLElement, forced?: boolean): boolean {
   if (typeof forced === 'boolean') return forced;
@@ -27,17 +34,11 @@ function resolveRtl(el: HTMLElement, forced?: boolean): boolean {
   return hostDir.toLowerCase() === 'rtl';
 }
 
-const DRAG_GUARD_FLAG = 'fsSwiperDragGuard';
-
 /**
- * Native HTML5 drag on product images/links hijacks Swiper's mouse gesture
- * (a ghost image starts dragging and mousemove stops firing), which makes the
- * slider feel dead on desktop. `dragstart` is a composed event, so one capture
- * listener on the root also covers cards rendered inside nested shadow roots.
+ * Native HTML5 drag on images/links hijacks Swiper's mouse gesture.
  */
 function suppressNativeDrag(el: HTMLElement): void {
-  const flagged = el.dataset[DRAG_GUARD_FLAG];
-  if (flagged === '1') return;
+  if (el.dataset[DRAG_GUARD_FLAG] === '1') return;
   el.dataset[DRAG_GUARD_FLAG] = '1';
   el.addEventListener(
     'dragstart',
@@ -64,8 +65,8 @@ export function mountFsSwiper(
   }
 
   return new Swiper(el, {
-    modules: [Navigation, Pagination, A11y, ...(extraModules || [])],
-    slidesPerView: 4.2,
+    modules: [Navigation, Pagination, A11y, Autoplay, ...(extraModules || [])],
+    slidesPerView: 'auto',
     spaceBetween: 16,
     speed: 420,
     watchOverflow: true,
@@ -80,7 +81,6 @@ export function mountFsSwiper(
     observeParents: true,
     a11y: { enabled: true },
     ...rest,
-    // Keep last so callers cannot accidentally drop RTL
     ...(rtl ? { rtl: true } : {}),
   });
 }
@@ -91,4 +91,4 @@ export function destroyFsSwiper(instance?: Swiper | null): void {
   }
 }
 
-export { Swiper };
+export { Swiper, Autoplay, Navigation, Pagination, A11y };

@@ -99,16 +99,16 @@ export const componentStyles = css`
     }
   }
 
-  .scat-track--slider {
-    display: flex;
-    gap: 0.85rem;
-    padding-bottom: 0.35rem;
+  .scat-swiper {
+    overflow: hidden;
   }
 
-  .scat-track--slider .scat-track__item {
-    flex: 0 0 auto;
+  .scat-swiper .swiper-slide {
+    width: auto;
+  }
+
+  .scat-swiper .scat-track__item {
     width: min(72vw, 16.5rem);
-    scroll-snap-align: start;
   }
 
   .scat-card {

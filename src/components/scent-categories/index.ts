@@ -1,9 +1,8 @@
 import { html, LitElement, nothing } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import { ref } from 'lit/directives/ref.js';
 import { styleMap } from 'lit/directives/style-map.js';
-import { enableDragScroll } from '../../utils/dragScroll.js';
+import { destroyFsSwiper, fsSwiperCss, mountFsSwiper, type Swiper } from '../../utils/fsSwiper.js';
 import {
   isExternalUrl,
   prefersReducedMotion,
@@ -31,9 +30,13 @@ export default class ScentCategories extends LitElement {
 
   @state() private layout: CategoryLayout = 'slider';
 
-  private boundLangHandler = () => this.requestUpdate();
+  private boundLangHandler = () => {
+    this.requestUpdate();
+    queueMicrotask(() => this.remountSwiper());
+  };
+  private swiper?: Swiper;
 
-  static styles = [sharedSectionCss, componentStyles];
+  static styles = [sharedSectionCss, fsSwiperCss, componentStyles];
 
   connectedCallback(): void {
     super.connectedCallback();
@@ -43,6 +46,8 @@ export default class ScentCategories extends LitElement {
 
   disconnectedCallback(): void {
     window.removeEventListener('language-changed', this.boundLangHandler);
+    destroyFsSwiper(this.swiper);
+    this.swiper = undefined;
     super.disconnectedCallback();
   }
 
@@ -50,6 +55,22 @@ export default class ScentCategories extends LitElement {
     if (changed.has('config')) {
       this.layout = resolveLayout(this.config || {});
     }
+    this.updateComplete.then(() => this.remountSwiper());
+  }
+
+  private remountSwiper(): void {
+    destroyFsSwiper(this.swiper);
+    this.swiper = undefined;
+
+    if (this.layout !== 'slider') return;
+
+    const root = this.renderRoot.querySelector('.scat-swiper') as HTMLElement | null;
+    if (!root || !this.categories.length) return;
+
+    this.swiper = mountFsSwiper(root, {
+      slidesPerView: 'auto',
+      spaceBetween: 16,
+    });
   }
 
   private setLayout(next: CategoryLayout): void {
@@ -172,23 +193,23 @@ export default class ScentCategories extends LitElement {
           </div>
         </div>
 
-        <div
-          class=${classMap({
-            'scat-track': true,
-            'scat-track--slider': isSlider,
-            'scat-track--grid': !isSlider,
-            'fs-scroll-x': isSlider,
-          })}
-          role="list"
-          aria-label=${t('تصنيفات العطور', 'Scent categories')}
-          ${ref((el) => {
-            if (el instanceof HTMLElement && isSlider) enableDragScroll(el);
-          })}
-        >
-          ${categories.map(
-            (cat) => html`<div class="scat-track__item" role="listitem">${this.renderCard(cat)}</div>`
-          )}
-        </div>
+        ${isSlider
+          ? html`
+            <div class="swiper scat-swiper">
+              <div class="swiper-wrapper">
+                ${categories.map(
+                  (cat) => html`<div class="swiper-slide scat-track__item" role="listitem">${this.renderCard(cat)}</div>`
+                )}
+              </div>
+            </div>`
+          : html`
+            <div class="scat-track scat-track--grid" role="list"
+              aria-label=${t('تصنيفات العطور', 'Scent categories')}>
+              ${categories.map(
+                (cat) => html`<div class="scat-track__item" role="listitem">${this.renderCard(cat)}</div>`
+              )}
+            </div>`
+        }
       </div>
 
       ${renderCommerceOutcome({ config: c, prefix: 'scat_' })}
