@@ -16,7 +16,31 @@ import { componentStyles } from './styles.js';
 import { parseSlides, resolveDirection } from './utils.js';
 import type { BeforeAfterSlide, SplitDirection } from './types.js';
 
-const ARROWS_H = html`<svg viewBox="0 0 16 16"><path d="M4 8H12M4 8L6 6M4 8L6 10M12 8L10 6M12 8L10 10"/></svg>`;
+const DRAG_ICON_H = html`
+  <svg class="sba-handle__svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <path
+      d="M8 12H16M8 12l2.2-2.2M8 12l2.2 2.2M16 12l-2.2-2.2M16 12l-2.2 2.2"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </svg>
+`;
+
+const DRAG_ICON_V = html`
+  <svg class="sba-handle__svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <path
+      d="M12 8V16M12 8l-2.2 2.2M12 8l2.2 2.2M12 16l-2.2-2.2M12 16l2.2-2.2"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </svg>
+`;
 
 export default class ScentBeforeAfter extends LitElement {
 
@@ -162,6 +186,7 @@ export default class ScentBeforeAfter extends LitElement {
                   'fs-fade-swap': true,
                 })}
                 style=${styleMap({ '--sba-pos': `${this.position}%` })}
+                @pointerdown=${this.onDown}
               >
                 <img class="sba-compare__img sba-compare__before" src=${active.beforeImage} alt=${beforeLabel} loading="lazy" decoding="async" />
                 <img class="sba-compare__img sba-compare__after" src=${active.afterImage} alt=${afterLabel} loading="lazy" decoding="async" />
@@ -171,14 +196,23 @@ export default class ScentBeforeAfter extends LitElement {
                   class="sba-handle"
                   @pointerdown=${this.onDown}
                   role="slider"
+                  tabindex="0"
+                  aria-orientation=${dir === 'vertical' ? 'horizontal' : 'vertical'}
                   aria-label=${t('اسحب للمقارنة', 'Drag to compare')}
                   aria-valuenow=${Math.round(this.position)}
                   aria-valuemin="5"
                   aria-valuemax="95"
+                  @keydown=${(e: KeyboardEvent) => {
+                    const step = e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? -4 : e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 4 : 0;
+                    if (!step) return;
+                    e.preventDefault();
+                    this.position = Math.max(5, Math.min(95, this.position + step));
+                  }}
                 >
-                  <span class="sba-handle__line"></span>
-                  <span class="sba-handle__grip">${ARROWS_H}</span>
-                  <span class="sba-handle__line"></span>
+                  <span class="sba-handle__rail" aria-hidden="true"></span>
+                  <span class="sba-handle__grip" aria-hidden="true">
+                    ${dir === 'vertical' ? DRAG_ICON_H : DRAG_ICON_V}
+                  </span>
                 </div>
               </div>
               ${active.caption ? html`<p class="sba-caption">${active.caption}</p>` : nothing}

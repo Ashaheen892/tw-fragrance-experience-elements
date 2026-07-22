@@ -123,7 +123,7 @@ export default class FragranceFamilyMap extends LitElement {
         ${family.link
           ? html`<div class="ffm-detail__actions">
               <a
-                class="fs-btn"
+                class="fs-btn fs-tap"
                 href=${family.link}
                 target=${external ? '_blank' : '_self'}
                 rel=${external ? 'noopener noreferrer' : nothing}

@@ -305,6 +305,7 @@ export default class SmartGiftBuilder extends LitElement {
         ${renderCommerceOutcome({
           config: c,
           prefix: 'sgb_',
+          ready: true,
           matchTags: [
             this.selections.personId,
             this.selections.occasionId,

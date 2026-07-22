@@ -15,5 +15,4 @@ interface HTMLElementTagNameMap {
   'salla-product-card': HTMLElement & { product?: unknown };
   'custom-salla-product-card': HTMLElement & { product?: unknown };
   'salla-product-options': HTMLElement;
-  'fs-products-swiper': HTMLElement;
 }

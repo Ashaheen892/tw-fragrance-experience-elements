@@ -18,39 +18,52 @@ export const componentStyles = css`
     font-size: clamp(1.05rem, 2.2vw, 1.25rem);
     font-weight: 800;
     text-align: center;
+    color: var(--text-color, #000000);
+  }
+
+  .spa-step .fs-coach {
+    justify-content: center;
+    text-align: start;
+    max-width: 36rem;
+    margin-inline: auto;
+    width: 100%;
   }
 
   .spa-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.65rem;
+    gap: 0.7rem;
   }
 
   @media (min-width: 640px) {
     .spa-grid {
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 0.75rem;
+      gap: 0.85rem;
     }
   }
 
+  /* Card chips (wear times / notes) — not pill buttons */
   .spa-chip {
     display: grid;
-    gap: 0.35rem;
-    min-height: 96px;
-    padding: 0.85rem 0.75rem;
+    align-content: center;
+    justify-items: center;
+    gap: 0.45rem;
+    min-height: 104px;
+    padding: 1rem 0.85rem;
     border: 1.5px solid var(--border-color, #e6e0d6);
     border-radius: calc(var(--section-radius, 20px) * 0.72);
-    background: var(--card-bg, #fff);
-    color: var(--text-color, #1f1a14);
+    background: var(--fs-surface, var(--card-bg, #ffffff));
+    color: var(--text-color, #000000);
     font: inherit;
     text-align: center;
     cursor: pointer;
-    box-shadow: 0 4px 14px rgba(90, 70, 40, 0.05);
+    box-shadow: 0 4px 14px color-mix(in srgb, var(--accent-color, var(--fs-store-primary)) 8%, transparent);
     transition:
       transform 0.22s ease,
       border-color 0.22s ease,
       box-shadow 0.22s ease,
-      background 0.22s ease;
+      background 0.22s ease,
+      color 0.22s ease;
   }
 
   .spa-chip:hover {
@@ -60,23 +73,23 @@ export const componentStyles = css`
       var(--item-color, var(--accent-color, var(--fs-store-primary))) 42%,
       var(--border-color, #e6e0d6)
     );
-    box-shadow: 0 10px 24px rgba(90, 70, 40, 0.09);
+    box-shadow: 0 10px 24px color-mix(in srgb, var(--accent-color, var(--fs-store-primary)) 14%, transparent);
   }
 
   .spa-chip.is-active {
-    border-color: var(--item-color, var(--accent-color, var(--fs-store-primary)));
+    border-color: var(--item-color, var(--button-bg, var(--fs-store-primary)));
     background: color-mix(
       in srgb,
-      var(--item-color, var(--accent-color, var(--fs-store-primary))) 9%,
-      var(--card-bg, #fff)
+      var(--item-color, var(--button-bg, var(--fs-store-primary))) 14%,
+      var(--fs-surface, var(--card-bg, #ffffff))
     );
     box-shadow:
       0 0 0 3px color-mix(
         in srgb,
-        var(--item-color, var(--accent-color, var(--fs-store-primary))) 18%,
+        var(--item-color, var(--button-bg, var(--fs-store-primary))) 20%,
         transparent
       ),
-      0 12px 28px rgba(90, 70, 40, 0.1);
+      0 12px 28px color-mix(in srgb, var(--accent-color, var(--fs-store-primary)) 16%, transparent);
   }
 
   .spa-chip:active {
@@ -84,16 +97,25 @@ export const componentStyles = css`
   }
 
   .spa-chip__icon {
-    width: 2rem;
-    height: 2rem;
+    width: 2.35rem;
+    height: 2.35rem;
     margin-inline: auto;
     display: grid;
     place-items: center;
     border-radius: 50%;
-    background: color-mix(in srgb, var(--item-color, var(--accent-color, var(--fs-store-primary))) 14%, #fff);
+    background: color-mix(
+      in srgb,
+      var(--item-color, var(--accent-color, var(--fs-store-primary))) 16%,
+      var(--card-bg, #ffffff)
+    );
     color: var(--item-color, var(--accent-color, var(--fs-store-primary)));
-    font-size: 1rem;
+    font-size: 1.05rem;
     overflow: hidden;
+  }
+
+  .spa-chip.is-active .spa-chip__icon {
+    background: var(--item-color, var(--button-bg, var(--fs-store-primary)));
+    color: #ffffff;
   }
 
   .spa-chip__icon img {
@@ -103,9 +125,34 @@ export const componentStyles = css`
   }
 
   .spa-chip__name {
-    font-size: 0.86rem;
+    font-size: 0.9rem;
     font-weight: 800;
     line-height: 1.35;
+    color: inherit;
+  }
+
+  :host([data-fs-theme='dark']) .spa-chip {
+    background: var(--fs-surface, #0a0a0a);
+    border-color: rgba(255, 255, 255, 0.14);
+    color: #ffffff;
+  }
+
+  :host([data-fs-theme='dark']) .spa-chip.is-active {
+    background: color-mix(
+      in srgb,
+      var(--item-color, var(--button-bg, var(--fs-store-primary))) 22%,
+      var(--fs-surface, #0a0a0a)
+    );
+    border-color: var(--item-color, var(--button-bg, var(--fs-store-primary)));
+    color: #ffffff;
+  }
+
+  :host([data-fs-theme='dark']) .spa-chip__icon {
+    background: color-mix(
+      in srgb,
+      var(--item-color, var(--accent-color, var(--fs-store-primary))) 22%,
+      #141414
+    );
   }
 
   .spa-list {
@@ -119,15 +166,22 @@ export const componentStyles = css`
     padding: 0.85rem 1rem;
     border: 1.5px solid var(--border-color, #e6e0d6);
     border-radius: calc(var(--section-radius, 20px) * 0.72);
-    background: var(--card-bg, #fff);
+    background: var(--fs-surface, var(--card-bg, #ffffff));
+    color: var(--text-color, #000000);
     text-align: start;
     cursor: pointer;
-    box-shadow: 0 4px 14px rgba(90, 70, 40, 0.05);
+    box-shadow: 0 4px 14px color-mix(in srgb, var(--accent-color, var(--fs-store-primary)) 8%, transparent);
     transition:
       transform 0.22s ease,
       border-color 0.22s ease,
       box-shadow 0.22s ease,
       background 0.22s ease;
+  }
+
+  :host([data-fs-theme='dark']) .spa-option {
+    background: var(--fs-surface, #0a0a0a);
+    border-color: rgba(255, 255, 255, 0.14);
+    color: #ffffff;
   }
 
   .spa-option:hover {
@@ -141,19 +195,33 @@ export const componentStyles = css`
   }
 
   .spa-option.is-active {
-    border-color: var(--item-color, var(--accent-color, var(--fs-store-primary)));
+    border-color: var(--item-color, var(--button-bg, var(--fs-store-primary)));
     background: color-mix(
       in srgb,
-      var(--item-color, var(--accent-color, var(--fs-store-primary))) 9%,
-      var(--card-bg, #fff)
+      var(--item-color, var(--button-bg, var(--fs-store-primary))) 14%,
+      var(--fs-surface, var(--card-bg, #ffffff))
     );
     box-shadow:
       0 0 0 3px color-mix(
         in srgb,
-        var(--item-color, var(--accent-color, var(--fs-store-primary))) 18%,
+        var(--item-color, var(--button-bg, var(--fs-store-primary))) 20%,
         transparent
       ),
-      0 12px 28px rgba(90, 70, 40, 0.1);
+      0 12px 28px color-mix(in srgb, var(--accent-color, var(--fs-store-primary)) 16%, transparent);
+  }
+
+  :host([data-fs-theme='dark']) .spa-option.is-active {
+    background: color-mix(
+      in srgb,
+      var(--item-color, var(--button-bg, var(--fs-store-primary))) 22%,
+      var(--fs-surface, #0a0a0a)
+    );
+    border-color: var(--item-color, var(--button-bg, var(--fs-store-primary)));
+    color: #ffffff;
+  }
+
+  :host([data-fs-theme='dark']) .spa-option__desc {
+    color: rgba(255, 255, 255, 0.72);
   }
 
   .spa-option:active {
@@ -168,7 +236,7 @@ export const componentStyles = css`
   .spa-option__desc {
     margin: 0;
     font-size: 0.8rem;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
     line-height: 1.55;
   }
 
@@ -177,7 +245,7 @@ export const componentStyles = css`
     border-radius: calc(var(--section-radius, 20px) * 0.7);
     border: 1px dashed var(--border-color, #e6e0d6);
     text-align: center;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
     font-size: 0.88rem;
   }
 
@@ -259,7 +327,7 @@ export const componentStyles = css`
   .spa-passport__holder {
     margin: 0 0 1rem;
     font-size: 0.82rem;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
   }
 
   .spa-passport__grid {
@@ -293,7 +361,7 @@ export const componentStyles = css`
     margin: 0.85rem 0 0;
     padding-top: 0.85rem;
     border-top: 1px dashed color-mix(in srgb, var(--passport-accent, var(--accent-color, var(--fs-store-primary))) 25%, var(--border-color, #e6e0d6));
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
     line-height: 1.7;
     font-size: 0.92rem;
   }

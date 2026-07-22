@@ -2,7 +2,7 @@ import { css as y, LitElement as $, html as s, nothing as o } from "lit";
 import { property as x, state as w } from "lit/decorators.js";
 import { classMap as g } from "lit/directives/class-map.js";
 import { styleMap as m } from "lit/directives/style-map.js";
-import { n as k, l, e as S, a as h, s as C, i as I, t as i, r as z, p as L, b as v, c as E } from "./commerceOutcome-CkVkQjOd.js";
+import { n as k, l, e as S, a as h, s as C, i as I, t as i, r as z, p as L, b as v, c as E } from "./commerceOutcome-CCLcV5SW.js";
 const Y = y`
   .spf-shell {
     display: grid;
@@ -16,7 +16,7 @@ const Y = y`
     font-size: 0.78rem;
     font-weight: 800;
     letter-spacing: 0.04em;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
     text-align: center;
   }
 
@@ -41,7 +41,7 @@ const Y = y`
     border: 1.5px solid var(--border-color, #e6e0d6);
     border-radius: calc(var(--section-radius, 20px) * 0.72);
     background: var(--card-bg, #fff);
-    color: var(--text-color, #1f1a14);
+    color: var(--text-color, #000000);
     font: inherit;
     text-align: center;
     cursor: pointer;
@@ -111,7 +111,7 @@ const Y = y`
   .spf-card__desc {
     margin: 0;
     font-size: 0.76rem;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
     line-height: 1.45;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -156,7 +156,7 @@ const Y = y`
 
   .spf-result__desc {
     margin: 0;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
     font-size: 0.92rem;
     line-height: 1.65;
   }
@@ -262,7 +262,7 @@ const u = class u extends $ {
         ${e.resultDesc ? s`<p class="spf-result__desc">${e.resultDesc}</p>` : e.desc ? s`<p class="spf-result__desc">${e.desc}</p>` : o}
         ${e.link ? s`<div class="spf-result__actions">
               <a
-                class="fs-btn"
+                class="fs-btn fs-tap"
                 href=${e.link}
                 target=${t ? "_blank" : "_self"}
                 rel=${t ? "noopener noreferrer" : o}

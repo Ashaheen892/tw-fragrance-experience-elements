@@ -86,7 +86,7 @@ export const componentStyles = css`
     border: 1px solid color-mix(in srgb, var(--accent-color, var(--fs-store-primary)) 20%, var(--border-color, #e6e0d6));
     font-size: 0.86rem;
     line-height: 1.55;
-    color: var(--text-color, #1f1a14);
+    color: var(--text-color, #000000);
   }
 
   .srg-zone-tip__label {
@@ -110,7 +110,7 @@ export const componentStyles = css`
     border-radius: calc(var(--section-radius, 20px) * 0.85);
     border: 1.5px solid color-mix(in srgb, var(--border-color, #e6e0d6) 82%, transparent);
     background: var(--card-bg, #fff);
-    color: var(--text-color, #1f1a14);
+    color: var(--text-color, #000000);
     text-align: start;
     cursor: pointer;
     box-shadow: 0 4px 14px rgba(90, 70, 40, 0.05);
@@ -176,7 +176,7 @@ export const componentStyles = css`
     flex-wrap: wrap;
     gap: 0.45rem 0.75rem;
     font-size: 0.82rem;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
   }
 
   .srg-card__meta-label {
@@ -184,14 +184,14 @@ export const componentStyles = css`
     font-weight: 800;
     letter-spacing: 0.03em;
     text-transform: uppercase;
-    color: var(--text-color, #1f1a14);
+    color: var(--text-color, #000000);
   }
 
   .srg-card__tips {
     margin: 0;
     font-size: 0.86rem;
     line-height: 1.6;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
   }
 
   @media (min-width: 960px) {

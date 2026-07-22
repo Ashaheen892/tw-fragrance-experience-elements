@@ -90,6 +90,18 @@
     </header>
     <main class="stage" id="stage"></main>
     <script type="module">
+      // Shim: outside the Twilight runtime, provide registerSallaComponent so
+      // sallaTransformPlugin footer can define the custom element.
+      if (!Function.prototype.registerSallaComponent) {
+        Object.defineProperty(Function.prototype, 'registerSallaComponent', {
+          value(tag) {
+            if (tag && !customElements.get(tag)) customElements.define(tag, this);
+          },
+          configurable: true,
+          writable: true,
+        });
+      }
+
       function arabicTitle(title) {
         if (typeof title === 'string') return title.trim();
         if (title && typeof title === 'object') return String(title.ar || title.en || '').trim();
@@ -152,7 +164,12 @@
         `;
         stage.appendChild(card);
 
-        await import(`/src/components/${name}/index.ts`);
+        try {
+          await import(`/src/components/${name}/index.ts`);
+        } catch (err) {
+          console.error(`Failed to load ${name}`, err);
+          continue;
+        }
         const el = document.createElement(`salla-${name}`);
         el.config = buildDefaults(component);
         card.querySelector('.frame').appendChild(el);

@@ -3,7 +3,7 @@ import { property as L, state as k } from "lit/decorators.js";
 import { classMap as v } from "lit/directives/class-map.js";
 import { keyed as z } from "lit/directives/keyed.js";
 import { styleMap as _ } from "lit/directives/style-map.js";
-import { n as h, l as c, a as b, g as E, s as R, t as g, r as N, p as H, b as B, c as M } from "./commerceOutcome-CkVkQjOd.js";
+import { n as h, l as c, a as b, g as E, s as R, t as g, r as N, p as H, b as B, c as M } from "./commerceOutcome-CCLcV5SW.js";
 const O = S`
   .inp-pyramid {
     display: grid;
@@ -47,7 +47,7 @@ const O = S`
     padding: 0.85rem 1rem;
     border: none;
     background: transparent;
-    color: var(--text-color, #1f1a14);
+    color: var(--text-color, #000000);
     font: inherit;
     text-align: start;
     cursor: pointer;
@@ -82,13 +82,13 @@ const O = S`
     font-size: 0.76rem;
     font-weight: 800;
     letter-spacing: 0.03em;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
     line-height: 1.45;
   }
 
   .inp-tier__chevron {
     font-size: 1.1rem;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
     transition: transform 0.24s ease, color 0.24s ease;
   }
 
@@ -142,7 +142,7 @@ const O = S`
   .inp-note__desc {
     margin: 0.15rem 0 0;
     font-size: 0.78rem;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
     line-height: 1.5;
   }
 
@@ -150,7 +150,7 @@ const O = S`
     margin: 0;
     padding: 0.5rem 0.2rem;
     font-size: 0.82rem;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
   }
 
   @media (prefers-reduced-motion: reduce) {

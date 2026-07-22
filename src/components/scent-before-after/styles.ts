@@ -23,7 +23,7 @@ export const componentStyles = css`
     border: 1.5px solid color-mix(in srgb, var(--accent-color, var(--fs-store-primary)) 30%, var(--border-color, #e6e0d6));
     border-radius: 999px;
     background: transparent;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
     font: inherit;
     font-size: 0.78rem;
     font-weight: 800;
@@ -95,77 +95,80 @@ export const componentStyles = css`
 
   .sba-handle {
     position: absolute;
-    z-index: 5;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    z-index: 6;
+    display: grid;
+    place-items: center;
+    touch-action: none;
   }
 
   .sba-compare--vertical .sba-handle {
     top: 0;
     bottom: 0;
-    width: 3px;
+    width: 2.75rem;
     left: var(--sba-pos, 50%);
     transform: translateX(-50%);
     cursor: ew-resize;
-    flex-direction: column;
   }
 
   .sba-compare--horizontal .sba-handle {
     left: 0;
     right: 0;
-    height: 3px;
+    height: 2.75rem;
     top: var(--sba-pos, 50%);
     transform: translateY(-50%);
     cursor: ns-resize;
-    flex-direction: row;
   }
 
-  .sba-handle__line {
-    flex: 1;
-    background: linear-gradient(
-      180deg,
-      color-mix(in srgb, var(--accent-color, var(--fs-store-primary)) 25%, transparent),
-      var(--accent-color, var(--fs-store-primary)),
-      color-mix(in srgb, var(--accent-color, var(--fs-store-primary)) 25%, transparent)
-    );
+  .sba-handle__rail {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    background: color-mix(in srgb, var(--card-bg, #fff) 88%, transparent);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent-color, var(--fs-store-primary)) 55%, transparent);
+    pointer-events: none;
   }
 
-  .sba-compare--horizontal .sba-handle__line {
-    background: linear-gradient(
-      90deg,
-      color-mix(in srgb, var(--accent-color, var(--fs-store-primary)) 25%, transparent),
-      var(--accent-color, var(--fs-store-primary)),
-      color-mix(in srgb, var(--accent-color, var(--fs-store-primary)) 25%, transparent)
-    );
+  .sba-compare--vertical .sba-handle__rail {
+    width: 3px;
+    height: 100%;
+  }
+
+  .sba-compare--horizontal .sba-handle__rail {
+    height: 3px;
+    width: 100%;
   }
 
   .sba-handle__grip {
-    flex: 0 0 auto;
+    position: relative;
+    z-index: 1;
     width: 2.75rem;
     height: 2.75rem;
     min-width: 44px;
     min-height: 44px;
     border-radius: 50%;
     border: 2px solid var(--accent-color, var(--fs-store-primary));
-    background: color-mix(in srgb, var(--text-color, #1f1a14) 72%, transparent);
-    backdrop-filter: blur(6px);
+    background: var(--card-bg, #fff);
+    color: var(--accent-color, var(--fs-store-primary));
     display: grid;
     place-items: center;
-    color: var(--accent-color, var(--fs-store-primary));
-    font-size: 0.9rem;
-    box-shadow: 0 4px 14px rgba(90, 70, 40, 0.2);
-    transition: transform 0.24s ease;
+    box-shadow:
+      0 0 0 4px color-mix(in srgb, var(--accent-color, var(--fs-store-primary)) 16%, transparent),
+      0 8px 20px rgba(90, 70, 40, 0.28);
+    transition: transform 0.22s ease, box-shadow 0.22s ease;
   }
 
-  .sba-handle__grip:hover {
+  .sba-handle:hover .sba-handle__grip,
+  .sba-handle:focus-visible .sba-handle__grip {
     transform: scale(1.08);
+    box-shadow:
+      0 0 0 5px color-mix(in srgb, var(--accent-color, var(--fs-store-primary)) 22%, transparent),
+      0 10px 24px rgba(90, 70, 40, 0.32);
   }
 
-  .sba-handle__grip svg {
-    width: 1rem;
-    height: 1rem;
-    fill: currentColor;
+  .sba-handle__svg {
+    width: 1.15rem;
+    height: 1.15rem;
+    display: block;
   }
 
   .sba-label {
@@ -207,7 +210,7 @@ export const componentStyles = css`
   .sba-caption {
     margin: 0.85rem 0 0;
     text-align: center;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
     font-size: 0.88rem;
     line-height: 1.55;
     font-style: italic;
@@ -230,7 +233,8 @@ export const componentStyles = css`
       transform: none;
     }
 
-    .sba-handle__grip:hover {
+    .sba-handle:hover .sba-handle__grip,
+    .sba-handle:focus-visible .sba-handle__grip {
       transform: none;
     }
   }

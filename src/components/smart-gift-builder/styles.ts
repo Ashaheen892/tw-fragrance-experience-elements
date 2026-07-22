@@ -96,7 +96,7 @@ export const componentStyles = css`
   .sgb-card__range {
     margin: 0;
     font-size: 0.74rem;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
     line-height: 1.45;
   }
 
@@ -160,7 +160,7 @@ export const componentStyles = css`
   .sgb-option__range {
     margin: 0;
     font-size: 0.8rem;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
   }
 
   .sgb-step__empty {
@@ -168,7 +168,7 @@ export const componentStyles = css`
     border-radius: calc(var(--section-radius, 20px) * 0.7);
     border: 1px dashed var(--border-color, #e6e0d6);
     text-align: center;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
     font-size: 0.88rem;
   }
 

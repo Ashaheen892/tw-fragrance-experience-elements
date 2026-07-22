@@ -43,7 +43,7 @@ export const componentStyles = css`
     padding: 0.85rem 1rem;
     border: none;
     background: transparent;
-    color: var(--text-color, #1f1a14);
+    color: var(--text-color, #000000);
     font: inherit;
     text-align: start;
     cursor: pointer;
@@ -78,13 +78,13 @@ export const componentStyles = css`
     font-size: 0.76rem;
     font-weight: 800;
     letter-spacing: 0.03em;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
     line-height: 1.45;
   }
 
   .inp-tier__chevron {
     font-size: 1.1rem;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
     transition: transform 0.24s ease, color 0.24s ease;
   }
 
@@ -138,7 +138,7 @@ export const componentStyles = css`
   .inp-note__desc {
     margin: 0.15rem 0 0;
     font-size: 0.78rem;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
     line-height: 1.5;
   }
 
@@ -146,7 +146,7 @@ export const componentStyles = css`
     margin: 0;
     padding: 0.5rem 0.2rem;
     font-size: 0.82rem;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
   }
 
   @media (prefers-reduced-motion: reduce) {

@@ -2,7 +2,7 @@ import { css as v, LitElement as u, nothing as n, html as a } from "lit";
 import { property as h } from "lit/decorators.js";
 import { classMap as b } from "lit/directives/class-map.js";
 import { styleMap as m } from "lit/directives/style-map.js";
-import { n as _, l as s, s as x, t as i, r as $, p as y, b as w, c as C } from "./commerceOutcome-CkVkQjOd.js";
+import { n as _, l as s, s as x, t as i, r as $, p as y, b as w, c as C } from "./commerceOutcome-CCLcV5SW.js";
 const S = v`
   .fll-grid {
     display: grid;
@@ -72,7 +72,7 @@ const S = v`
   }
 
   .fll-op {
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
     font-weight: 800;
   }
 
@@ -99,14 +99,14 @@ const S = v`
     font-size: 0.72rem;
     font-weight: 800;
     letter-spacing: 0.03em;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
   }
 
   .fll-meta__value {
     margin: 0;
     font-size: 0.84rem;
     line-height: 1.55;
-    color: var(--text-color, #1f1a14);
+    color: var(--text-color, #000000);
   }
 
   @media (prefers-reduced-motion: reduce) {

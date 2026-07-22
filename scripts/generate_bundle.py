@@ -62,10 +62,24 @@ PERFUME_IMAGES = [
 
 
 def apply_preview_images(components):
+    # Prefer captured animated WebP previews; fall back to Unsplash.
+    webp_urls = {}
+    for rel in (
+        Path("notion-screenshots") / "webp-urls.json",
+        Path("notion-screenshots") / "webps" / "urls.json",
+    ):
+        path = BUNDLE_PATH.parent / rel
+        if path.exists():
+            with path.open(encoding="utf-8") as fh:
+                webp_urls = json.load(fh)
+            break
+
     for c in components:
-        pid = PREVIEW_IMAGES.get(c["name"])
-        if pid:
-            url = unsplash(pid)
+        url = webp_urls.get(c["name"])
+        if not url:
+            pid = PREVIEW_IMAGES.get(c["name"])
+            url = unsplash(pid) if pid else ""
+        if url:
             c["image"] = url
             c["preview_image"] = url
 
@@ -268,40 +282,6 @@ def variable_list(fid, label="الرابط", conditions=None):
     )
 
 
-def products_picker(
-    fid,
-    label="اختر المنتج",
-    *,
-    multichoice=True,
-    required=False,
-    max_length=24,
-    min_length=0,
-    desc=None,
-    conditions=None,
-):
-    """Raed/Saji-style picker for real store products."""
-    return with_conditions(
-        {
-            "id": fid,
-            "icon": "sicon-keyboard_arrow_down",
-            "type": "items",
-            "label": label,
-            "format": "dropdown-list",
-            "source": "products",
-            "options": [],
-            "required": required,
-            "selected": [],
-            "maxLength": max_length,
-            "minLength": min_length,
-            "searchable": True,
-            "description": desc,
-            "multichoice": multichoice,
-            "key": u(),
-        },
-        conditions,
-    )
-
-
 def dropdown_manual(fid, label, options, selected_value, *, icon="sicon-keyboard_arrow_down",
                     multichoice=False, desc=None, conditions=None):
     opts = [{"key": val, "label": lbl, "value": val} for lbl, val in options]
@@ -345,72 +325,20 @@ def collection(fid, label, fields, value, min_len=0, max_len=60, required=False,
 
 
 def theme_fields(p, *, accent=THEME_ACCENT, bg=THEME_BG, card=THEME_CARD):
-    return [
-        static_title(f"{p}theme_title", "الألوان والتنسيق"),
-        color(f"{p}bg", "لون الخلفية", bg),
-        color(f"{p}text", "لون النص", THEME_TEXT),
-        color(f"{p}muted", "لون النص الثانوي", THEME_MUTED),
-        color(f"{p}accent", "اللون الرئيسي", accent),
-        color(f"{p}card", "لون البطاقات", card),
-        color(f"{p}border", "لون الحدود", THEME_BORDER),
-        color(f"{p}button_bg", "خلفية الأزرار", accent),
-        color(f"{p}button_color", "لون نص الأزرار", "#ffffff"),
-        number(f"{p}radius", "تدوير الحواف", 20, 0, 40, "px"),
-        boolean(f"{p}animate", "تفعيل الحركات والانتقالات", True,
-                "يتوقف تلقائياً عند تفعيل خيار تقليل الحركة في الجهاز."),
-    ]
+    """Section colors inherit store primary + light/dark theme — no merchant pickers."""
+    return []
 
 
 def editor_controls():
-    return [
-        boolean(
-            "add_component_background_color", "إضافة لون خلفية للعنصر", False,
-            "فعّل هذا الخيار لتخصيص لون خلفية كامل للعنصر.",
-        ),
-        color(
-            "component_background_color", "لون خلفية العنصر", EDITOR_BG,
-            "اختر لونًا مناسبًا يتناسق مع هوية متجرك.",
-            conditions=cond_eq("add_component_background_color", True),
-        ),
-    ]
+    """Editor chrome controls removed — inherit store theme only."""
+    return []
+
 
 
 def commerce_fields(prefix):
-    """Conversion outcome: real Salla product picker + optional CTA."""
+    """Conversion outcome: optional CTA only."""
     return [
         static_title(f"{prefix}commerce_title", "التوصيات التجارية"),
-        boolean(
-            f"{prefix}show_products",
-            "عرض منتجات بعد النتيجة",
-            False,
-            "فعّل الخيار ثم اختر منتجات حقيقية من متجرك.",
-        ),
-        products_picker(
-            f"{prefix}chosen_products",
-            "المنتجات المختارة",
-            multichoice=True,
-            max_length=24,
-            min_length=0,
-            desc="منتجات سلة الحقيقية (مثل ثيم رائد) — بدون عينات وهمية.",
-            conditions=cond_eq(f"{prefix}show_products", True),
-        ),
-        number(
-            f"{prefix}products_limit",
-            "عدد المنتجات المعروضة",
-            8,
-            1,
-            24,
-            "",
-            "الحد الأقصى لعرض المنتجات المختارة.",
-            conditions=cond_eq(f"{prefix}show_products", True),
-        ),
-        multilang(
-            f"{prefix}products_title",
-            "عنوان المنتجات المقترحة",
-            "منتجات مقترحة لك",
-            "Picks for you",
-            conditions=cond_eq(f"{prefix}show_products", True),
-        ),
         boolean(
             f"{prefix}show_cta",
             "عرض زر رابط بعد النتيجة",
@@ -433,6 +361,39 @@ def commerce_fields(prefix):
 
 
 def append_commerce_fields(components):
+    removed_suffixes = {
+        "show_products",
+        "products_source",
+        "chosen_products",
+        "products_limit",
+        "products_title",
+        "show_view_all",
+        "view_all_label",
+        "view_all_link",
+        "slides_per_view",
+        "show_product_options",
+        "product_shadow",
+        "hide_add_btn",
+    }
+    # Replace any legacy CTA fields so merchants get show_cta + conditioned link/label.
+    commerce_suffixes = {
+        "commerce_title",
+        "show_cta",
+        "result_link",
+        "cta_link",
+        "cta_label",
+    }
+
+    def is_legacy_product_field(field, prefix):
+        field_id = field.get("id", "")
+        suffix = field_id[len(prefix):] if field_id.startswith(prefix) else ""
+        return (
+            suffix in removed_suffixes
+            or suffix in commerce_suffixes
+            or field.get("source") == "products"
+            or field_id == f"{prefix}products"
+        )
+
     for component_data in components:
         fields = component_data.get("fields", [])
         prefix = next(
@@ -446,14 +407,10 @@ def append_commerce_fields(components):
         )
         if not prefix:
             continue
-        # Remove the legacy collection of fake product samples before adding
-        # the Raed/Saji picker fields.
         fields[:] = [
             field
             for field in fields
-            if field.get("id") != f"{prefix}products"
-            or field.get("source") == "products"
-            or field.get("format") != "collection"
+            if not is_legacy_product_field(field, prefix)
         ]
         existing = {field.get("id") for field in fields}
         fields.extend(field for field in commerce_fields(prefix) if field["id"] not in existing)
@@ -462,9 +419,10 @@ def append_commerce_fields(components):
 def prepend_editor_controls(components):
     for c in components:
         existing = {f.get("id") for f in c.get("fields", [])}
-        if "add_component_background_color" in existing:
+        extra = editor_controls()
+        if not extra:
             continue
-        c["fields"] = editor_controls() + c["fields"]
+        c["fields"] = extra + c["fields"]
 
 
 def component(name, title, icon, fields, image_url=PLACEHOLDER):
@@ -480,7 +438,8 @@ def component(name, title, icon, fields, image_url=PLACEHOLDER):
 
 
 def _dd(label, value):
-    return {"selected": [{"key": value, "label": label, "value": value}]}
+    """Dropdown value shape used inside collection sample rows (array, not {selected})."""
+    return [{"key": value, "label": label, "value": value}]
 
 
 LAYER_OPTS = [("المقدمة", "top"), ("القلب", "heart"), ("الأساس", "base")]
@@ -1313,8 +1272,6 @@ def build_scent_passport():
             multilang(f"{p}share_btn", "زر نسخ الملخص", "نسخ الملخص", "Copy summary"),
             multilang(f"{p}passport_title", "عنوان الجواز", "جوازك العطري", "Your scent passport"),
             multilang(f"{p}holder_label", "تسمية حامل الجواز", "حامل الجواز", "Passport holder"),
-            multilang(f"{p}cta_label", "نص زر التوصية", "استكشف التوصية", "Explore recommendation"),
-            variable_list(f"{p}result_link", "رابط التوصية (اختياري)"),
             *theme_fields(p),
         ],
     )
@@ -1504,8 +1461,6 @@ def build_smart_gift_builder():
             multilang(f"{p}back_btn", "زر السابق", "السابق", "Back"),
             multilang(f"{p}see_btn", "زر عرض الهدية", "اعرض الهدية", "See your gift"),
             multilang(f"{p}reset_btn", "زر إعادة البدء", "ابدأ من جديد", "Start over"),
-            multilang(f"{p}cta_label", "نص زر التوصية", "استكشف التوصية", "Explore recommendation"),
-            variable_list(f"{p}result_link", "رابط التوصية (اختياري)"),
             *theme_fields(p),
         ],
     )
@@ -1708,8 +1663,11 @@ def build_fragrance_wardrobe():
                       "نظّمي عطورك حسب المناسبة — افتحي كل خانة لاكتشاف التركيبة المناسبة.",
                       "Organize your scents by occasion — open each drawer to discover the right fit.",
                       "textarea", "300"),
-            multilang(f"{p}open_label", "نص فتح الخانة", "افتح الخزانة", "Open drawer"),
-            multilang(f"{p}close_label", "نص إغلاق الخانة", "أغلق", "Close"),
+            multilang(f"{p}open_label", "نص الإرشاد",
+                      "اختَر خانة لفتح درج العطر المناسب",
+                      "Pick a slot to open that fragrance drawer"),
+            multilang(f"{p}close_label", "نص زر الاستكشاف",
+                      "استكشف هذه الخانة", "Explore this slot"),
             static_title(f"{p}slots_title", "خانات الخزانة"),
             collection(f"{p}slots", "خانة", slot_fields, sample),
             *theme_fields(p),

@@ -3,7 +3,7 @@ import { property as y, state as $ } from "lit/decorators.js";
 import { classMap as m } from "lit/directives/class-map.js";
 import { keyed as k } from "lit/directives/keyed.js";
 import { styleMap as f } from "lit/directives/style-map.js";
-import { n as w, a as L, l, g as S, s as z, t as n, r as C, p as I, b as A, c as M } from "./commerceOutcome-CkVkQjOd.js";
+import { n as w, a as L, l, g as S, s as z, t as n, r as C, p as I, b as A, c as M } from "./commerceOutcome-CCLcV5SW.js";
 const H = x`
   :host {
     direction: inherit;
@@ -41,7 +41,7 @@ const H = x`
     border-radius: calc(var(--section-radius, 20px) * 0.85);
     border: 1.5px solid color-mix(in srgb, var(--border-color, #e6e0d6) 80%, transparent);
     background: var(--card-bg, #fff);
-    color: var(--text-color, #1f1a14);
+    color: var(--text-color, #000000);
     text-align: start;
     cursor: pointer;
     box-shadow: 0 4px 14px rgba(90, 70, 40, 0.05);
@@ -105,7 +105,7 @@ const H = x`
     font-size: 0.76rem;
     font-weight: 800;
     letter-spacing: 0.03em;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
   }
 
   .set-detail {
@@ -182,9 +182,9 @@ function P(o) {
   })).filter((e) => e.label || e.timeLabel || e.desc);
 }
 var Y = Object.defineProperty, u = (o, e, t, p) => {
-  for (var a = void 0, r = o.length - 1, d; r >= 0; r--)
-    (d = o[r]) && (a = d(e, t, a) || a);
-  return a && Y(e, t, a), a;
+  for (var r = void 0, a = o.length - 1, d; a >= 0; a--)
+    (d = o[a]) && (r = d(e, t, r) || r);
+  return r && Y(e, t, r), r;
 };
 const g = class g extends _ {
   constructor() {
@@ -252,17 +252,17 @@ const g = class g extends _ {
     `;
   }
   render() {
-    const e = this.config || {}, t = C(e, "set_"), p = t.animate && !I(), a = l(e.set_title), r = l(e.set_desc), d = this.stages, h = O(e), v = this.active;
+    const e = this.config || {}, t = C(e, "set_"), p = t.animate && !I(), r = l(e.set_title), a = l(e.set_desc), d = this.stages, h = O(e), v = this.active;
     return d.length ? s`
       <section
         class=${m({ "fs-section": !0, "fs-animate": p })}
         style=${f(A(t))}
-        aria-label=${a || n("رحلة العطر عبر الوقت", "Scent evolution timeline")}
+        aria-label=${r || n("رحلة العطر عبر الوقت", "Scent evolution timeline")}
       >
         <div class="fs-container">
-          ${a || r ? s`<div class="fs-header">
-                ${a ? s`<h2 class="fs-title">${a}</h2>` : i}
-                ${r ? s`<p class="fs-desc">${r}</p>` : i}
+          ${r || a ? s`<div class="fs-header">
+                ${r ? s`<h2 class="fs-title">${r}</h2>` : i}
+                ${a ? s`<p class="fs-desc">${a}</p>` : i}
               </div>` : i}
 
           <div

@@ -3,7 +3,7 @@ import { property as k, state as S } from "lit/decorators.js";
 import { classMap as h } from "lit/directives/class-map.js";
 import { keyed as C } from "lit/directives/keyed.js";
 import { styleMap as p } from "lit/directives/style-map.js";
-import { n as I, l as g, e as z, a as L, g as j, s as Y, i as A, t as l, r as E, p as O, b as u, c as U } from "./commerceOutcome-CkVkQjOd.js";
+import { n as I, l as g, e as z, a as L, g as j, s as Y, i as A, t as l, r as E, p as O, b as u, c as U } from "./commerceOutcome-CCLcV5SW.js";
 const H = $`
   .ffm-shell {
     display: grid;
@@ -34,7 +34,7 @@ const H = $`
     font-weight: 800;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
   }
 
   .ffm-chips {
@@ -62,7 +62,7 @@ const H = $`
     border: 1.5px solid var(--border-color, #e6e0d6);
     border-radius: calc(var(--section-radius, 20px) * 0.72);
     background: var(--card-bg, #fff);
-    color: var(--text-color, #1f1a14);
+    color: var(--text-color, #000000);
     font: inherit;
     font-size: 0.9rem;
     font-weight: 700;
@@ -351,7 +351,7 @@ const v = class v extends y {
             </div>` : s}
         ${e.link ? a`<div class="ffm-detail__actions">
               <a
-                class="fs-btn"
+                class="fs-btn fs-tap"
                 href=${e.link}
                 target=${o ? "_blank" : "_self"}
                 rel=${o ? "noopener noreferrer" : s}

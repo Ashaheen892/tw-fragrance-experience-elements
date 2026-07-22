@@ -1,10 +1,335 @@
-import { css } from 'lit';
-
-/**
- * Shared section chrome + mobile/tablet baselines.
- * Breakpoints: phone ≤639 · tablet ≤959 · desktop ≥960
- */
-export const sharedSectionCss = css`
+import { css as $, nothing as f, html as k } from "lit";
+function z() {
+  var r, e, t;
+  try {
+    const o = typeof Salla < "u" ? (e = (r = Salla == null ? void 0 : Salla.lang) == null ? void 0 : r.getLocale) == null ? void 0 : e.call(r) : void 0, a = (t = document.documentElement.lang) == null ? void 0 : t.split("-")[0];
+    return String(o || a || "ar").toLowerCase();
+  } catch {
+    return "ar";
+  }
+}
+function b(r, e = "") {
+  if (r == null)
+    return e;
+  if (typeof r == "string")
+    return r.trim() || e;
+  if (typeof r == "number")
+    return String(r);
+  if (typeof r == "object") {
+    const t = r, a = [z(), "ar", "en", ...Object.keys(t)];
+    for (const i of a) {
+      const s = t[i];
+      if (typeof s == "string" && s.trim())
+        return s.trim();
+    }
+  }
+  return e;
+}
+const m = "var(--color-primary, var(--primary-color, var(--color-main, #64748b)))";
+function h() {
+  var t;
+  if (typeof document > "u") return "light";
+  const r = document.documentElement, e = (r.getAttribute("data-theme") || r.getAttribute("data-mode") || "").toLowerCase();
+  if (e === "dark") return "dark";
+  if (e === "light") return "light";
+  if (r.classList.contains("dark") || (t = document.body) != null && t.classList.contains("dark"))
+    return "dark";
+  try {
+    const o = localStorage.getItem("salla_demo_theme");
+    if (o === "dark" || o === "light") return o;
+  } catch {
+  }
+  return "light";
+}
+function j(r = h()) {
+  const e = r === "dark";
+  return {
+    "--fs-store-primary": m,
+    "--accent-color": m,
+    "--button-bg": m,
+    "--button-color": "#ffffff",
+    "--text-color": e ? "#ffffff" : "#000000",
+    "--muted-color": e ? "#aaaaaa" : "#666666",
+    "--card-bg": e ? "#0f0f0f" : "#ffffff",
+    "--fs-surface": e ? "#0a0a0a" : "#f0f0f0",
+    "--border-color": e ? "rgba(255, 255, 255, 0.12)" : "#e5e7eb",
+    "--section-bg": "transparent"
+  };
+}
+function S(r, e) {
+  for (const [t, o] of Object.entries(e))
+    r.style.setProperty(t, o);
+  r.setAttribute("data-fs-theme", h());
+}
+function u(r, e) {
+  r.querySelectorAll(".fs-section").forEach((t) => {
+    S(t, e);
+  });
+}
+function L(r = h()) {
+  if (typeof document > "u") return;
+  const e = j(r);
+  u(document, e), document.querySelectorAll("*").forEach((t) => {
+    const o = t, a = o.shadowRoot;
+    a && a.querySelector(".fs-section") && (S(o, e), u(a, e));
+  });
+}
+let g = !1, c = null;
+function n() {
+  c && clearTimeout(c), c = setTimeout(() => {
+    c = null, L();
+  }, 50);
+}
+function M() {
+  if (!(g || typeof document > "u")) {
+    g = !0, n();
+    try {
+      new MutationObserver(n).observe(document.documentElement, {
+        attributes: !0,
+        attributeFilter: ["data-theme", "data-mode", "class"]
+      }), document.body && new MutationObserver(n).observe(document.body, {
+        attributes: !0,
+        attributeFilter: ["class", "data-theme", "data-mode"]
+      });
+    } catch {
+    }
+    window.addEventListener("storage", (r) => {
+      r.key === "salla_demo_theme" && n();
+    });
+    try {
+      new MutationObserver((r) => {
+        r.some((e) => e.addedNodes.length) && n();
+      }).observe(document.documentElement, { childList: !0, subtree: !0 });
+    } catch {
+    }
+  }
+}
+function T(r) {
+  return Object.entries(r || {}).reduce((e, [t, o]) => {
+    const a = t.includes(".") ? t.split(".").pop() : t;
+    return e[a] = o, e;
+  }, {});
+}
+function x(r, e = "") {
+  const t = typeof r == "string" || typeof r == "number" ? String(r).trim() : b(r, "").trim();
+  return t && t.toLowerCase().replace(/[^a-z0-9\u0600-\u06ff]+/gi, "-").replace(/^-+|-+$/g, "").slice(0, 48) || e;
+}
+function C(r, e = "") {
+  if (r && typeof r == "object" && !Array.isArray(r)) {
+    const t = r, o = String(t.en ?? "").trim(), a = String(t.ar ?? "").trim();
+    return x(o || a, e);
+  }
+  return x(r, e);
+}
+function N(r, e, t = "item") {
+  const o = String(r.id ?? r.value ?? r.key ?? "").trim();
+  return o || C(r.name ?? r.title ?? r.label ?? r.brand ?? r.model, "") || `${t}-${e + 1}`;
+}
+function W(r) {
+  return Array.isArray(r) ? r.filter((e) => !!e && typeof e == "object").map((e, t) => {
+    const o = T(e), a = o;
+    return String(a.id ?? "").trim() || (a.id = N(a, t)), o;
+  }) : [];
+}
+function d(r, e = 0) {
+  return typeof r == "number" && Number.isFinite(r) ? r : typeof r == "string" && r.trim() !== "" && Number.isFinite(Number(r)) ? Number(r) : r && typeof r == "object" && "value" in r ? d(r.value, e) : e;
+}
+function v(r, e = 0) {
+  if (typeof r == "number" && Number.isFinite(r)) return r;
+  if (typeof r == "string" && r.trim() !== "") {
+    const t = Number(r.replace(",", "."));
+    return Number.isFinite(t) ? t : e;
+  }
+  return e;
+}
+function q(r, e, t) {
+  return Math.min(t, Math.max(e, r));
+}
+function p(r, e = !1) {
+  if (typeof r == "boolean") return r;
+  if (typeof r == "string") {
+    const t = r.toLowerCase().trim();
+    if (["true", "1", "yes", "on"].includes(t)) return !0;
+    if (["false", "0", "no", "off", ""].includes(t)) return !1;
+  }
+  return typeof r == "number" ? r !== 0 : e;
+}
+function l(r) {
+  if (!r) return "";
+  if (typeof r == "string") {
+    const e = r.trim();
+    return Y(e) ? e : "";
+  }
+  if (Array.isArray(r)) {
+    for (const e of r) {
+      const t = l(e);
+      if (t) return t;
+    }
+    return "";
+  }
+  if (typeof r == "object") {
+    const e = r, t = [
+      e.url,
+      e.href,
+      e.link,
+      e.value,
+      e.custom,
+      e.path
+    ];
+    for (const o of t) {
+      const a = l(o);
+      if (a) return a;
+    }
+  }
+  return "";
+}
+function Y(r) {
+  if (!r || r === "#") return !1;
+  if (r.startsWith("/") || r.startsWith("#") || r.startsWith("?") || r.startsWith("mailto:") || r.startsWith("tel:") || r.startsWith("whatsapp:"))
+    return !0;
+  try {
+    const e = new URL(r, window.location.origin);
+    return ["http:", "https:", "mailto:", "tel:"].includes(e.protocol);
+  } catch {
+    return !1;
+  }
+}
+function _(r) {
+  try {
+    return new URL(r, window.location.origin).origin !== window.location.origin;
+  } catch {
+    return !1;
+  }
+}
+function F(r) {
+  if (!r || typeof r != "string") return !1;
+  try {
+    const e = new URL(r, window.location.origin);
+    return !!["http:", "https:"].includes(e.protocol);
+  } catch {
+    return !1;
+  }
+}
+function U(r, e = "group_order") {
+  return [...r].sort(
+    (t, o) => v(t[e], 0) - v(o[e], 0)
+  );
+}
+function A(r, e, t, o) {
+  return z() === "en" ? e : o || r;
+}
+async function D(r) {
+  var e;
+  if (!r) return !1;
+  try {
+    if ((e = navigator.clipboard) != null && e.writeText)
+      return await navigator.clipboard.writeText(r), !0;
+  } catch {
+  }
+  try {
+    const t = document.createElement("textarea");
+    t.value = r, t.setAttribute("readonly", ""), t.style.position = "fixed", t.style.opacity = "0", document.body.appendChild(t), t.select();
+    const o = document.execCommand("copy");
+    return document.body.removeChild(t), o;
+  } catch {
+    return !1;
+  }
+}
+function P() {
+  try {
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  } catch {
+    return !1;
+  }
+}
+function O(r, e, t) {
+  const o = r || {};
+  return {
+    bg: "transparent",
+    text: "#000000",
+    muted: "#666666",
+    accent: "var(--color-primary, var(--primary-color, var(--color-main, #64748b)))",
+    card: "var(--color-white, var(--bg-color, #ffffff))",
+    border: "var(--color-border, #e5e7eb)",
+    buttonBg: "var(--color-primary, var(--primary-color, var(--color-main, #64748b)))",
+    buttonColor: "#ffffff",
+    radius: `${d(o[`${e}radius`], 20)}px`,
+    spaceDesktop: d(
+      o[`${e}space_desktop`],
+      48
+    ),
+    spaceMobile: d(
+      o[`${e}space_mobile`],
+      28
+    ),
+    animate: p(o[`${e}animate`], !0),
+    fullWidth: p(o[`${e}full_width`], !1),
+    noBottomMargin: !1,
+    hasContainer: !0
+  };
+}
+function V(r) {
+  const e = r.hasContainer !== !1;
+  return M(), {
+    ...j(),
+    "--section-radius": r.radius,
+    "--space-desktop": `${r.spaceDesktop}px`,
+    "--space-mobile": `${r.spaceMobile}px`,
+    "--space-desktop-bottom": r.noBottomMargin ? "0px" : `${r.spaceDesktop}px`,
+    "--space-mobile-bottom": r.noBottomMargin ? "0px" : `${r.spaceMobile}px`,
+    "--section-container-max": e ? "1440px" : "none",
+    "--section-container-pad": e ? "16px" : "0px",
+    "--section-container-pad-sm": e ? "12px" : "0px"
+  };
+}
+function y(r, e = "") {
+  if (typeof r == "string" && r.trim()) return r.trim();
+  if (Array.isArray(r) && r[0]) {
+    const t = r[0];
+    if (typeof t == "string") return t;
+    if (t && typeof t == "object" && "value" in t)
+      return String(t.value ?? e);
+    if (t && typeof t == "object" && "key" in t)
+      return String(t.key ?? e);
+  }
+  if (r && typeof r == "object") {
+    const t = r;
+    if (Array.isArray(t.selected) && t.selected[0])
+      return y(t.selected, e);
+    if ("value" in t && t.value != null && !Array.isArray(t.value))
+      return String(t.value ?? e);
+    if (Array.isArray(t.value) && t.value[0])
+      return y(t.value, e);
+  }
+  return e;
+}
+function X(r) {
+  const e = b(r, "");
+  return e ? e.split(/[,،|/]/).map((t) => t.trim()).filter(Boolean) : [];
+}
+function w(r) {
+  if (!r) return "";
+  if (typeof r == "string") {
+    const e = r.trim();
+    return F(e) || e.startsWith("/") ? e : "";
+  }
+  if (Array.isArray(r)) {
+    for (const e of r) {
+      const t = w(e);
+      if (t) return t;
+    }
+    return "";
+  }
+  if (typeof r == "object") {
+    const e = r, t = [e.url, e.src, e.image, e.thumbnail, e.original];
+    for (const o of t) {
+      const a = w(o);
+      if (a) return a;
+    }
+  }
+  return "";
+}
+const H = $`
   :host {
     direction: inherit;
     width: 100%;
@@ -1891,3 +2216,65 @@ export const sharedSectionCss = css`
     }
   }
 `;
+function B(r, e, t) {
+  if (r && typeof r == "object" && "config" in r && "prefix" in r) {
+    const a = r;
+    return {
+      ...a,
+      config: a.config || {},
+      prefix: a.prefix || ""
+    };
+  }
+  return {
+    ...{},
+    config: r || {},
+    prefix: ""
+  };
+}
+function E(r, e, t = {}) {
+  const o = (t.href || "").trim() || l(r[`${e}result_link`] ?? r[`${e}cta_link`]) || "/", a = b(r[`${e}cta_label`], "").trim() || A("تسوق الآن", "Shop now"), i = ["fs-btn", "fs-tap", t.className || ""].filter(Boolean).join(" ");
+  return k`<a
+    class=${i}
+    href=${o}
+    target=${_(o) ? "_blank" : f}
+    rel=${_(o) ? "noopener noreferrer" : f}
+  >
+    ${a}
+  </a>`;
+}
+function K(r, e, t) {
+  const o = B(r);
+  if (o.ready === !1) return f;
+  const a = o.config || {}, i = o.prefix || "", s = l(
+    a[`${i}result_link`] ?? a[`${i}cta_link`]
+  );
+  return p(a[`${i}show_cta`], !!s) && !!s ? k`
+    <aside class="fs-commerce" aria-label=${A("التسوق", "Shopping")}>
+      <div class="fs-commerce__actions">
+        ${E(a, i, { className: "fs-commerce__cta" })}
+      </div>
+    </aside>
+  ` : f;
+}
+export {
+  w as a,
+  V as b,
+  K as c,
+  q as d,
+  l as e,
+  v as f,
+  y as g,
+  U as h,
+  _ as i,
+  F as j,
+  X as k,
+  b as l,
+  D as m,
+  W as n,
+  z as o,
+  P as p,
+  p as q,
+  O as r,
+  H as s,
+  A as t
+};

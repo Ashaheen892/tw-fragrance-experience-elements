@@ -5,37 +5,74 @@ export const componentStyles = css`
     direction: inherit;
   }
 
-  /* ── Layout toggle ── */
-  .scat-toggle {
+  .scat-shell {
+    display: grid;
+    gap: 1.1rem;
+  }
+
+  .scat-toolbar {
     display: flex;
-    justify-content: center;
-    gap: 0.35rem;
-    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 1rem;
+  }
+
+  .scat-toolbar__hint {
+    margin: 0;
+    font-size: 0.84rem;
+    font-weight: 650;
+    color: var(--muted-color, #6e6558);
+    line-height: 1.5;
+  }
+
+  .scat-toggle {
+    display: inline-flex;
+    gap: 0.3rem;
+    padding: 0.25rem;
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--border-color, #e6e0d6) 85%, transparent);
+    background: color-mix(in srgb, var(--card-bg, #fff) 88%, var(--section-bg, transparent));
   }
 
   .scat-toggle__btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 2.4rem;
-    height: 2.4rem;
-    border: 1px solid color-mix(in srgb, var(--accent-color, #9a7b4f) 35%, var(--border-color, #e6e0d6));
-    border-radius: 8px;
+    gap: 0.35rem;
+    min-height: 2.4rem;
+    padding: 0.35rem 0.75rem;
+    border: none;
+    border-radius: 999px;
     background: transparent;
     color: var(--muted-color, #6e6558);
+    font: inherit;
+    font-size: 0.78rem;
+    font-weight: 800;
     cursor: pointer;
-    transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+    transition:
+      color 0.2s ease,
+      background 0.2s ease,
+      box-shadow 0.2s ease;
   }
 
   .scat-toggle__btn.is-active {
-    border-color: var(--accent-color, #9a7b4f);
-    color: var(--accent-color, #9a7b4f);
-    background: color-mix(in srgb, var(--accent-color, #9a7b4f) 8%, transparent);
+    color: var(--button-color, #fff);
+    background: linear-gradient(
+      135deg,
+      var(--button-bg, var(--accent-color, var(--fs-store-primary))),
+      color-mix(in srgb, var(--button-bg, var(--accent-color, var(--fs-store-primary))) 62%, #5c4a32)
+    );
+    box-shadow: 0 6px 14px color-mix(in srgb, var(--accent-color, var(--fs-store-primary)) 24%, transparent);
+  }
+
+  .scat-toggle__label {
+    line-height: 1;
   }
 
   .scat-toggle__icon {
-    width: 1rem;
-    height: 1rem;
+    width: 0.95rem;
+    height: 0.95rem;
     stroke: currentColor;
     fill: none;
     stroke-width: 1.8;
@@ -43,59 +80,71 @@ export const componentStyles = css`
     stroke-linejoin: round;
   }
 
-  /* ── Grid layout ── */
-  .scat-grid {
+  .scat-track--grid {
     display: grid;
-    gap: 1rem;
-    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    gap: 0.85rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  /* ── Slider layout ── */
-  .scat-slider {
+  @media (min-width: 640px) {
+    .scat-track--grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+    }
+  }
+
+  @media (min-width: 960px) {
+    .scat-track--grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .scat-track--slider {
     display: flex;
-    gap: 1rem;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior-x: contain;
-    scroll-snap-type: x proximity;
-    scrollbar-width: thin;
-    padding-bottom: 0.5rem;
+    gap: 0.85rem;
+    padding-bottom: 0.35rem;
   }
 
-  .scat-slider > .scat-card {
+  .scat-track--slider .scat-track__item {
     flex: 0 0 auto;
-    width: min(78vw, 17rem);
+    width: min(72vw, 16.5rem);
     scroll-snap-align: start;
   }
 
-  /* ── Card ── */
   .scat-card {
+    --cat-color: var(--accent-color, var(--fs-store-primary));
     position: relative;
     display: flex;
     flex-direction: column;
+    height: 100%;
     overflow: hidden;
     border-radius: calc(var(--section-radius, 20px) * 0.72);
-    border: 1.5px solid color-mix(in srgb, var(--accent-color, #9a7b4f) 18%, var(--border-color, #e6e0d6));
+    border: 1.5px solid color-mix(in srgb, var(--cat-color) 22%, var(--border-color, #e6e0d6));
     background: var(--card-bg, #fff);
     text-decoration: none;
     color: inherit;
+    box-shadow: 0 6px 16px rgba(90, 70, 40, 0.07);
+    transition:
+      border-color 0.22s ease,
+      box-shadow 0.22s ease,
+      transform 0.22s ease;
+  }
+
+  a.scat-card {
     cursor: pointer;
-    box-shadow: 0 4px 14px rgba(90, 70, 40, 0.05);
-    transition: border-color 0.22s ease, box-shadow 0.22s ease, transform 0.22s ease;
   }
 
   .scat-card:hover {
-    border-color: color-mix(in srgb, var(--accent-color, #9a7b4f) 42%, var(--border-color, #e6e0d6));
-    box-shadow: 0 10px 24px rgba(90, 70, 40, 0.09);
     transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--cat-color) 48%, var(--border-color, #e6e0d6));
+    box-shadow: 0 12px 28px rgba(90, 70, 40, 0.11);
   }
 
-  /* ── Image area ── */
   .scat-card__media {
     position: relative;
     aspect-ratio: 4 / 3;
     overflow: hidden;
-    background: color-mix(in srgb, var(--border-color, #e6e0d6) 45%, #fff);
+    background: color-mix(in srgb, var(--cat-color) 14%, var(--card-bg, #fff));
   }
 
   .scat-card__img {
@@ -103,11 +152,11 @@ export const componentStyles = css`
     height: 100%;
     object-fit: cover;
     display: block;
-    transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .scat-card:hover .scat-card__img {
-    transform: scale(1.04);
+    transform: scale(1.045);
   }
 
   .scat-card__overlay {
@@ -115,41 +164,59 @@ export const componentStyles = css`
     inset: 0;
     background: linear-gradient(
       to top,
-      rgba(31, 26, 20, 0.55) 0%,
-      rgba(31, 26, 20, 0.1) 50%,
-      transparent 100%
+      color-mix(in srgb, var(--text-color, #1f1a14) 45%, transparent) 0%,
+      transparent 58%
     );
     pointer-events: none;
   }
 
   .scat-card__icon {
     position: absolute;
-    top: 0.75rem;
-    inset-inline-end: 0.75rem;
+    top: 0.7rem;
+    inset-inline-end: 0.7rem;
+    z-index: 1;
     width: 2.2rem;
     height: 2.2rem;
     border-radius: 50%;
     display: grid;
     place-items: center;
-    background: rgba(255, 255, 255, 0.92);
+    background: color-mix(in srgb, var(--card-bg, #fff) 88%, transparent);
+    color: var(--cat-color);
     font-size: 1rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 12px rgba(90, 70, 40, 0.12);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
   }
 
-  /* ── Body ── */
+  .scat-card__fallback {
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: var(--cat-color);
+  }
+
+  .scat-card__media--empty {
+    display: grid;
+    place-items: center;
+    background: linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--cat-color) 16%, var(--card-bg, #fff)),
+      color-mix(in srgb, var(--cat-color) 5%, var(--card-bg, #fff))
+    );
+  }
+
   .scat-card__body {
-    display: flex;
-    flex-direction: column;
+    display: grid;
     gap: 0.35rem;
-    padding: 0.9rem 1rem;
+    padding: 0.95rem 1rem 1.05rem;
+    flex: 1 1 auto;
   }
 
   .scat-card__name {
     margin: 0;
     font-size: 1rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
+    font-weight: 800;
     line-height: 1.35;
+    letter-spacing: -0.01em;
     color: var(--text-color, #1f1a14);
   }
 
@@ -164,51 +231,63 @@ export const componentStyles = css`
     overflow: hidden;
   }
 
-  /* ── Gold hairline accent at bottom ── */
+  .scat-card__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.45rem;
+    min-height: 2.2rem;
+    padding: 0.35rem 0.9rem;
+    width: fit-content;
+    border-radius: 999px;
+    border: 1.5px solid color-mix(in srgb, var(--cat-color) 45%, var(--border-color, #e6e0d6));
+    background: color-mix(in srgb, var(--cat-color) 10%, var(--card-bg, #fff));
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    color: var(--cat-color);
+  }
+
   .scat-card::after {
     content: '';
     display: block;
     height: 2px;
     background: linear-gradient(
       90deg,
-      transparent 5%,
-      var(--accent-color, #9a7b4f) 50%,
-      transparent 95%
+      transparent 4%,
+      var(--cat-color) 50%,
+      transparent 96%
     );
     opacity: 0;
-    transition: opacity 0.25s ease;
+    transition: opacity 0.22s ease;
   }
 
   .scat-card:hover::after {
     opacity: 1;
   }
 
-  /* ── No-image fallback ── */
-  .scat-card__media--empty {
-    display: grid;
-    place-items: center;
-    background: linear-gradient(
-      135deg,
-      var(--section-bg, #f6f4f1),
-      color-mix(in srgb, var(--accent-color, #9a7b4f) 12%, var(--card-bg, #fff))
-    );
-    font-size: 2rem;
-  }
+  @media (max-width: 479px) {
+    .scat-toggle__label {
+      display: none;
+    }
 
-  @media (min-width: 960px) {
-    .scat-grid {
-      grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+    .scat-toggle__btn {
+      width: 2.4rem;
+      padding: 0;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .scat-card,
-    .scat-card__img {
-      transition: none;
+    .scat-card__img,
+    .scat-toggle__btn {
+      transition: none !important;
     }
+
     .scat-card:hover {
       transform: none;
     }
+
     .scat-card:hover .scat-card__img {
       transform: none;
     }

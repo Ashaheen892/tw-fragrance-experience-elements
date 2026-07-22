@@ -28,7 +28,7 @@ export const componentStyles = css`
     font-weight: 800;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
   }
 
   .fpm-bar__value {
@@ -107,7 +107,7 @@ export const componentStyles = css`
     margin: 0;
     font-size: 0.82rem;
     font-weight: 800;
-    color: var(--text-color, #1f1a14);
+    color: var(--text-color, #000000);
     line-height: 1.35;
   }
 

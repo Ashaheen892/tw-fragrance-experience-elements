@@ -27,6 +27,27 @@ function resolveRtl(el: HTMLElement, forced?: boolean): boolean {
   return hostDir.toLowerCase() === 'rtl';
 }
 
+const DRAG_GUARD_FLAG = 'fsSwiperDragGuard';
+
+/**
+ * Native HTML5 drag on product images/links hijacks Swiper's mouse gesture
+ * (a ghost image starts dragging and mousemove stops firing), which makes the
+ * slider feel dead on desktop. `dragstart` is a composed event, so one capture
+ * listener on the root also covers cards rendered inside nested shadow roots.
+ */
+function suppressNativeDrag(el: HTMLElement): void {
+  const flagged = el.dataset[DRAG_GUARD_FLAG];
+  if (flagged === '1') return;
+  el.dataset[DRAG_GUARD_FLAG] = '1';
+  el.addEventListener(
+    'dragstart',
+    (event) => {
+      event.preventDefault();
+    },
+    { capture: true }
+  );
+}
+
 /** Create / replace a Swiper instance on a root that already has .swiper markup. */
 export function mountFsSwiper(
   el: HTMLElement,
@@ -35,6 +56,7 @@ export function mountFsSwiper(
   const { rtl: rtlOpt, modules: extraModules, ...rest } = options;
   const rtl = resolveRtl(el, rtlOpt);
   el.setAttribute(DIR_ATTR, rtl ? 'rtl' : 'ltr');
+  suppressNativeDrag(el);
 
   const existing = (el as HTMLElement & { swiper?: Swiper }).swiper;
   if (existing && !existing.destroyed) {

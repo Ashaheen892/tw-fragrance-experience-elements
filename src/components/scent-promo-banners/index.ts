@@ -83,6 +83,34 @@ export default class ScentPromoBanners extends LitElement {
     this.goTo((this.activeIndex + 1) % this.banners.length);
   }
 
+  private swipeStartX: number | null = null;
+
+  private onPointerDown = (e: PointerEvent) => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    this.swipeStartX = e.clientX;
+    this.stopAuto();
+  };
+
+  private onPointerUp = (e: PointerEvent) => {
+    const startX = this.swipeStartX;
+    this.swipeStartX = null;
+    this.startAuto();
+    if (startX == null) return;
+    const dx = e.clientX - startX;
+    if (Math.abs(dx) < 40) return;
+    const rtl = getComputedStyle(this).direction === 'rtl';
+    const forward = rtl ? dx > 0 : dx < 0;
+    if (forward) this.next();
+    else this.prev();
+  };
+
+  private onPointerCancel = () => {
+    this.swipeStartX = null;
+    this.startAuto();
+  };
+
+  private onDragStart = (e: Event) => e.preventDefault();
+
   private renderSlide(banner: PromoBanner, index: number) {
     const active = index === this.activeIndex;
     return html`
@@ -105,7 +133,7 @@ export default class ScentPromoBanners extends LitElement {
                 : nothing}
               ${banner.ctaLabel && banner.ctaLink
                 ? html`<a
-                    class="spb-cta fs-tap"
+                    class="fs-btn fs-tap"
                     href=${banner.ctaLink}
                     target=${isExternalUrl(banner.ctaLink) ? '_blank' : nothing}
                     rel=${isExternalUrl(banner.ctaLink) ? 'noopener noreferrer' : nothing}
@@ -121,7 +149,7 @@ export default class ScentPromoBanners extends LitElement {
                 : nothing}
               ${banner.ctaLabel && banner.ctaLink
                 ? html`<a
-                    class="spb-cta fs-tap"
+                    class="fs-btn fs-tap"
                     href=${banner.ctaLink}
                     target=${isExternalUrl(banner.ctaLink) ? '_blank' : nothing}
                     rel=${isExternalUrl(banner.ctaLink) ? 'noopener noreferrer' : nothing}
@@ -163,7 +191,15 @@ export default class ScentPromoBanners extends LitElement {
               </div>`
             : nothing}
 
-          <div class="spb-carousel" role="region" aria-roledescription="carousel">
+          <div
+            class="spb-carousel"
+            role="region"
+            aria-roledescription="carousel"
+            @pointerdown=${this.onPointerDown}
+            @pointerup=${this.onPointerUp}
+            @pointercancel=${this.onPointerCancel}
+            @dragstart=${this.onDragStart}
+          >
             <div
               class="spb-track"
               style=${styleMap({ transform: `translateX(${-this.activeIndex * 100}%)` })}
@@ -173,26 +209,11 @@ export default class ScentPromoBanners extends LitElement {
 
             ${banners.length > 1
               ? html`
-                <button type="button" class="spb-nav spb-nav--prev fs-tap" aria-label=${t('السابق', 'Previous')} @click=${() => this.prev()}>‹</button>
-                <button type="button" class="spb-nav spb-nav--next fs-tap" aria-label=${t('التالي', 'Next')} @click=${() => this.next()}>›</button>
+                <button type="button" class="spb-nav spb-nav--prev fs-icon-btn fs-icon-btn--on-media fs-tap" aria-label=${t('السابق', 'Previous')} @click=${() => this.prev()}>‹</button>
+                <button type="button" class="spb-nav spb-nav--next fs-icon-btn fs-icon-btn--on-media fs-tap" aria-label=${t('التالي', 'Next')} @click=${() => this.next()}>›</button>
               `
               : nothing}
           </div>
-
-          ${banners.length > 1
-            ? html`<div class="spb-dots" role="tablist">
-                ${banners.map((_b, i) => html`
-                  <button
-                    type="button"
-                    role="tab"
-                    class=${classMap({ 'spb-dot': true, 'is-active': i === this.activeIndex })}
-                    aria-selected=${i === this.activeIndex ? 'true' : 'false'}
-                    aria-label=${`${i + 1}`}
-                    @click=${() => this.goTo(i)}
-                  ></button>
-                `)}
-              </div>`
-            : nothing}
 
           ${renderCommerceOutcome({ config: c, prefix: 'spb_' })}
         </div>

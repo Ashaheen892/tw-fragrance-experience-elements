@@ -129,7 +129,7 @@ export const componentStyles = css`
     border-radius: calc(var(--section-radius, 20px) * 0.72);
     border: 1.5px solid color-mix(in srgb, var(--border-color, #e6e0d6) 82%, transparent);
     background: var(--card-bg, #fff);
-    color: var(--text-color, #1f1a14);
+    color: var(--text-color, #000000);
     text-align: start;
     cursor: pointer;
     box-shadow: 0 4px 14px rgba(90, 70, 40, 0.05);

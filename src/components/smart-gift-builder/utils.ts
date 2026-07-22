@@ -106,7 +106,7 @@ export function parseNavLabels(config: Record<string, unknown>): GiftNavLabels {
     reset: localizedString(config.sgb_reset_btn as LocaleValue) || t('ابدأ من جديد', 'Start over'),
     ctaLabel:
       localizedString(config.sgb_cta_label as LocaleValue) ||
-      t('استكشف التوصية', 'Explore recommendation'),
+      t('تسوق الآن', 'Shop now'),
   };
 }
 

@@ -88,7 +88,7 @@ export const componentStyles = css`
   .osg-card__desc {
     margin: 0;
     font-size: 0.8rem;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
     line-height: 1.55;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -113,7 +113,7 @@ export const componentStyles = css`
 
   .osg-panel__desc {
     margin: 0;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
     line-height: 1.7;
     font-size: 0.92rem;
   }

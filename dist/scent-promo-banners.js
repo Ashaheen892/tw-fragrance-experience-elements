@@ -1,10 +1,10 @@
-import { css as y, LitElement as _, nothing as i, html as a } from "lit";
+import { css as _, LitElement as y, nothing as a, html as i } from "lit";
 import { property as k, state as L } from "lit/decorators.js";
-import { classMap as g } from "lit/directives/class-map.js";
+import { classMap as f } from "lit/directives/class-map.js";
 import { keyed as w } from "lit/directives/keyed.js";
-import { styleMap as m } from "lit/directives/style-map.js";
-import { t as n, n as I, f as T, e as z, l as d, a as S, s as A, p as x, i as h, r as C, b as j, c as E } from "./commerceOutcome-CkVkQjOd.js";
-const M = y`
+import { styleMap as b } from "lit/directives/style-map.js";
+import { t as r, n as S, f as A, e as C, l as c, a as I, s as T, p as m, i as h, r as X, b as M, c as P } from "./commerceOutcome-CCLcV5SW.js";
+const z = _`
   :host {
     direction: inherit;
   }
@@ -15,6 +15,14 @@ const M = y`
     border-radius: var(--section-radius, 20px);
     border: 1px solid var(--border-color, #e6e0d6);
     box-shadow: 0 14px 34px rgba(90, 70, 40, 0.1);
+    touch-action: pan-y;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .spb-carousel:active {
+    cursor: grabbing;
   }
 
   .spb-track {
@@ -85,100 +93,11 @@ const M = y`
     max-width: 32rem;
   }
 
-  .spb-cta {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.45rem;
-    min-height: 46px;
-    padding: 0.65rem 1.8rem;
-    border: 1.5px solid var(--accent-color, var(--fs-store-primary));
-    border-radius: 999px;
-    background: transparent;
-    color: var(--card-bg, #fff);
-    font: inherit;
-    font-size: 0.84rem;
-    font-weight: 800;
-    letter-spacing: 0.04em;
-    text-decoration: none;
-    cursor: pointer;
-    transition:
-      background 0.24s ease,
-      color 0.24s ease,
-      transform 0.24s ease,
-      box-shadow 0.24s ease;
-  }
-
-  .spb-cta:hover {
-    background: var(--accent-color, var(--fs-store-primary));
-    color: var(--button-color, #fff);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 24px rgba(90, 70, 40, 0.14);
-  }
-
-  .spb-dots {
-    display: flex;
-    justify-content: center;
-    gap: 0.65rem;
-    margin-top: 1rem;
-  }
-
-  .spb-dot {
-    width: 44px;
-    height: 44px;
-    border: none;
-    background: transparent;
-    padding: 0;
-    cursor: pointer;
-    display: grid;
-    place-items: center;
-  }
-
-  .spb-dot::after {
-    content: '';
-    width: 8px;
-    height: 8px;
-    border-radius: 999px;
-    border: 1.5px solid var(--accent-color, var(--fs-store-primary));
-    background: transparent;
-    transition: background 0.24s ease, transform 0.24s ease;
-  }
-
-  .spb-dot.is-active::after {
-    background: var(--accent-color, var(--fs-store-primary));
-    transform: scale(1.25);
-  }
-
   .spb-nav {
     position: absolute;
     top: 50%;
-    transform: translateY(-50%);
     z-index: 10;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.75rem;
-    height: 2.75rem;
-    min-width: 44px;
-    min-height: 44px;
-    border: 1.5px solid color-mix(in srgb, var(--card-bg, #fff) 35%, transparent);
-    border-radius: 50%;
-    background: color-mix(in srgb, var(--text-color, #1f1a14) 40%, transparent);
-    backdrop-filter: blur(4px);
-    color: var(--card-bg, #fff);
-    font-size: 1.1rem;
-    cursor: pointer;
-    transition:
-      background 0.24s ease,
-      border-color 0.24s ease,
-      transform 0.24s ease;
-    padding: 0;
-  }
-
-  .spb-nav:hover {
-    background: color-mix(in srgb, var(--text-color, #1f1a14) 65%, transparent);
-    border-color: var(--accent-color, var(--fs-store-primary));
-    transform: translateY(calc(-50% - 2px));
+    transform: translateY(-50%);
   }
 
   .spb-nav--prev {
@@ -189,83 +108,88 @@ const M = y`
     inset-inline-end: 0.75rem;
   }
 
+  .spb-nav.fs-icon-btn--on-media:hover {
+    transform: translateY(calc(-50% - 1px));
+  }
+
   @media (max-width: 639px) {
     .spb-slide {
       min-height: 240px;
       aspect-ratio: 16 / 9;
-    }
-
-    .spb-nav {
-      width: 2.75rem;
-      height: 2.75rem;
-      font-size: 0.9rem;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .spb-track,
     .spb-slide__bg,
-    .spb-cta,
-    .spb-nav,
-    .spb-dot::after {
+    .spb-nav {
       transition: none;
     }
 
     .spb-slide.is-active .spb-slide__bg,
-    .spb-cta:hover,
-    .spb-nav:hover {
-      transform: none;
+    .spb-nav.fs-icon-btn--on-media:hover {
+      transform: translateY(-50%);
     }
   }
-`, f = [
+`, g = [
   {
     id: "launch",
-    heading: n("إصدار محدود", "Limited edition"),
-    subheading: n("عطور الموسم بتركيبة فاخرة", "Seasonal scents in a luxurious blend"),
+    heading: r("إصدار محدود", "Limited edition"),
+    subheading: r("عطور الموسم بتركيبة فاخرة", "Seasonal scents in a luxurious blend"),
     image: "https://images.unsplash.com/photo-1615634260167-c8cdede054de?auto=format&fit=crop&w=1400&q=80",
-    ctaLabel: n("اكتشف المجموعة", "Explore collection"),
+    ctaLabel: r("اكتشف المجموعة", "Explore collection"),
     ctaLink: "",
     overlayOpacity: 45
   },
   {
     id: "gift",
-    heading: n("هدايا عطرية", "Scented gifts"),
-    subheading: n("اختيارات أنيقة لكل مناسبة", "Elegant picks for every occasion"),
+    heading: r("هدايا عطرية", "Scented gifts"),
+    subheading: r("اختيارات أنيقة لكل مناسبة", "Elegant picks for every occasion"),
     image: "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=1400&q=80",
-    ctaLabel: n("تسوّق الهدايا", "Shop gifts"),
+    ctaLabel: r("تسوّق الهدايا", "Shop gifts"),
     ctaLink: "",
     overlayOpacity: 45
   }
 ];
-function O(b) {
-  const e = I(b).map((t, r) => ({
-    id: `banner-${r}`,
-    heading: d(t.heading) || d(t.title),
-    subheading: d(t.subheading),
-    image: S(t.image),
-    ctaLabel: d(t.cta_label),
-    ctaLink: z(t.cta_link ?? t.link),
-    overlayOpacity: Math.max(0, Math.min(100, T(t.overlay_opacity, 45)))
-  })).filter((t) => t.image || t.heading);
-  return e.length ? e.map((t, r) => {
-    const s = f[r % f.length];
+function E(p) {
+  const t = S(p).map((e, n) => ({
+    id: `banner-${n}`,
+    heading: c(e.heading) || c(e.title),
+    subheading: c(e.subheading),
+    image: I(e.image),
+    ctaLabel: c(e.cta_label),
+    ctaLink: C(e.cta_link ?? e.link),
+    overlayOpacity: Math.max(0, Math.min(100, A(e.overlay_opacity, 45)))
+  })).filter((e) => e.image || e.heading);
+  return t.length ? t.map((e, n) => {
+    const s = g[n % g.length];
     return {
-      ...t,
-      image: t.image || s.image,
-      heading: t.heading || s.heading,
-      subheading: t.subheading || s.subheading,
-      ctaLabel: t.ctaLabel || s.ctaLabel
+      ...e,
+      image: e.image || s.image,
+      heading: e.heading || s.heading,
+      subheading: e.subheading || s.subheading,
+      ctaLabel: e.ctaLabel || s.ctaLabel
     };
-  }) : f.map((t) => ({ ...t }));
+  }) : g.map((e) => ({ ...e }));
 }
-var U = Object.defineProperty, $ = (b, e, t, r) => {
-  for (var s = void 0, c = b.length - 1, o; c >= 0; c--)
-    (o = b[c]) && (s = o(e, t, s) || s);
-  return s && U(e, t, s), s;
+var O = Object.defineProperty, v = (p, t, e, n) => {
+  for (var s = void 0, o = p.length - 1, l; o >= 0; o--)
+    (l = p[o]) && (s = l(t, e, s) || s);
+  return s && O(t, e, s), s;
 };
-const u = class u extends _ {
+const u = class u extends y {
   constructor() {
-    super(...arguments), this.config = {}, this.activeIndex = 0, this.autoTimer = 0, this.boundLangHandler = () => this.requestUpdate();
+    super(...arguments), this.config = {}, this.activeIndex = 0, this.autoTimer = 0, this.boundLangHandler = () => this.requestUpdate(), this.swipeStartX = null, this.onPointerDown = (t) => {
+      t.pointerType === "mouse" && t.button !== 0 || (this.swipeStartX = t.clientX, this.stopAuto());
+    }, this.onPointerUp = (t) => {
+      const e = this.swipeStartX;
+      if (this.swipeStartX = null, this.startAuto(), e == null) return;
+      const n = t.clientX - e;
+      if (Math.abs(n) < 40) return;
+      (getComputedStyle(this).direction === "rtl" ? n > 0 : n < 0) ? this.next() : this.prev();
+    }, this.onPointerCancel = () => {
+      this.swipeStartX = null, this.startAuto();
+    }, this.onDragStart = (t) => t.preventDefault();
   }
   connectedCallback() {
     super.connectedCallback(), window.addEventListener("language-changed", this.boundLangHandler), this.startAuto();
@@ -273,128 +197,123 @@ const u = class u extends _ {
   disconnectedCallback() {
     window.removeEventListener("language-changed", this.boundLangHandler), this.stopAuto(), super.disconnectedCallback();
   }
-  updated(e) {
-    if (e.has("config")) {
-      const t = this.banners;
-      this.activeIndex >= t.length && (this.activeIndex = 0), this.startAuto();
+  updated(t) {
+    if (t.has("config")) {
+      const e = this.banners;
+      this.activeIndex >= e.length && (this.activeIndex = 0), this.startAuto();
     }
   }
   get banners() {
-    var e;
-    return O((e = this.config) == null ? void 0 : e.spb_banners);
+    var t;
+    return E((t = this.config) == null ? void 0 : t.spb_banners);
   }
   startAuto() {
-    var t;
-    if (this.stopAuto(), this.banners.length <= 1 || x()) return;
-    const e = Math.max(3e3, Number((t = this.config) == null ? void 0 : t.spb_interval) || 5e3);
-    this.autoTimer = window.setInterval(() => this.next(), e);
+    var e;
+    if (this.stopAuto(), this.banners.length <= 1 || m()) return;
+    const t = Math.max(3e3, Number((e = this.config) == null ? void 0 : e.spb_interval) || 5e3);
+    this.autoTimer = window.setInterval(() => this.next(), t);
   }
   stopAuto() {
     this.autoTimer && (window.clearInterval(this.autoTimer), this.autoTimer = 0);
   }
-  goTo(e) {
-    this.activeIndex = e, this.startAuto();
+  goTo(t) {
+    this.activeIndex = t, this.startAuto();
   }
   prev() {
-    const e = this.banners.length;
-    this.goTo((this.activeIndex - 1 + e) % e);
+    const t = this.banners.length;
+    this.goTo((this.activeIndex - 1 + t) % t);
   }
   next() {
     this.goTo((this.activeIndex + 1) % this.banners.length);
   }
-  renderSlide(e, t) {
-    const r = t === this.activeIndex;
-    return a`
+  renderSlide(t, e) {
+    const n = e === this.activeIndex;
+    return i`
       <div
-        class=${g({ "spb-slide": !0, "is-active": r })}
+        class=${f({ "spb-slide": !0, "is-active": n })}
         role="tabpanel"
-        aria-hidden=${r ? "false" : "true"}
+        aria-hidden=${n ? "false" : "true"}
       >
-        ${e.image ? a`<img class="spb-slide__bg" src=${e.image} alt="" loading=${t === 0 ? "eager" : "lazy"} decoding="async" />` : i}
-        <div class="spb-slide__overlay" style=${m({ "--spb-overlay": `${e.overlayOpacity / 100}` })}></div>
-        ${r ? w(t, a`<div class="spb-slide__content fs-fade-swap">
-              ${e.heading ? a`<h3 class="spb-slide__heading">${e.heading}</h3>` : i}
-              ${e.subheading ? a`<p class="spb-slide__sub">${e.subheading}</p>` : i}
-              ${e.ctaLabel && e.ctaLink ? a`<a
-                    class="spb-cta fs-tap"
-                    href=${e.ctaLink}
-                    target=${h(e.ctaLink) ? "_blank" : i}
-                    rel=${h(e.ctaLink) ? "noopener noreferrer" : i}
-                  >${e.ctaLabel}</a>` : i}
-            </div>`) : a`<div class="spb-slide__content">
-              ${e.heading ? a`<h3 class="spb-slide__heading">${e.heading}</h3>` : i}
-              ${e.subheading ? a`<p class="spb-slide__sub">${e.subheading}</p>` : i}
-              ${e.ctaLabel && e.ctaLink ? a`<a
-                    class="spb-cta fs-tap"
-                    href=${e.ctaLink}
-                    target=${h(e.ctaLink) ? "_blank" : i}
-                    rel=${h(e.ctaLink) ? "noopener noreferrer" : i}
-                  >${e.ctaLabel}</a>` : i}
+        ${t.image ? i`<img class="spb-slide__bg" src=${t.image} alt="" loading=${e === 0 ? "eager" : "lazy"} decoding="async" />` : a}
+        <div class="spb-slide__overlay" style=${b({ "--spb-overlay": `${t.overlayOpacity / 100}` })}></div>
+        ${n ? w(e, i`<div class="spb-slide__content fs-fade-swap">
+              ${t.heading ? i`<h3 class="spb-slide__heading">${t.heading}</h3>` : a}
+              ${t.subheading ? i`<p class="spb-slide__sub">${t.subheading}</p>` : a}
+              ${t.ctaLabel && t.ctaLink ? i`<a
+                    class="fs-btn fs-tap"
+                    href=${t.ctaLink}
+                    target=${h(t.ctaLink) ? "_blank" : a}
+                    rel=${h(t.ctaLink) ? "noopener noreferrer" : a}
+                  >${t.ctaLabel}</a>` : a}
+            </div>`) : i`<div class="spb-slide__content">
+              ${t.heading ? i`<h3 class="spb-slide__heading">${t.heading}</h3>` : a}
+              ${t.subheading ? i`<p class="spb-slide__sub">${t.subheading}</p>` : a}
+              ${t.ctaLabel && t.ctaLink ? i`<a
+                    class="fs-btn fs-tap"
+                    href=${t.ctaLink}
+                    target=${h(t.ctaLink) ? "_blank" : a}
+                    rel=${h(t.ctaLink) ? "noopener noreferrer" : a}
+                  >${t.ctaLabel}</a>` : a}
             </div>`}
       </div>
     `;
   }
   render() {
-    const e = this.config || {}, t = C(e, "spb_"), r = t.animate && !x(), s = d(e.spb_title), c = d(e.spb_desc), o = this.banners;
-    return o.length ? a`
+    const t = this.config || {}, e = X(t, "spb_"), n = e.animate && !m(), s = c(t.spb_title), o = c(t.spb_desc), l = this.banners;
+    return l.length ? i`
       <section
-        class=${g({ "fs-section": !0, "fs-animate": r })}
-        style=${m(j(t))}
-        aria-label=${s || n("بانرات ترويجية", "Promotional banners")}
+        class=${f({ "fs-section": !0, "fs-animate": n })}
+        style=${b(M(e))}
+        aria-label=${s || r("بانرات ترويجية", "Promotional banners")}
       >
         <div class="fs-container">
-          ${s || c ? a`<div class="fs-header">
-                ${s ? a`<h2 class="fs-title">${s}</h2>` : i}
-                ${c ? a`<p class="fs-desc">${c}</p>` : i}
-              </div>` : i}
+          ${s || o ? i`<div class="fs-header">
+                ${s ? i`<h2 class="fs-title">${s}</h2>` : a}
+                ${o ? i`<p class="fs-desc">${o}</p>` : a}
+              </div>` : a}
 
-          <div class="spb-carousel" role="region" aria-roledescription="carousel">
+          <div
+            class="spb-carousel"
+            role="region"
+            aria-roledescription="carousel"
+            @pointerdown=${this.onPointerDown}
+            @pointerup=${this.onPointerUp}
+            @pointercancel=${this.onPointerCancel}
+            @dragstart=${this.onDragStart}
+          >
             <div
               class="spb-track"
-              style=${m({ transform: `translateX(${-this.activeIndex * 100}%)` })}
+              style=${b({ transform: `translateX(${-this.activeIndex * 100}%)` })}
             >
-              ${o.map((v, l) => this.renderSlide(v, l))}
+              ${l.map((x, $) => this.renderSlide(x, $))}
             </div>
 
-            ${o.length > 1 ? a`
-                <button type="button" class="spb-nav spb-nav--prev fs-tap" aria-label=${n("السابق", "Previous")} @click=${() => this.prev()}>‹</button>
-                <button type="button" class="spb-nav spb-nav--next fs-tap" aria-label=${n("التالي", "Next")} @click=${() => this.next()}>›</button>
-              ` : i}
+            ${l.length > 1 ? i`
+                <button type="button" class="spb-nav spb-nav--prev fs-icon-btn fs-icon-btn--on-media fs-tap" aria-label=${r("السابق", "Previous")} @click=${() => this.prev()}>‹</button>
+                <button type="button" class="spb-nav spb-nav--next fs-icon-btn fs-icon-btn--on-media fs-tap" aria-label=${r("التالي", "Next")} @click=${() => this.next()}>›</button>
+              ` : a}
           </div>
 
-          ${o.length > 1 ? a`<div class="spb-dots" role="tablist">
-                ${o.map((v, l) => a`
-                  <button
-                    type="button"
-                    role="tab"
-                    class=${g({ "spb-dot": !0, "is-active": l === this.activeIndex })}
-                    aria-selected=${l === this.activeIndex ? "true" : "false"}
-                    aria-label=${`${l + 1}`}
-                    @click=${() => this.goTo(l)}
-                  ></button>
-                `)}
-              </div>` : i}
-
-          ${E({ config: e, prefix: "spb_" })}
+          ${P({ config: t, prefix: "spb_" })}
         </div>
       </section>
-    ` : a`<div class="fs-empty" role="status">
-        ${n(
+    ` : i`<div class="fs-empty" role="status">
+        ${r(
       "أضف بانرات ترويجية من إعدادات العنصر.",
       "Add promo banners in the element settings."
     )}
       </div>`;
   }
 };
-u.styles = [A, M];
-let p = u;
-$([
+u.styles = [T, z];
+let d = u;
+v([
   k({ type: Object })
-], p.prototype, "config");
-$([
+], d.prototype, "config");
+v([
   L()
-], p.prototype, "activeIndex");
-typeof p < "u" && p.registerSallaComponent("salla-scent-promo-banners");
+], d.prototype, "activeIndex");
+typeof d < "u" && d.registerSallaComponent("salla-scent-promo-banners");
 export {
-  p as default
+  d as default
 };

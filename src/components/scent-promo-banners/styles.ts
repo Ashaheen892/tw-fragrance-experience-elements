@@ -11,6 +11,14 @@ export const componentStyles = css`
     border-radius: var(--section-radius, 20px);
     border: 1px solid var(--border-color, #e6e0d6);
     box-shadow: 0 14px 34px rgba(90, 70, 40, 0.1);
+    touch-action: pan-y;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .spb-carousel:active {
+    cursor: grabbing;
   }
 
   .spb-track {
@@ -81,100 +89,11 @@ export const componentStyles = css`
     max-width: 32rem;
   }
 
-  .spb-cta {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.45rem;
-    min-height: 46px;
-    padding: 0.65rem 1.8rem;
-    border: 1.5px solid var(--accent-color, var(--fs-store-primary));
-    border-radius: 999px;
-    background: transparent;
-    color: var(--card-bg, #fff);
-    font: inherit;
-    font-size: 0.84rem;
-    font-weight: 800;
-    letter-spacing: 0.04em;
-    text-decoration: none;
-    cursor: pointer;
-    transition:
-      background 0.24s ease,
-      color 0.24s ease,
-      transform 0.24s ease,
-      box-shadow 0.24s ease;
-  }
-
-  .spb-cta:hover {
-    background: var(--accent-color, var(--fs-store-primary));
-    color: var(--button-color, #fff);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 24px rgba(90, 70, 40, 0.14);
-  }
-
-  .spb-dots {
-    display: flex;
-    justify-content: center;
-    gap: 0.65rem;
-    margin-top: 1rem;
-  }
-
-  .spb-dot {
-    width: 44px;
-    height: 44px;
-    border: none;
-    background: transparent;
-    padding: 0;
-    cursor: pointer;
-    display: grid;
-    place-items: center;
-  }
-
-  .spb-dot::after {
-    content: '';
-    width: 8px;
-    height: 8px;
-    border-radius: 999px;
-    border: 1.5px solid var(--accent-color, var(--fs-store-primary));
-    background: transparent;
-    transition: background 0.24s ease, transform 0.24s ease;
-  }
-
-  .spb-dot.is-active::after {
-    background: var(--accent-color, var(--fs-store-primary));
-    transform: scale(1.25);
-  }
-
   .spb-nav {
     position: absolute;
     top: 50%;
-    transform: translateY(-50%);
     z-index: 10;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.75rem;
-    height: 2.75rem;
-    min-width: 44px;
-    min-height: 44px;
-    border: 1.5px solid color-mix(in srgb, var(--card-bg, #fff) 35%, transparent);
-    border-radius: 50%;
-    background: color-mix(in srgb, var(--text-color, #1f1a14) 40%, transparent);
-    backdrop-filter: blur(4px);
-    color: var(--card-bg, #fff);
-    font-size: 1.1rem;
-    cursor: pointer;
-    transition:
-      background 0.24s ease,
-      border-color 0.24s ease,
-      transform 0.24s ease;
-    padding: 0;
-  }
-
-  .spb-nav:hover {
-    background: color-mix(in srgb, var(--text-color, #1f1a14) 65%, transparent);
-    border-color: var(--accent-color, var(--fs-store-primary));
-    transform: translateY(calc(-50% - 2px));
+    transform: translateY(-50%);
   }
 
   .spb-nav--prev {
@@ -185,32 +104,27 @@ export const componentStyles = css`
     inset-inline-end: 0.75rem;
   }
 
+  .spb-nav.fs-icon-btn--on-media:hover {
+    transform: translateY(calc(-50% - 1px));
+  }
+
   @media (max-width: 639px) {
     .spb-slide {
       min-height: 240px;
       aspect-ratio: 16 / 9;
-    }
-
-    .spb-nav {
-      width: 2.75rem;
-      height: 2.75rem;
-      font-size: 0.9rem;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .spb-track,
     .spb-slide__bg,
-    .spb-cta,
-    .spb-nav,
-    .spb-dot::after {
+    .spb-nav {
       transition: none;
     }
 
     .spb-slide.is-active .spb-slide__bg,
-    .spb-cta:hover,
-    .spb-nav:hover {
-      transform: none;
+    .spb-nav.fs-icon-btn--on-media:hover {
+      transform: translateY(-50%);
     }
   }
 `;

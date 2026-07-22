@@ -3,6 +3,7 @@ import {
   localizedString,
   type LocaleValue,
 } from './localizedString.js';
+import { ensureFsThemeWatch, fsThemeVars } from './fsTheme.js';
 
 export type ConfigValue = Record<string, unknown> | null | undefined;
 
@@ -343,7 +344,6 @@ export interface SectionTheme {
   /** Standard Salla editor controls (mirror the default element editor). */
   noBottomMargin: boolean;
   hasContainer: boolean;
-  bgOverride: string;
 }
 
 export function readSectionTheme(
@@ -352,17 +352,16 @@ export function readSectionTheme(
   defaults?: Partial<SectionTheme>
 ): SectionTheme {
   const c = config || {};
+  // Colors come from the store theme (primary + light/dark), not merchant pickers.
   return {
-    bg: String(c[`${prefix}bg`] ?? defaults?.bg ?? '#f6f4f1'),
-    text: String(c[`${prefix}text`] ?? defaults?.text ?? '#1f1a14'),
-    muted: String(c[`${prefix}muted`] ?? defaults?.muted ?? '#6e6558'),
-    accent: String(c[`${prefix}accent`] ?? defaults?.accent ?? '#9a7b4f'),
-    card: String(c[`${prefix}card`] ?? defaults?.card ?? '#ffffff'),
-    border: String(c[`${prefix}border`] ?? defaults?.border ?? '#e6e0d6'),
-    buttonBg: String(c[`${prefix}button_bg`] ?? defaults?.buttonBg ?? '#9a7b4f'),
-    buttonColor: String(
-      c[`${prefix}button_color`] ?? defaults?.buttonColor ?? '#ffffff'
-    ),
+    bg: 'transparent',
+    text: '#000000',
+    muted: '#666666',
+    accent: 'var(--color-primary, var(--primary-color, var(--color-main, #64748b)))',
+    card: 'var(--color-white, var(--bg-color, #ffffff))',
+    border: 'var(--color-border, #e5e7eb)',
+    buttonBg: 'var(--color-primary, var(--primary-color, var(--color-main, #64748b)))',
+    buttonColor: '#ffffff',
     radius: `${getUnitValue(c[`${prefix}radius`], defaults?.radius ? Number(String(defaults.radius).replace('px', '')) : 20)}px`,
     spaceDesktop: getUnitValue(
       c[`${prefix}space_desktop`],
@@ -374,33 +373,21 @@ export function readSectionTheme(
     ),
     animate: isTruthy(c[`${prefix}animate`], defaults?.animate ?? true),
     fullWidth: isTruthy(c[`${prefix}full_width`], defaults?.fullWidth ?? false),
-    noBottomMargin: false, // keep default bottom spacing — no merchant toggle
-    hasContainer: true, // always contained — no merchant toggle
-    bgOverride: isTruthy(c.add_component_background_color, false)
-      ? String(c.component_background_color ?? '').trim()
-      : '',
+    noBottomMargin: false,
+    hasContainer: true,
   };
 }
 
 export function themeStyleMap(theme: SectionTheme): Record<string, string> {
   const useContainer = theme.hasContainer !== false;
+  ensureFsThemeWatch();
   return {
-    '--section-bg': theme.bgOverride || theme.bg || 'transparent',
-    '--text-color': theme.text,
-    '--muted-color': theme.muted,
-    '--accent-color': theme.accent || 'var(--color-primary, var(--primary-color, #64748b))', /* raed-bridge */
-    '--card-bg': theme.card,
-    '--border-color': theme.border,
-    '--button-bg': theme.buttonBg || theme.accent || 'var(--color-primary, var(--primary-color, #64748b))',
-    '--button-color': theme.buttonColor,
+    ...fsThemeVars(),
     '--section-radius': theme.radius,
     '--space-desktop': `${theme.spaceDesktop}px`,
     '--space-mobile': `${theme.spaceMobile}px`,
-    // Standard editor controls (default element editor parity):
-    // notmrb → remove the section's bottom spacing.
     '--space-desktop-bottom': theme.noBottomMargin ? '0px' : `${theme.spaceDesktop}px`,
     '--space-mobile-bottom': theme.noBottomMargin ? '0px' : `${theme.spaceMobile}px`,
-    // has_container → constrain width & side padding, otherwise go edge-to-edge.
     '--section-container-max': useContainer ? '1440px' : 'none',
     '--section-container-pad': useContainer ? '16px' : '0px',
     '--section-container-pad-sm': useContainer ? '12px' : '0px',

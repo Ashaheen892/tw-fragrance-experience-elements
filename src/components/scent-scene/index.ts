@@ -130,7 +130,7 @@ export default class ScentScene extends LitElement {
           ${scene.link
             ? html`<div class="ssc-stage__actions">
                 <a
-                  class="fs-btn"
+                  class="fs-btn fs-tap"
                   href=${scene.link}
                   target=${external ? '_blank' : '_self'}
                   rel=${external ? 'noopener noreferrer' : nothing}

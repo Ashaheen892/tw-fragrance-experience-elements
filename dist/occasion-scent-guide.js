@@ -2,7 +2,7 @@ import { css as u, LitElement as x, nothing as o, html as s } from "lit";
 import { property as _, state as $ } from "lit/decorators.js";
 import { classMap as v } from "lit/directives/class-map.js";
 import { styleMap as p } from "lit/directives/style-map.js";
-import { n as y, e as k, l as c, a as w, s as C, t as i, i as z, r as I, p as P, b as L, c as E } from "./commerceOutcome-CkVkQjOd.js";
+import { n as y, e as k, l as c, a as w, s as C, t as i, i as z, r as I, p as P, b as L, c as E } from "./commerceOutcome-CCLcV5SW.js";
 const O = u`
   :host {
     direction: inherit;
@@ -91,7 +91,7 @@ const O = u`
   .osg-card__desc {
     margin: 0;
     font-size: 0.8rem;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
     line-height: 1.55;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -116,7 +116,7 @@ const O = u`
 
   .osg-panel__desc {
     margin: 0;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
     line-height: 1.7;
     font-size: 0.92rem;
   }
@@ -241,7 +241,7 @@ const m = class m extends x {
               <p class="osg-profile__text">${e.scentProfile}</p>
             </div>` : o}
         ${e.link ? s`<a
-              class="fs-btn"
+              class="fs-btn fs-tap"
               href=${e.link}
               target=${r ? "_blank" : "_self"}
               rel=${r ? "noopener noreferrer" : o}

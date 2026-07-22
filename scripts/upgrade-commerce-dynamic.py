@@ -72,10 +72,7 @@ BASE = Path("/Users/ahmedshaheen/Desktop/ثيمات  سلة")
 
 SOURCE_OPTIONS = [
     {"key": "latest", "label": "أحدث المنتجات", "value": "latest"},
-    {"key": "sales", "label": "الأكثر مبيعًا", "value": "sales"},
     {"key": "selected", "label": "منتجات مختارة", "value": "selected"},
-    {"key": "categories", "label": "منتجات من تصنيف", "value": "categories"},
-    {"key": "brands", "label": "الماركات التجارية", "value": "brands"},
 ]
 
 LINK_SOURCES = [

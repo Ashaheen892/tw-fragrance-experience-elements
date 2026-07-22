@@ -103,7 +103,7 @@ export default class OccasionScentGuide extends LitElement {
           : nothing}
         ${occasion.link
           ? html`<a
-              class="fs-btn"
+              class="fs-btn fs-tap"
               href=${occasion.link}
               target=${external ? '_blank' : '_self'}
               rel=${external ? 'noopener noreferrer' : nothing}

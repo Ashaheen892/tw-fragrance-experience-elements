@@ -3,7 +3,7 @@ import { property as y, state as $ } from "lit/decorators.js";
 import { classMap as f } from "lit/directives/class-map.js";
 import { keyed as w } from "lit/directives/keyed.js";
 import { styleMap as m } from "lit/directives/style-map.js";
-import { n as k, l as c, f as S, a as z, h as U, j as u, s as C, t as l, r as D, p as I, b as h, c as L } from "./commerceOutcome-CkVkQjOd.js";
+import { n as k, l as c, f as S, a as z, h as U, j as u, s as C, t as l, r as D, p as I, b as h, c as L } from "./commerceOutcome-CCLcV5SW.js";
 const j = q`
   :host {
     direction: inherit;
@@ -64,7 +64,7 @@ const j = q`
     border-radius: calc(var(--section-radius, 20px) * 0.85);
     border: 1.5px solid color-mix(in srgb, var(--border-color, #e6e0d6) 82%, transparent);
     background: var(--card-bg, #fff);
-    color: var(--text-color, #1f1a14);
+    color: var(--text-color, #000000);
     text-align: start;
     cursor: pointer;
     box-shadow: 0 4px 14px rgba(90, 70, 40, 0.05);
@@ -138,7 +138,7 @@ const j = q`
   .pql-step__short {
     margin: 0.15rem 0 0;
     font-size: 0.76rem;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
     line-height: 1.4;
   }
 
@@ -182,7 +182,7 @@ const j = q`
 
   .pql-detail__body {
     margin: 0 0 0.85rem;
-    color: var(--text-color, #1f1a14);
+    color: var(--text-color, #000000);
     font-size: 0.92rem;
     line-height: 1.68;
   }
@@ -208,7 +208,7 @@ const j = q`
     margin: 0;
     font-size: 0.88rem;
     line-height: 1.6;
-    color: var(--text-color, #1f1a14);
+    color: var(--text-color, #000000);
   }
 
   .pql-cert {
@@ -224,20 +224,20 @@ const j = q`
     font-weight: 800;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
   }
 
   .pql-cert__text {
     margin: 0;
     font-size: 0.84rem;
     line-height: 1.55;
-    color: var(--text-color, #1f1a14);
+    color: var(--text-color, #000000);
   }
 
   .pql-empty-hint {
     margin-top: 0.35rem;
     font-size: 0.82rem;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
   }
 
   @media (prefers-reduced-motion: reduce) {

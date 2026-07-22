@@ -60,7 +60,7 @@ export const componentStyles = css`
     font-weight: 800;
     letter-spacing: 0.05em;
     text-transform: uppercase;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
     pointer-events: none;
   }
 
@@ -129,7 +129,7 @@ export const componentStyles = css`
     font-weight: 800;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
   }
 
   @media (min-width: 960px) {

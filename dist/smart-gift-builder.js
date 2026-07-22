@@ -1,10 +1,10 @@
-import { css as E, LitElement as R, nothing as p, html as a } from "lit";
+import { css as R, LitElement as E, nothing as p, html as a } from "lit";
 import { property as O, state as w } from "lit/decorators.js";
 import { classMap as h } from "lit/directives/class-map.js";
 import { keyed as z } from "lit/directives/keyed.js";
 import { styleMap as _ } from "lit/directives/style-map.js";
-import { n as v, l, t as n, s as T, c as B, r as P, p as L, b as M } from "./commerceOutcome-CkVkQjOd.js";
-const j = E`
+import { n as v, l, t as n, s as T, c as B, r as P, p as L, b as M } from "./commerceOutcome-CCLcV5SW.js";
+const j = R`
   .sgb-shell {
     display: grid;
     gap: clamp(1rem, 2.5vw, 1.35rem);
@@ -100,7 +100,7 @@ const j = E`
   .sgb-card__range {
     margin: 0;
     font-size: 0.74rem;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
     line-height: 1.45;
   }
 
@@ -164,7 +164,7 @@ const j = E`
   .sgb-option__range {
     margin: 0;
     font-size: 0.8rem;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
   }
 
   .sgb-step__empty {
@@ -172,7 +172,7 @@ const j = E`
     border-radius: calc(var(--section-radius, 20px) * 0.7);
     border: 1px dashed var(--border-color, #e6e0d6);
     text-align: center;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
     font-size: 0.88rem;
   }
 
@@ -301,7 +301,7 @@ function S(r) {
     back: l(r.sgb_back_btn) || n("السابق", "Back"),
     see: l(r.sgb_see_btn) || n("اعرض الهدية", "See your gift"),
     reset: l(r.sgb_reset_btn) || n("ابدأ من جديد", "Start over"),
-    ctaLabel: l(r.sgb_cta_label) || n("استكشف التوصية", "Explore recommendation")
+    ctaLabel: l(r.sgb_cta_label) || n("تسوق الآن", "Shop now")
   };
 }
 function H(r, s) {
@@ -361,7 +361,7 @@ var Q = Object.defineProperty, x = (r, s, e, t) => {
     (u = r[d]) && (o = u(s, e, o) || o);
   return o && Q(s, e, o), o;
 };
-const k = class k extends R {
+const k = class k extends E {
   constructor() {
     super(...arguments), this.config = {}, this.stepIndex = 0, this.showResult = !1, this.selections = I(), this.boundLangHandler = () => this.requestUpdate();
   }
@@ -556,6 +556,7 @@ const k = class k extends R {
         ${B({
       config: s,
       prefix: "sgb_",
+      ready: !0,
       matchTags: [
         this.selections.personId,
         this.selections.occasionId,

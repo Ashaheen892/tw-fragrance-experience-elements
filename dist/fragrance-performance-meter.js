@@ -2,7 +2,7 @@ import { css as b, LitElement as $, html as i, nothing as f } from "lit";
 import { property as y } from "lit/decorators.js";
 import { classMap as x } from "lit/directives/class-map.js";
 import { styleMap as c } from "lit/directives/style-map.js";
-import { n as w, l as p, g as S, d as k, f as L, s as C, p as g, r as M, b as E, t as u, c as R } from "./commerceOutcome-CkVkQjOd.js";
+import { n as w, l as p, g as S, d as k, f as L, s as C, p as g, r as M, b as E, t as u, c as R } from "./commerceOutcome-CCLcV5SW.js";
 const j = b`
   .fpm-panel {
     max-width: 880px;
@@ -31,7 +31,7 @@ const j = b`
     font-weight: 800;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
   }
 
   .fpm-bar__value {
@@ -110,7 +110,7 @@ const j = b`
     margin: 0;
     font-size: 0.82rem;
     font-weight: 800;
-    color: var(--text-color, #1f1a14);
+    color: var(--text-color, #000000);
     line-height: 1.35;
   }
 

@@ -13,7 +13,7 @@ export const componentStyles = css`
     font-size: 0.78rem;
     font-weight: 800;
     letter-spacing: 0.04em;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
     text-align: center;
   }
 
@@ -38,7 +38,7 @@ export const componentStyles = css`
     border: 1.5px solid var(--border-color, #e6e0d6);
     border-radius: calc(var(--section-radius, 20px) * 0.72);
     background: var(--card-bg, #fff);
-    color: var(--text-color, #1f1a14);
+    color: var(--text-color, #000000);
     font: inherit;
     text-align: center;
     cursor: pointer;
@@ -108,7 +108,7 @@ export const componentStyles = css`
   .spf-card__desc {
     margin: 0;
     font-size: 0.76rem;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
     line-height: 1.45;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -153,7 +153,7 @@ export const componentStyles = css`
 
   .spf-result__desc {
     margin: 0;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
     font-size: 0.92rem;
     line-height: 1.65;
   }

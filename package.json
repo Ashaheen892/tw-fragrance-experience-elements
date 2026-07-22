@@ -5,15 +5,21 @@
     "type": "module",
     "scripts": {
         "dev": "node scripts/clear-chrome-cache.mjs && node --import ./scripts/ignore-tty-eio.mjs ./node_modules/vite/bin/vite.js",
+        "prebuild": "python3 scripts/normalize_uuid_keys.py",
         "build": "vite build",
         "preview": "node scripts/clear-chrome-cache.mjs && node --import ./scripts/ignore-tty-eio.mjs ./node_modules/vite/bin/vite.js preview",
         "generate:bundle": "python3 scripts/generate_bundle.py",
         "capture:webps": "node scripts/capture-element-screenshots.mjs",
+        "capture:animated": "node scripts/capture-element-animated-webps.mjs",
+        "upload:webps": "node scripts/upload-webps-and-update-bundle.mjs",
+        "build:guides": "node scripts/build-notion-guides.mjs",
         "cache:clear": "node scripts/clear-chrome-cache.mjs"
     },
     "devDependencies": {
         "@salla.sa/twilight-bundles": "^0.1.0",
+        "gifenc": "^1.0.3",
         "playwright": "^1.61.1",
+        "pngjs": "^7.0.0",
         "sharp": "^0.35.3",
         "typescript": "^5.6.3",
         "vite": "^5.0.0"

@@ -440,6 +440,7 @@ export default class ScentPassport extends LitElement {
         ${renderCommerceOutcome({
           config: c,
           prefix: 'spa_',
+          ready: true,
           matchTags: [
             this.selections.characterId,
             this.selections.strengthId,

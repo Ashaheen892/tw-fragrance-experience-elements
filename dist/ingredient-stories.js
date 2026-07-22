@@ -3,7 +3,7 @@ import { property as x, state as w } from "lit/decorators.js";
 import { classMap as f } from "lit/directives/class-map.js";
 import { keyed as k } from "lit/directives/keyed.js";
 import { styleMap as h } from "lit/directives/style-map.js";
-import { n as C, l as i, a as I, g as z, s as S, t as c, r as L, p as T, b as M, c as O } from "./commerceOutcome-CkVkQjOd.js";
+import { n as C, l as i, a as I, g as z, s as S, t as c, r as L, p as T, b as M, c as O } from "./commerceOutcome-CCLcV5SW.js";
 const P = y`
   :host {
     direction: inherit;
@@ -32,7 +32,7 @@ const P = y`
     border-radius: calc(var(--section-radius, 20px) * 0.85);
     border: 1.5px solid color-mix(in srgb, var(--border-color, #e6e0d6) 82%, transparent);
     background: var(--card-bg, #fff);
-    color: var(--text-color, #1f1a14);
+    color: var(--text-color, #000000);
     text-align: start;
     cursor: pointer;
     box-shadow: 0 4px 14px rgba(90, 70, 40, 0.05);
@@ -99,7 +99,7 @@ const P = y`
   .igs-card__teaser {
     margin: 0;
     font-size: 0.78rem;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
     line-height: 1.55;
     display: -webkit-box;
     -webkit-line-clamp: 2;

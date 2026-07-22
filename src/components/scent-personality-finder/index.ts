@@ -113,7 +113,7 @@ export default class ScentPersonalityFinder extends LitElement {
         ${item.link
           ? html`<div class="spf-result__actions">
               <a
-                class="fs-btn"
+                class="fs-btn fs-tap"
                 href=${item.link}
                 target=${external ? '_blank' : '_self'}
                 rel=${external ? 'noopener noreferrer' : nothing}

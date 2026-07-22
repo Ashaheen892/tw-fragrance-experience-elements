@@ -3,7 +3,7 @@ import { property as w, state as k } from "lit/decorators.js";
 import { classMap as m } from "lit/directives/class-map.js";
 import { keyed as C } from "lit/directives/keyed.js";
 import { styleMap as d } from "lit/directives/style-map.js";
-import { n as S, e as z, a as h, k as I, l as p, s as L, t as i, i as A, p as b, r as E, b as u, c as M } from "./commerceOutcome-CkVkQjOd.js";
+import { n as S, e as z, a as h, k as I, l as p, s as L, t as i, i as A, p as b, r as E, b as u, c as M } from "./commerceOutcome-CCLcV5SW.js";
 const T = $`
   .ssc-shell {
     display: grid;
@@ -133,7 +133,7 @@ const T = $`
     border-radius: calc(var(--section-radius, 20px) * 0.72);
     border: 1.5px solid color-mix(in srgb, var(--border-color, #e6e0d6) 82%, transparent);
     background: var(--card-bg, #fff);
-    color: var(--text-color, #1f1a14);
+    color: var(--text-color, #000000);
     text-align: start;
     cursor: pointer;
     box-shadow: 0 4px 14px rgba(90, 70, 40, 0.05);
@@ -302,7 +302,7 @@ const v = class v extends y {
               </div>` : c}
           ${s.link ? r`<div class="ssc-stage__actions">
                 <a
-                  class="fs-btn"
+                  class="fs-btn fs-tap"
                   href=${s.link}
                   target=${e ? "_blank" : "_self"}
                   rel=${e ? "noopener noreferrer" : c}

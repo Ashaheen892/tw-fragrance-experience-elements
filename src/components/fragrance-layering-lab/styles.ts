@@ -69,7 +69,7 @@ export const componentStyles = css`
   }
 
   .fll-op {
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
     font-weight: 800;
   }
 
@@ -96,14 +96,14 @@ export const componentStyles = css`
     font-size: 0.72rem;
     font-weight: 800;
     letter-spacing: 0.03em;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
   }
 
   .fll-meta__value {
     margin: 0;
     font-size: 0.84rem;
     line-height: 1.55;
-    color: var(--text-color, #1f1a14);
+    color: var(--text-color, #000000);
   }
 
   @media (prefers-reduced-motion: reduce) {

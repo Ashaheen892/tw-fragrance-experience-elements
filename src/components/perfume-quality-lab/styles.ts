@@ -60,7 +60,7 @@ export const componentStyles = css`
     border-radius: calc(var(--section-radius, 20px) * 0.85);
     border: 1.5px solid color-mix(in srgb, var(--border-color, #e6e0d6) 82%, transparent);
     background: var(--card-bg, #fff);
-    color: var(--text-color, #1f1a14);
+    color: var(--text-color, #000000);
     text-align: start;
     cursor: pointer;
     box-shadow: 0 4px 14px rgba(90, 70, 40, 0.05);
@@ -134,7 +134,7 @@ export const componentStyles = css`
   .pql-step__short {
     margin: 0.15rem 0 0;
     font-size: 0.76rem;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
     line-height: 1.4;
   }
 
@@ -178,7 +178,7 @@ export const componentStyles = css`
 
   .pql-detail__body {
     margin: 0 0 0.85rem;
-    color: var(--text-color, #1f1a14);
+    color: var(--text-color, #000000);
     font-size: 0.92rem;
     line-height: 1.68;
   }
@@ -204,7 +204,7 @@ export const componentStyles = css`
     margin: 0;
     font-size: 0.88rem;
     line-height: 1.6;
-    color: var(--text-color, #1f1a14);
+    color: var(--text-color, #000000);
   }
 
   .pql-cert {
@@ -220,20 +220,20 @@ export const componentStyles = css`
     font-weight: 800;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
   }
 
   .pql-cert__text {
     margin: 0;
     font-size: 0.84rem;
     line-height: 1.55;
-    color: var(--text-color, #1f1a14);
+    color: var(--text-color, #000000);
   }
 
   .pql-empty-hint {
     margin-top: 0.35rem;
     font-size: 0.82rem;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
   }
 
   @media (prefers-reduced-motion: reduce) {

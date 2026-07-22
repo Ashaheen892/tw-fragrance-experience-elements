@@ -3,7 +3,7 @@ import { property as w, state as k } from "lit/decorators.js";
 import { classMap as b } from "lit/directives/class-map.js";
 import { keyed as L } from "lit/directives/keyed.js";
 import { styleMap as v } from "lit/directives/style-map.js";
-import { n as P, l as o, d as g, f as u, s as S, t as n, r as C, p as I, b as z, c as M } from "./commerceOutcome-CkVkQjOd.js";
+import { n as P, l as o, d as g, f as u, s as S, t as n, r as C, p as I, b as z, c as M } from "./commerceOutcome-CCLcV5SW.js";
 const A = $`
   :host {
     direction: inherit;
@@ -64,7 +64,7 @@ const A = $`
     font-weight: 800;
     letter-spacing: 0.05em;
     text-transform: uppercase;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
     pointer-events: none;
   }
 
@@ -133,7 +133,7 @@ const A = $`
     font-weight: 800;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
   }
 
   @media (min-width: 960px) {

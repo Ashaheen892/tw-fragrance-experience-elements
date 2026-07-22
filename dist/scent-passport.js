@@ -1,9 +1,9 @@
-import { css as T, LitElement as A, html as i, nothing as d } from "lit";
-import { property as E, state as y } from "lit/decorators.js";
-import { classMap as f } from "lit/directives/class-map.js";
+import { css as T, LitElement as A, html as o, nothing as d } from "lit";
+import { property as E, state as $ } from "lit/decorators.js";
+import { classMap as g } from "lit/directives/class-map.js";
 import { keyed as z } from "lit/directives/keyed.js";
 import { styleMap as v } from "lit/directives/style-map.js";
-import { n as _, a as I, l as c, t as a, k as j, s as L, m as R, c as P, r as Y, p as O, b as B } from "./commerceOutcome-CkVkQjOd.js";
+import { n as _, a as I, l as c, t as a, k as j, s as L, m as R, c as P, r as Y, p as O, b as B } from "./commerceOutcome-CCLcV5SW.js";
 const M = T`
   .spa-shell {
     display: grid;
@@ -22,39 +22,52 @@ const M = T`
     font-size: clamp(1.05rem, 2.2vw, 1.25rem);
     font-weight: 800;
     text-align: center;
+    color: var(--text-color, #000000);
+  }
+
+  .spa-step .fs-coach {
+    justify-content: center;
+    text-align: start;
+    max-width: 36rem;
+    margin-inline: auto;
+    width: 100%;
   }
 
   .spa-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.65rem;
+    gap: 0.7rem;
   }
 
   @media (min-width: 640px) {
     .spa-grid {
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 0.75rem;
+      gap: 0.85rem;
     }
   }
 
+  /* Card chips (wear times / notes) — not pill buttons */
   .spa-chip {
     display: grid;
-    gap: 0.35rem;
-    min-height: 96px;
-    padding: 0.85rem 0.75rem;
+    align-content: center;
+    justify-items: center;
+    gap: 0.45rem;
+    min-height: 104px;
+    padding: 1rem 0.85rem;
     border: 1.5px solid var(--border-color, #e6e0d6);
     border-radius: calc(var(--section-radius, 20px) * 0.72);
-    background: var(--card-bg, #fff);
-    color: var(--text-color, #1f1a14);
+    background: var(--fs-surface, var(--card-bg, #ffffff));
+    color: var(--text-color, #000000);
     font: inherit;
     text-align: center;
     cursor: pointer;
-    box-shadow: 0 4px 14px rgba(90, 70, 40, 0.05);
+    box-shadow: 0 4px 14px color-mix(in srgb, var(--accent-color, var(--fs-store-primary)) 8%, transparent);
     transition:
       transform 0.22s ease,
       border-color 0.22s ease,
       box-shadow 0.22s ease,
-      background 0.22s ease;
+      background 0.22s ease,
+      color 0.22s ease;
   }
 
   .spa-chip:hover {
@@ -64,23 +77,23 @@ const M = T`
       var(--item-color, var(--accent-color, var(--fs-store-primary))) 42%,
       var(--border-color, #e6e0d6)
     );
-    box-shadow: 0 10px 24px rgba(90, 70, 40, 0.09);
+    box-shadow: 0 10px 24px color-mix(in srgb, var(--accent-color, var(--fs-store-primary)) 14%, transparent);
   }
 
   .spa-chip.is-active {
-    border-color: var(--item-color, var(--accent-color, var(--fs-store-primary)));
+    border-color: var(--item-color, var(--button-bg, var(--fs-store-primary)));
     background: color-mix(
       in srgb,
-      var(--item-color, var(--accent-color, var(--fs-store-primary))) 9%,
-      var(--card-bg, #fff)
+      var(--item-color, var(--button-bg, var(--fs-store-primary))) 14%,
+      var(--fs-surface, var(--card-bg, #ffffff))
     );
     box-shadow:
       0 0 0 3px color-mix(
         in srgb,
-        var(--item-color, var(--accent-color, var(--fs-store-primary))) 18%,
+        var(--item-color, var(--button-bg, var(--fs-store-primary))) 20%,
         transparent
       ),
-      0 12px 28px rgba(90, 70, 40, 0.1);
+      0 12px 28px color-mix(in srgb, var(--accent-color, var(--fs-store-primary)) 16%, transparent);
   }
 
   .spa-chip:active {
@@ -88,16 +101,25 @@ const M = T`
   }
 
   .spa-chip__icon {
-    width: 2rem;
-    height: 2rem;
+    width: 2.35rem;
+    height: 2.35rem;
     margin-inline: auto;
     display: grid;
     place-items: center;
     border-radius: 50%;
-    background: color-mix(in srgb, var(--item-color, var(--accent-color, var(--fs-store-primary))) 14%, #fff);
+    background: color-mix(
+      in srgb,
+      var(--item-color, var(--accent-color, var(--fs-store-primary))) 16%,
+      var(--card-bg, #ffffff)
+    );
     color: var(--item-color, var(--accent-color, var(--fs-store-primary)));
-    font-size: 1rem;
+    font-size: 1.05rem;
     overflow: hidden;
+  }
+
+  .spa-chip.is-active .spa-chip__icon {
+    background: var(--item-color, var(--button-bg, var(--fs-store-primary)));
+    color: #ffffff;
   }
 
   .spa-chip__icon img {
@@ -107,9 +129,34 @@ const M = T`
   }
 
   .spa-chip__name {
-    font-size: 0.86rem;
+    font-size: 0.9rem;
     font-weight: 800;
     line-height: 1.35;
+    color: inherit;
+  }
+
+  :host([data-fs-theme='dark']) .spa-chip {
+    background: var(--fs-surface, #0a0a0a);
+    border-color: rgba(255, 255, 255, 0.14);
+    color: #ffffff;
+  }
+
+  :host([data-fs-theme='dark']) .spa-chip.is-active {
+    background: color-mix(
+      in srgb,
+      var(--item-color, var(--button-bg, var(--fs-store-primary))) 22%,
+      var(--fs-surface, #0a0a0a)
+    );
+    border-color: var(--item-color, var(--button-bg, var(--fs-store-primary)));
+    color: #ffffff;
+  }
+
+  :host([data-fs-theme='dark']) .spa-chip__icon {
+    background: color-mix(
+      in srgb,
+      var(--item-color, var(--accent-color, var(--fs-store-primary))) 22%,
+      #141414
+    );
   }
 
   .spa-list {
@@ -123,15 +170,22 @@ const M = T`
     padding: 0.85rem 1rem;
     border: 1.5px solid var(--border-color, #e6e0d6);
     border-radius: calc(var(--section-radius, 20px) * 0.72);
-    background: var(--card-bg, #fff);
+    background: var(--fs-surface, var(--card-bg, #ffffff));
+    color: var(--text-color, #000000);
     text-align: start;
     cursor: pointer;
-    box-shadow: 0 4px 14px rgba(90, 70, 40, 0.05);
+    box-shadow: 0 4px 14px color-mix(in srgb, var(--accent-color, var(--fs-store-primary)) 8%, transparent);
     transition:
       transform 0.22s ease,
       border-color 0.22s ease,
       box-shadow 0.22s ease,
       background 0.22s ease;
+  }
+
+  :host([data-fs-theme='dark']) .spa-option {
+    background: var(--fs-surface, #0a0a0a);
+    border-color: rgba(255, 255, 255, 0.14);
+    color: #ffffff;
   }
 
   .spa-option:hover {
@@ -145,19 +199,33 @@ const M = T`
   }
 
   .spa-option.is-active {
-    border-color: var(--item-color, var(--accent-color, var(--fs-store-primary)));
+    border-color: var(--item-color, var(--button-bg, var(--fs-store-primary)));
     background: color-mix(
       in srgb,
-      var(--item-color, var(--accent-color, var(--fs-store-primary))) 9%,
-      var(--card-bg, #fff)
+      var(--item-color, var(--button-bg, var(--fs-store-primary))) 14%,
+      var(--fs-surface, var(--card-bg, #ffffff))
     );
     box-shadow:
       0 0 0 3px color-mix(
         in srgb,
-        var(--item-color, var(--accent-color, var(--fs-store-primary))) 18%,
+        var(--item-color, var(--button-bg, var(--fs-store-primary))) 20%,
         transparent
       ),
-      0 12px 28px rgba(90, 70, 40, 0.1);
+      0 12px 28px color-mix(in srgb, var(--accent-color, var(--fs-store-primary)) 16%, transparent);
+  }
+
+  :host([data-fs-theme='dark']) .spa-option.is-active {
+    background: color-mix(
+      in srgb,
+      var(--item-color, var(--button-bg, var(--fs-store-primary))) 22%,
+      var(--fs-surface, #0a0a0a)
+    );
+    border-color: var(--item-color, var(--button-bg, var(--fs-store-primary)));
+    color: #ffffff;
+  }
+
+  :host([data-fs-theme='dark']) .spa-option__desc {
+    color: rgba(255, 255, 255, 0.72);
   }
 
   .spa-option:active {
@@ -172,7 +240,7 @@ const M = T`
   .spa-option__desc {
     margin: 0;
     font-size: 0.8rem;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
     line-height: 1.55;
   }
 
@@ -181,7 +249,7 @@ const M = T`
     border-radius: calc(var(--section-radius, 20px) * 0.7);
     border: 1px dashed var(--border-color, #e6e0d6);
     text-align: center;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
     font-size: 0.88rem;
   }
 
@@ -263,7 +331,7 @@ const M = T`
   .spa-passport__holder {
     margin: 0 0 1rem;
     font-size: 0.82rem;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
   }
 
   .spa-passport__grid {
@@ -297,7 +365,7 @@ const M = T`
     margin: 0.85rem 0 0;
     padding-top: 0.85rem;
     border-top: 1px dashed color-mix(in srgb, var(--passport-accent, var(--accent-color, var(--fs-store-primary))) 25%, var(--border-color, #e6e0d6));
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
     line-height: 1.7;
     font-size: 0.92rem;
   }
@@ -323,21 +391,21 @@ const M = T`
     }
   }
 `;
-function W(r) {
-  if (Array.isArray(r))
-    return r.map((e) => {
+function W(t) {
+  if (Array.isArray(t))
+    return t.map((e) => {
       if (typeof e == "string") return e.trim();
       if (e && typeof e == "object") {
-        const t = e;
-        return String(t.id ?? t.value ?? t.key ?? "").trim();
+        const r = e;
+        return String(r.id ?? r.value ?? r.key ?? "").trim();
       }
       return "";
     }).filter(Boolean);
-  const s = String(r ?? "").trim();
+  const s = String(t ?? "").trim();
   return s ? s.split(/[,،|/]/).map((e) => e.trim()).filter(Boolean) : [];
 }
-function S(r) {
-  return _(r).map((s, e) => ({
+function S(t) {
+  return _(t).map((s, e) => ({
     id: String(s.id ?? s.note_id ?? "").trim() || `note-${e + 1}`,
     name: c(s.name),
     color: String(s.color ?? "").trim(),
@@ -345,25 +413,25 @@ function S(r) {
     image: I(s.image) || I(s.icon)
   })).filter((s) => s.name);
 }
-function K(r) {
-  return _(r).map((s, e) => {
-    const t = String(s.value ?? s.id ?? s.strength_id ?? "").trim();
+function K(t) {
+  return _(t).map((s, e) => {
+    const r = String(s.value ?? s.id ?? s.strength_id ?? "").trim();
     return {
-      id: String(s.id ?? s.strength_id ?? t).trim() || `strength-${e + 1}`,
+      id: String(s.id ?? s.strength_id ?? r).trim() || `strength-${e + 1}`,
       name: c(s.name),
       desc: c(s.desc),
-      value: t || `strength-${e + 1}`
+      value: r || `strength-${e + 1}`
     };
   }).filter((s) => s.name);
 }
-function H(r) {
-  return _(r).map((s, e) => ({
+function H(t) {
+  return _(t).map((s, e) => ({
     id: String(s.id ?? s.time_id ?? "").trim() || `time-${e + 1}`,
     name: c(s.name)
   })).filter((s) => s.name);
 }
-function U(r) {
-  return _(r).map((s, e) => ({
+function U(t) {
+  return _(t).map((s, e) => ({
     id: String(s.id ?? s.character_id ?? "").trim() || `character-${e + 1}`,
     name: c(s.name),
     desc: c(s.desc),
@@ -371,41 +439,41 @@ function U(r) {
     icon: String(s.icon ?? "").trim()
   })).filter((s) => s.name);
 }
-function q(r) {
-  return _(r).map((s, e) => ({
+function q(t) {
+  return _(t).map((s, e) => ({
     id: String(s.id ?? s.result_id ?? "").trim() || `result-${e + 1}`,
     summary: c(s.summary),
     characterIds: W(s.character_id ?? s.character_ids),
     tags: j(s.tags)
   })).filter((s) => s.summary || s.characterIds.length || s.tags.length);
 }
-function x(r) {
+function x(t) {
   return {
-    next: c(r.spa_next_btn) || a("التالي", "Next"),
-    back: c(r.spa_back_btn) || a("السابق", "Back"),
-    see: c(r.spa_see_btn) || a("اعرض جوازك", "See your passport"),
-    reset: c(r.spa_reset_btn) || a("ابدأ من جديد", "Start over"),
-    share: c(r.spa_share_btn) || a("نسخ الملخص", "Copy summary"),
-    passportTitle: c(r.spa_passport_title) || a("جوازك العطري", "Your scent passport"),
-    holderLabel: c(r.spa_holder_label) || a("حامل الجواز", "Passport holder"),
-    ctaLabel: c(r.spa_cta_label) || a("استكشف التوصية", "Explore recommendation")
+    next: c(t.spa_next_btn) || a("التالي", "Next"),
+    back: c(t.spa_back_btn) || a("السابق", "Back"),
+    see: c(t.spa_see_btn) || a("اعرض جوازك", "See your passport"),
+    reset: c(t.spa_reset_btn) || a("ابدأ من جديد", "Start over"),
+    share: c(t.spa_share_btn) || a("نسخ الملخص", "Copy summary"),
+    passportTitle: c(t.spa_passport_title) || a("جوازك العطري", "Your scent passport"),
+    holderLabel: c(t.spa_holder_label) || a("حامل الجواز", "Passport holder"),
+    ctaLabel: c(t.spa_cta_label) || a("استكشف التوصية", "Explore recommendation")
   };
 }
-function G(r, s, e) {
-  if (!r.length) return null;
-  const t = r.find((n) => n.characterIds.includes(s));
-  if (t) return t;
-  const o = e.trim().toLowerCase();
-  if (o) {
-    const n = r.find(
-      (l) => l.tags.some((h) => h.toLowerCase() === o || o.includes(h.toLowerCase()))
+function G(t, s, e) {
+  if (!t.length) return null;
+  const r = t.find((n) => n.characterIds.includes(s));
+  if (r) return r;
+  const i = e.trim().toLowerCase();
+  if (i) {
+    const n = t.find(
+      (l) => l.tags.some((h) => h.toLowerCase() === i || i.includes(h.toLowerCase()))
     );
     if (n) return n;
   }
-  return r[0] ?? null;
+  return t[0] ?? null;
 }
-function C(r, s, e, t, o, n) {
-  const l = [], h = s.filter((m) => r.likedIds.includes(m.id)).map((m) => m.name), g = e.filter((m) => r.dislikedIds.includes(m.id)).map((m) => m.name), p = o.filter((m) => r.timeIds.includes(m.id)).map((m) => m.name);
+function C(t, s, e, r, i, n) {
+  const l = [], h = s.filter((m) => t.likedIds.includes(m.id)).map((m) => m.name), u = e.filter((m) => t.dislikedIds.includes(m.id)).map((m) => m.name), p = i.filter((m) => t.timeIds.includes(m.id)).map((m) => m.name);
   return n != null && n.name && l.push(
     a(
       `طابعك العطري: ${n.name}.`,
@@ -416,15 +484,15 @@ function C(r, s, e, t, o, n) {
       `نوتات تحبها: ${h.join("، ")}.`,
       `Notes you love: ${h.join(", ")}.`
     )
-  ), g.length && l.push(
+  ), u.length && l.push(
     a(
-      `تتجنّب: ${g.join("، ")}.`,
-      `You avoid: ${g.join(", ")}.`
+      `تتجنّب: ${u.join("، ")}.`,
+      `You avoid: ${u.join(", ")}.`
     )
-  ), t != null && t.name && l.push(
+  ), r != null && r.name && l.push(
     a(
-      `التركيز المفضّل: ${t.name}.`,
-      `Preferred intensity: ${t.name}.`
+      `التركيز المفضّل: ${r.name}.`,
+      `Preferred intensity: ${r.name}.`
     )
   ), p.length && l.push(
     a(
@@ -436,9 +504,9 @@ function C(r, s, e, t, o, n) {
     "Complete your picks to build your personal scent profile."
   );
 }
-function D(r, s, e, t, o, n, l, h) {
-  const g = h || a("جوازك العطري", "Your scent passport"), p = r || C(s, e, t, o, n, l);
-  return `${g}
+function D(t, s, e, r, i, n, l, h) {
+  const u = h || a("جوازك العطري", "Your scent passport"), p = t || C(s, e, r, i, n, l);
+  return `${u}
 
 ${p}`;
 }
@@ -449,8 +517,8 @@ const b = [
   { key: "times", labelAr: "أوقات الارتداء", labelEn: "Wear times" },
   { key: "character", labelAr: "طابعك العطري", labelEn: "Scent character" }
 ];
-function N(r, s) {
-  return r.includes(s) ? r.filter((e) => e !== s) : [...r, s];
+function N(t, s) {
+  return t.includes(s) ? t.filter((e) => e !== s) : [...t, s];
 }
 function k() {
   return {
@@ -461,16 +529,16 @@ function k() {
     characterId: ""
   };
 }
-function F(r, s) {
-  return r.find((e) => e.id === s || e.value === s) ?? null;
+function F(t, s) {
+  return t.find((e) => e.id === s || e.value === s) ?? null;
 }
-function J(r, s) {
-  return r.find((e) => e.id === s) ?? null;
+function J(t, s) {
+  return t.find((e) => e.id === s) ?? null;
 }
-var Q = Object.defineProperty, $ = (r, s, e, t) => {
-  for (var o = void 0, n = r.length - 1, l; n >= 0; n--)
-    (l = r[n]) && (o = l(s, e, o) || o);
-  return o && Q(s, e, o), o;
+var Q = Object.defineProperty, y = (t, s, e, r) => {
+  for (var i = void 0, n = t.length - 1, l; n >= 0; n--)
+    (l = t[n]) && (i = l(s, e, i) || i);
+  return i && Q(s, e, i), i;
 };
 const w = class w extends A {
   constructor() {
@@ -533,8 +601,8 @@ const w = class w extends A {
     this.stepIndex = 0, this.showResult = !1, this.selections = k(), this.shareNotice = "";
   }
   async shareSummary() {
-    const s = this.config || {}, e = x(s), t = this.resolveSummary(), o = D(
-      t,
+    const s = this.config || {}, e = x(s), r = this.resolveSummary(), i = D(
+      r,
       this.selections,
       this.likedNotes,
       this.dislikedNotes,
@@ -542,7 +610,7 @@ const w = class w extends A {
       this.selectedTimes,
       this.selectedCharacter,
       e.passportTitle
-    ), n = await R(o);
+    ), n = await R(i);
     this.shareNotice = n ? a("تم نسخ الملخص.", "Summary copied.") : a("تعذّر النسخ.", "Could not copy."), this.shareTimer && clearTimeout(this.shareTimer), this.shareTimer = setTimeout(() => {
       this.shareNotice = "";
     }, 2400);
@@ -557,11 +625,11 @@ const w = class w extends A {
     return this.times.filter((s) => this.selections.timeIds.includes(s.id));
   }
   resolveSummary() {
-    var e, t;
+    var e, r;
     const s = G(
       q((e = this.config) == null ? void 0 : e.spa_results),
       this.selections.characterId,
-      ((t = this.selectedCharacter) == null ? void 0 : t.name) ?? ""
+      ((r = this.selectedCharacter) == null ? void 0 : r.name) ?? ""
     );
     return s != null && s.summary ? s.summary : C(
       this.selections,
@@ -573,20 +641,20 @@ const w = class w extends A {
     );
   }
   renderIcon(s, e) {
-    return e ? i`<img src=${e} alt="" loading="lazy" decoding="async" />` : s.startsWith("sicon-") ? i`<span class=${s}></span>` : i`<span>${s || "◆"}</span>`;
+    return e ? o`<img src=${e} alt="" loading="lazy" decoding="async" />` : s.startsWith("sicon-") ? o`<span class=${s}></span>` : o`<span>${s || "◆"}</span>`;
   }
-  renderNoteChip(s, e, t) {
-    const o = e.includes(s.id), n = s.color ? { "--item-color": s.color } : {};
-    return i`
+  renderNoteChip(s, e, r) {
+    const i = e.includes(s.id), n = s.color ? { "--item-color": s.color } : {};
+    return o`
       <button
         type="button"
-        class=${f({ "spa-chip": !0, "fs-tap": !0, "is-active": o })}
+        class=${g({ "spa-chip": !0, "fs-tap": !0, "is-active": i })}
         style=${v(n)}
-        aria-pressed=${o ? "true" : "false"}
+        aria-pressed=${i ? "true" : "false"}
         @click=${() => {
       this.selections = {
         ...this.selections,
-        [t]: N(this.selections[t], s.id)
+        [r]: N(this.selections[r], s.id)
       };
     }}
       >
@@ -597,26 +665,26 @@ const w = class w extends A {
   }
   renderStrengthOption(s) {
     const e = this.selections.strengthId === s.id || this.selections.strengthId === s.value;
-    return i`
+    return o`
       <button
         type="button"
-        class=${f({ "spa-option": !0, "fs-tap": !0, "is-active": e })}
+        class=${g({ "spa-option": !0, "fs-tap": !0, "is-active": e })}
         aria-pressed=${e ? "true" : "false"}
         @click=${() => {
       this.selections = { ...this.selections, strengthId: s.id };
     }}
       >
         <span class="spa-option__name">${s.name}</span>
-        ${s.desc ? i`<p class="spa-option__desc">${s.desc}</p>` : d}
+        ${s.desc ? o`<p class="spa-option__desc">${s.desc}</p>` : d}
       </button>
     `;
   }
   renderTimeChip(s) {
     const e = this.selections.timeIds.includes(s.id);
-    return i`
+    return o`
       <button
         type="button"
-        class=${f({ "spa-chip": !0, "fs-tap": !0, "is-active": e })}
+        class=${g({ "spa-chip": !0, "fs-tap": !0, "is-active": e })}
         aria-pressed=${e ? "true" : "false"}
         @click=${() => {
       this.selections = {
@@ -630,117 +698,117 @@ const w = class w extends A {
     `;
   }
   renderCharacterOption(s) {
-    const e = this.selections.characterId === s.id, t = s.color ? { "--item-color": s.color } : {};
-    return i`
+    const e = this.selections.characterId === s.id, r = s.color ? { "--item-color": s.color } : {};
+    return o`
       <button
         type="button"
-        class=${f({ "spa-option": !0, "fs-tap": !0, "is-active": e })}
-        style=${v(t)}
+        class=${g({ "spa-option": !0, "fs-tap": !0, "is-active": e })}
+        style=${v(r)}
         aria-pressed=${e ? "true" : "false"}
         @click=${() => {
       this.selections = { ...this.selections, characterId: s.id };
     }}
       >
         <span class="spa-option__name">${s.icon ? `${s.icon} ` : d}${s.name}</span>
-        ${s.desc ? i`<p class="spa-option__desc">${s.desc}</p>` : d}
+        ${s.desc ? o`<p class="spa-option__desc">${s.desc}</p>` : d}
       </button>
     `;
   }
   renderStepBody() {
     const s = this.currentStepKey, e = b[this.stepIndex];
-    return s === "liked" ? i`
+    return s === "liked" ? o`
         <div class="spa-step" role="group" aria-label=${a(e.labelAr, e.labelEn)}>
           <h3 class="spa-step__title">${a(e.labelAr, e.labelEn)}</h3>
           <p class="fs-coach">
             <span class="fs-coach__mark" aria-hidden="true">✦</span>
             ${a("اختر واحدة أو أكثر", "Pick one or more")}
           </p>
-          ${this.likedNotes.length ? i`<div class="spa-grid">
+          ${this.likedNotes.length ? o`<div class="spa-grid">
                 ${this.likedNotes.map(
-      (t) => this.renderNoteChip(t, this.selections.likedIds, "likedIds")
+      (r) => this.renderNoteChip(r, this.selections.likedIds, "likedIds")
     )}
-              </div>` : i`<div class="spa-step__empty">
+              </div>` : o`<div class="spa-step__empty">
                 ${a("أضف نوتات مفضّلة من إعدادات العنصر.", "Add liked notes in element settings.")}
               </div>`}
         </div>
-      ` : s === "disliked" ? i`
+      ` : s === "disliked" ? o`
         <div class="spa-step" role="group" aria-label=${a(e.labelAr, e.labelEn)}>
           <h3 class="spa-step__title">${a(e.labelAr, e.labelEn)}</h3>
           <p class="fs-coach">
             <span class="fs-coach__mark" aria-hidden="true">✦</span>
             ${a("اختياري — لتجنّب ما لا يناسبك", "Optional — notes to skip")}
           </p>
-          ${this.dislikedNotes.length ? i`<div class="spa-grid">
+          ${this.dislikedNotes.length ? o`<div class="spa-grid">
                 ${this.dislikedNotes.map(
-      (t) => this.renderNoteChip(t, this.selections.dislikedIds, "dislikedIds")
+      (r) => this.renderNoteChip(r, this.selections.dislikedIds, "dislikedIds")
     )}
-              </div>` : i`<div class="spa-step__empty">
+              </div>` : o`<div class="spa-step__empty">
                 ${a("أضف نوتات مرفوضة من إعدادات العنصر.", "Add disliked notes in element settings.")}
               </div>`}
         </div>
-      ` : s === "strength" ? i`
+      ` : s === "strength" ? o`
         <div class="spa-step" role="radiogroup" aria-label=${a(e.labelAr, e.labelEn)}>
           <h3 class="spa-step__title">${a(e.labelAr, e.labelEn)}</h3>
-          ${this.strengths.length ? i`<div class="spa-list">
-                ${this.strengths.map((t) => this.renderStrengthOption(t))}
-              </div>` : i`<div class="spa-step__empty">
+          ${this.strengths.length ? o`<div class="spa-list">
+                ${this.strengths.map((r) => this.renderStrengthOption(r))}
+              </div>` : o`<div class="spa-step__empty">
                 ${a("أضف مستويات التركيز من إعدادات العنصر.", "Add strength levels in element settings.")}
               </div>`}
         </div>
-      ` : s === "times" ? i`
+      ` : s === "times" ? o`
         <div class="spa-step" role="group" aria-label=${a(e.labelAr, e.labelEn)}>
           <h3 class="spa-step__title">${a(e.labelAr, e.labelEn)}</h3>
           <p class="fs-coach">
             <span class="fs-coach__mark" aria-hidden="true">✦</span>
             ${a("متى ترتدي العطر؟", "When do you wear fragrance?")}
           </p>
-          ${this.times.length ? i`<div class="spa-grid">
-                ${this.times.map((t) => this.renderTimeChip(t))}
-              </div>` : i`<div class="spa-step__empty">
+          ${this.times.length ? o`<div class="spa-grid">
+                ${this.times.map((r) => this.renderTimeChip(r))}
+              </div>` : o`<div class="spa-step__empty">
                 ${a("أضف أوقات الارتداء من إعدادات العنصر.", "Add wear times in element settings.")}
               </div>`}
         </div>
-      ` : i`
+      ` : o`
       <div class="spa-step" role="radiogroup" aria-label=${a(e.labelAr, e.labelEn)}>
         <h3 class="spa-step__title">${a(e.labelAr, e.labelEn)}</h3>
-        ${this.characters.length ? i`<div class="spa-list">
-              ${this.characters.map((t) => this.renderCharacterOption(t))}
-            </div>` : i`<div class="spa-step__empty">
+        ${this.characters.length ? o`<div class="spa-list">
+              ${this.characters.map((r) => this.renderCharacterOption(r))}
+            </div>` : o`<div class="spa-step__empty">
               ${a("أضف شخصيات عطرية من إعدادات العنصر.", "Add scent characters in element settings.")}
             </div>`}
       </div>
     `;
   }
   renderPassport() {
-    const s = this.config || {}, e = x(s), t = this.selectedCharacter, o = (t == null ? void 0 : t.color) || "#9a7b4f", n = this.likedNotes.filter((p) => this.selections.likedIds.includes(p.id)).map((p) => p.name), l = this.dislikedNotes.filter((p) => this.selections.dislikedIds.includes(p.id)).map((p) => p.name), h = this.resolveSummary(), g = !!(c(s.spa_share_btn) || e.share);
-    return i`
+    const s = this.config || {}, e = x(s), r = this.selectedCharacter, i = (r == null ? void 0 : r.color) || "#9a7b4f", n = this.likedNotes.filter((p) => this.selections.likedIds.includes(p.id)).map((p) => p.name), l = this.dislikedNotes.filter((p) => this.selections.dislikedIds.includes(p.id)).map((p) => p.name), h = this.resolveSummary(), u = !!(c(s.spa_share_btn) || e.share);
+    return o`
       <article
         class="spa-passport fs-result"
-        style=${v({ "--passport-accent": o })}
+        style=${v({ "--passport-accent": i })}
         role="region"
         aria-live="polite"
       >
         <div class="spa-passport__head">
           <p class="spa-passport__brand">${e.passportTitle}</p>
-          <span class="spa-passport__seal" aria-hidden="true">${(t == null ? void 0 : t.icon) || "✦"}</span>
+          <span class="spa-passport__seal" aria-hidden="true">${(r == null ? void 0 : r.icon) || "✦"}</span>
         </div>
-        <h3 class="spa-passport__title">${(t == null ? void 0 : t.name) || a("ملفك العطري", "Your scent profile")}</h3>
+        <h3 class="spa-passport__title">${(r == null ? void 0 : r.name) || a("ملفك العطري", "Your scent profile")}</h3>
         <p class="spa-passport__holder">${e.holderLabel}</p>
 
         <div class="spa-passport__grid">
-          ${n.length ? i`<div class="spa-passport__row">
+          ${n.length ? o`<div class="spa-passport__row">
                 <span class="spa-passport__label">${a("تحب", "You love")}</span>
                 <p class="spa-passport__value">${n.join(" · ")}</p>
               </div>` : d}
-          ${l.length ? i`<div class="spa-passport__row">
+          ${l.length ? o`<div class="spa-passport__row">
                 <span class="spa-passport__label">${a("تتجنّب", "You avoid")}</span>
                 <p class="spa-passport__value">${l.join(" · ")}</p>
               </div>` : d}
-          ${this.selectedStrength ? i`<div class="spa-passport__row">
+          ${this.selectedStrength ? o`<div class="spa-passport__row">
                 <span class="spa-passport__label">${a("التركيز", "Intensity")}</span>
                 <p class="spa-passport__value">${this.selectedStrength.name}</p>
               </div>` : d}
-          ${this.selectedTimes.length ? i`<div class="spa-passport__row">
+          ${this.selectedTimes.length ? o`<div class="spa-passport__row">
                 <span class="spa-passport__label">${a("أوقات الارتداء", "Wear times")}</span>
                 <p class="spa-passport__value">
                   ${this.selectedTimes.map((p) => p.name).join(" · ")}
@@ -748,10 +816,10 @@ const w = class w extends A {
               </div>` : d}
         </div>
 
-        ${h ? i`<p class="spa-passport__summary">${h}</p>` : d}
+        ${h ? o`<p class="spa-passport__summary">${h}</p>` : d}
 
         <div class="fs-actions">
-          ${g ? i`<button type="button" class="fs-btn fs-btn--ghost fs-tap" @click=${this.shareSummary}>
+          ${u ? o`<button type="button" class="fs-btn fs-btn--ghost fs-tap" @click=${this.shareSummary}>
                 ${e.share}
               </button>` : d}
           <button type="button" class="fs-btn fs-btn--ghost fs-tap" @click=${this.reset}>
@@ -761,6 +829,7 @@ const w = class w extends A {
         ${P({
       config: s,
       prefix: "spa_",
+      ready: !0,
       matchTags: [
         this.selections.characterId,
         this.selections.strengthId,
@@ -768,23 +837,23 @@ const w = class w extends A {
         ...this.selections.timeIds
       ]
     })}
-        ${this.shareNotice ? i`<p class="spa-toast" role="status">${this.shareNotice}</p>` : d}
+        ${this.shareNotice ? o`<p class="spa-toast" role="status">${this.shareNotice}</p>` : d}
       </article>
     `;
   }
   renderProgress() {
-    const s = b.length, e = this.showResult ? s : this.stepIndex + 1, t = Math.round(e / s * 100);
-    return i`
+    const s = b.length, e = this.showResult ? s : this.stepIndex + 1, r = Math.round(e / s * 100);
+    return o`
       <div
         class="fs-progress"
         role="progressbar"
         aria-valuemin="0"
         aria-valuemax="100"
-        aria-valuenow=${t}
+        aria-valuenow=${r}
         aria-label=${a(`الخطوة ${e} من ${s}`, `Step ${e} of ${s}`)}
       >
         <div class="fs-progress__bar">
-          <span style=${v({ width: `${t}%` })}></span>
+          <span style=${v({ width: `${r}%` })}></span>
         </div>
         <p class="fs-progress__label">
           ${a(`الخطوة ${e} من ${s}`, `Step ${e} of ${s}`)}
@@ -793,20 +862,20 @@ const w = class w extends A {
     `;
   }
   renderWizard() {
-    const s = this.config || {}, e = x(s), t = this.stepIndex >= b.length - 1, o = this.showResult ? "result" : `step-${this.stepIndex}`;
-    return i`
+    const s = this.config || {}, e = x(s), r = this.stepIndex >= b.length - 1, i = this.showResult ? "result" : `step-${this.stepIndex}`;
+    return o`
       <div class="spa-shell">
         ${this.renderProgress()}
 
         ${z(
-      o,
-      i`<div class="fs-fade-swap">
+      i,
+      o`<div class="fs-fade-swap">
             ${this.showResult ? this.renderPassport() : this.renderStepBody()}
           </div>`
     )}
 
-        ${this.showResult ? d : i`<div class="fs-nav">
-              ${this.stepIndex > 0 ? i`<button type="button" class="fs-btn fs-btn--ghost fs-tap" @click=${this.goBack}>
+        ${this.showResult ? d : o`<div class="fs-nav">
+              ${this.stepIndex > 0 ? o`<button type="button" class="fs-btn fs-btn--ghost fs-tap" @click=${this.goBack}>
                     ${e.back}
                   </button>` : d}
               <button
@@ -817,24 +886,24 @@ const w = class w extends A {
                 title=${this.canAdvance() ? "" : a("اختر خياراً للمتابعة", "Choose an option to continue")}
                 @click=${this.goNext}
               >
-                ${t ? e.see : e.next}
+                ${r ? e.see : e.next}
               </button>
             </div>`}
       </div>
     `;
   }
   render() {
-    const s = this.config || {}, e = Y(s, "spa_"), t = e.animate && !O(), o = c(s.spa_title), n = c(s.spa_desc);
-    return i`
+    const s = this.config || {}, e = Y(s, "spa_"), r = e.animate && !O(), i = c(s.spa_title), n = c(s.spa_desc);
+    return o`
       <section
-        class=${f({ "fs-section": !0, "fs-animate": t })}
+        class=${g({ "fs-section": !0, "fs-animate": r })}
         style=${v(B(e))}
-        aria-label=${o || a("جوازك العطري", "Scent passport")}
+        aria-label=${i || a("جوازك العطري", "Scent passport")}
       >
         <div class="fs-container">
-          ${o || n ? i`<div class="fs-header">
-                ${o ? i`<h2 class="fs-title">${o}</h2>` : d}
-                ${n ? i`<p class="fs-desc">${n}</p>` : d}
+          ${i || n ? o`<div class="fs-header">
+                ${i ? o`<h2 class="fs-title">${i}</h2>` : d}
+                ${n ? o`<p class="fs-desc">${n}</p>` : d}
               </div>` : d}
           ${this.renderWizard()}
         </div>
@@ -843,23 +912,23 @@ const w = class w extends A {
   }
 };
 w.styles = [L, M];
-let u = w;
-$([
+let f = w;
+y([
   E({ type: Object })
-], u.prototype, "config");
-$([
-  y()
-], u.prototype, "stepIndex");
-$([
-  y()
-], u.prototype, "showResult");
-$([
-  y()
-], u.prototype, "selections");
-$([
-  y()
-], u.prototype, "shareNotice");
-typeof u < "u" && u.registerSallaComponent("salla-scent-passport");
+], f.prototype, "config");
+y([
+  $()
+], f.prototype, "stepIndex");
+y([
+  $()
+], f.prototype, "showResult");
+y([
+  $()
+], f.prototype, "selections");
+y([
+  $()
+], f.prototype, "shareNotice");
+typeof f < "u" && f.registerSallaComponent("salla-scent-passport");
 export {
-  u as default
+  f as default
 };

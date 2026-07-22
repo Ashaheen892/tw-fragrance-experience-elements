@@ -30,7 +30,7 @@ export const componentStyles = css`
     font-weight: 800;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
   }
 
   .ffm-chips {
@@ -58,7 +58,7 @@ export const componentStyles = css`
     border: 1.5px solid var(--border-color, #e6e0d6);
     border-radius: calc(var(--section-radius, 20px) * 0.72);
     background: var(--card-bg, #fff);
-    color: var(--text-color, #1f1a14);
+    color: var(--text-color, #000000);
     font: inherit;
     font-size: 0.9rem;
     font-weight: 700;

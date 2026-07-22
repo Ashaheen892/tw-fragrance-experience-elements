@@ -3,7 +3,7 @@ import { property as Z, state as _ } from "lit/decorators.js";
 import { classMap as f } from "lit/directives/class-map.js";
 import { keyed as h } from "lit/directives/keyed.js";
 import { styleMap as v } from "lit/directives/style-map.js";
-import { n as $, l as n, f as m, d as y, g as C, o as L, s as R, t as o, r as S, p as E, q as N, b as A, c as B } from "./commerceOutcome-CkVkQjOd.js";
+import { n as $, l as n, f as m, d as y, g as C, o as L, s as R, t as o, r as S, p as E, q as N, b as A, c as B } from "./commerceOutcome-CCLcV5SW.js";
 const M = k`
   :host {
     direction: inherit;
@@ -90,7 +90,7 @@ const M = k`
     border: 1px solid color-mix(in srgb, var(--accent-color, var(--fs-store-primary)) 20%, var(--border-color, #e6e0d6));
     font-size: 0.86rem;
     line-height: 1.55;
-    color: var(--text-color, #1f1a14);
+    color: var(--text-color, #000000);
   }
 
   .srg-zone-tip__label {
@@ -114,7 +114,7 @@ const M = k`
     border-radius: calc(var(--section-radius, 20px) * 0.85);
     border: 1.5px solid color-mix(in srgb, var(--border-color, #e6e0d6) 82%, transparent);
     background: var(--card-bg, #fff);
-    color: var(--text-color, #1f1a14);
+    color: var(--text-color, #000000);
     text-align: start;
     cursor: pointer;
     box-shadow: 0 4px 14px rgba(90, 70, 40, 0.05);
@@ -180,7 +180,7 @@ const M = k`
     flex-wrap: wrap;
     gap: 0.45rem 0.75rem;
     font-size: 0.82rem;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
   }
 
   .srg-card__meta-label {
@@ -188,14 +188,14 @@ const M = k`
     font-weight: 800;
     letter-spacing: 0.03em;
     text-transform: uppercase;
-    color: var(--text-color, #1f1a14);
+    color: var(--text-color, #000000);
   }
 
   .srg-card__tips {
     margin: 0;
     font-size: 0.86rem;
     line-height: 1.6;
-    color: var(--muted-color, #6e6558);
+    color: var(--muted-color, #666666);
   }
 
   @media (min-width: 960px) {
