@@ -1,10 +1,12 @@
-import { css as S, LitElement as C, html as a, nothing as p } from "lit";
-import { property as L, state as k } from "lit/decorators.js";
-import { classMap as v } from "lit/directives/class-map.js";
-import { keyed as z } from "lit/directives/keyed.js";
-import { styleMap as _ } from "lit/directives/style-map.js";
-import { n as h, l as c, a as b, g as E, s as R, t as g, r as N, p as H, b as B, c as M } from "./commerceOutcome-CCLcV5SW.js";
-const O = S`
+var __defProp = Object.defineProperty;
+var __name = (target, value) => __defProp(target, "name", { value, configurable: !0 });
+import { css, LitElement, html, nothing } from "lit";
+import { property, state } from "lit/decorators.js";
+import { classMap } from "lit/directives/class-map.js";
+import { keyed } from "lit/directives/keyed.js";
+import { styleMap } from "lit/directives/style-map.js";
+import { n as normalizeCollection, l as localizedString, a as extractImageUrl, g as getRadioValue, s as sharedSectionCss, t, r as readSectionTheme, p as prefersReducedMotion, b as themeStyleMap, c as renderCommerceOutcome } from "./commerceOutcome-DYfJre3y.js";
+const componentStyles = css`
   .inp-pyramid {
     display: grid;
     gap: 0.65rem;
@@ -164,72 +166,78 @@ const O = S`
       transform: none;
     }
   }
-`, f = ["top", "heart", "base"], y = {
+`, LAYER_KEYS = ["top", "heart", "base"], DEFAULT_TIER_LABELS = {
   top: "Top",
   heart: "Heart",
   base: "Base"
 };
-function $(n, e = "top") {
-  const t = E(n, e).toLowerCase();
-  return f.includes(t) ? t : e;
+function resolveLayer(raw, fallback = "top") {
+  const value = getRadioValue(raw, fallback).toLowerCase();
+  return LAYER_KEYS.includes(value) ? value : fallback;
 }
-function x(n, e, t) {
-  const i = c(n.name);
-  return i ? {
-    id: String(n.id ?? n.note_id ?? "").trim() || `note-${e + 1}`,
-    name: i,
-    desc: c(n.desc),
-    icon: String(n.icon ?? "").trim(),
-    image: b(n.image) || b(n.icon),
-    layer: $(n.layer, t)
+__name(resolveLayer, "resolveLayer");
+function parseNote(item, i, fallbackLayer) {
+  const name = localizedString(item.name);
+  return name ? {
+    id: String(item.id ?? item.note_id ?? "").trim() || `note-${i + 1}`,
+    name,
+    desc: localizedString(item.desc),
+    icon: String(item.icon ?? "").trim(),
+    image: extractImageUrl(item.image) || extractImageUrl(item.icon),
+    layer: resolveLayer(item.layer, fallbackLayer)
   } : null;
 }
-function A(n) {
-  return h(n).map((e, t) => x(e, t, $(e.layer))).filter((e) => e !== null);
+__name(parseNote, "parseNote");
+function parseNotesCollection(raw) {
+  return normalizeCollection(raw).map((item, i) => parseNote(item, i, resolveLayer(item.layer))).filter((n) => n !== null);
 }
-function Y(n, e, t, i) {
-  const r = String(n.key ?? n.tier ?? n.layer ?? e).toLowerCase(), o = f.includes(r) ? r : e, s = h(n.notes).map((m, T) => x(m, T, o)).filter((m) => m !== null), l = c(n.label) || c(t[`inp_${o}_label`]) || y[o];
+__name(parseNotesCollection, "parseNotesCollection");
+function tierFromCollection(tierItem, key, config, notesByLayer) {
+  const tierKey = String(tierItem.key ?? tierItem.tier ?? tierItem.layer ?? key).toLowerCase(), layer = LAYER_KEYS.includes(tierKey) ? tierKey : key, embeddedNotes = normalizeCollection(tierItem.notes).map((item, i) => parseNote(item, i, layer)).filter((n) => n !== null), label = localizedString(tierItem.label) || localizedString(config[`inp_${layer}_label`]) || DEFAULT_TIER_LABELS[layer];
   return {
-    key: o,
-    label: l || (o === "top" ? "Top" : o === "heart" ? "Heart" : "Base"),
-    desc: c(n.desc),
-    color: String(n.color ?? "").trim() || String(t[`inp_${o}_color`] ?? "").trim(),
-    notes: s.length ? s : i.get(o) || []
+    key: layer,
+    label: label || (layer === "top" ? "Top" : layer === "heart" ? "Heart" : "Base"),
+    desc: localizedString(tierItem.desc),
+    color: String(tierItem.color ?? "").trim() || String(config[`inp_${layer}_color`] ?? "").trim(),
+    notes: embeddedNotes.length ? embeddedNotes : notesByLayer.get(layer) || []
   };
 }
-function j(n) {
-  const e = h(n.inp_tiers), t = A(n.inp_notes), i = /* @__PURE__ */ new Map();
-  for (const r of t) {
-    const o = i.get(r.layer) || [];
-    o.push(r), i.set(r.layer, o);
+__name(tierFromCollection, "tierFromCollection");
+function parsePyramidTiers(config) {
+  const tiersRaw = normalizeCollection(config.inp_tiers), flatNotes = parseNotesCollection(config.inp_notes), notesByLayer = /* @__PURE__ */ new Map();
+  for (const note of flatNotes) {
+    const list = notesByLayer.get(note.layer) || [];
+    list.push(note), notesByLayer.set(note.layer, list);
   }
-  return e.length ? f.map((r) => {
-    const o = e.find((s) => String(s.key ?? s.tier ?? s.layer ?? "").toLowerCase() === r) || {};
-    return Y(o, r, n, i);
-  }).filter((r) => r.label || r.desc || r.notes.length) : f.map((r) => {
-    const o = n[`inp_${r}_label`], s = n[`inp_${r}_desc`], l = c(o) || y[r];
+  return tiersRaw.length ? LAYER_KEYS.map((key) => {
+    const match = tiersRaw.find((t2) => String(t2.key ?? t2.tier ?? t2.layer ?? "").toLowerCase() === key) || {};
+    return tierFromCollection(match, key, config, notesByLayer);
+  }).filter((tier) => tier.label || tier.desc || tier.notes.length) : LAYER_KEYS.map((key) => {
+    const labelRaw = config[`inp_${key}_label`], descRaw = config[`inp_${key}_desc`], label = localizedString(labelRaw) || DEFAULT_TIER_LABELS[key];
     return {
-      key: r,
-      label: l,
-      desc: c(s),
-      color: String(n[`inp_${r}_color`] ?? "").trim(),
-      notes: i.get(r) || []
+      key,
+      label,
+      desc: localizedString(descRaw),
+      color: String(config[`inp_${key}_color`] ?? "").trim(),
+      notes: notesByLayer.get(key) || []
     };
-  }).filter((r) => r.label || r.desc || r.notes.length);
+  }).filter((tier) => tier.label || tier.desc || tier.notes.length);
 }
-function U(n) {
-  return n.some((e) => e.notes.length > 0 || e.label || e.desc);
+__name(parsePyramidTiers, "parsePyramidTiers");
+function hasPyramidContent(tiers) {
+  return tiers.some((tier) => tier.notes.length > 0 || tier.label || tier.desc);
 }
-var F = Object.defineProperty, w = (n, e, t, i) => {
-  for (var r = void 0, o = n.length - 1, s; o >= 0; o--)
-    (s = n[o]) && (r = s(e, t, r) || r);
-  return r && F(e, t, r), r;
-};
-const K = {
+__name(hasPyramidContent, "hasPyramidContent");
+var __defProp2 = Object.defineProperty, __decorateClass = /* @__PURE__ */ __name((decorators, target, key, kind) => {
+  for (var result = void 0, i = decorators.length - 1, decorator; i >= 0; i--)
+    (decorator = decorators[i]) && (result = decorator(target, key, result) || result);
+  return result && __defProp2(target, key, result), result;
+}, "__decorateClass");
+const TIER_SHORT = {
   top: "T",
   heart: "H",
   base: "B"
-}, u = class u extends C {
+}, _InteractiveNotesPyramid = class _InteractiveNotesPyramid extends LitElement {
   constructor() {
     super(...arguments), this.config = {}, this.openTier = "", this.boundLangHandler = () => this.requestUpdate();
   }
@@ -239,91 +247,91 @@ const K = {
   disconnectedCallback() {
     window.removeEventListener("language-changed", this.boundLangHandler), super.disconnectedCallback();
   }
-  updated(e) {
-    e.has("config") && (this.openTier = "");
+  updated(changed) {
+    changed.has("config") && (this.openTier = "");
   }
   get tiers() {
-    return j(this.config || {});
+    return parsePyramidTiers(this.config || {});
   }
-  toggleTier(e) {
-    this.openTier = this.openTier === e ? "" : e;
+  toggleTier(key) {
+    this.openTier = this.openTier === key ? "" : key;
   }
-  renderNoteIcon(e) {
-    const t = e.icon.startsWith("sicon-");
-    return e.image && !e.image.startsWith("sicon-") ? a`<img src=${e.image} alt="" loading="lazy" decoding="async" />` : e.icon ? t ? a`<span class=${e.icon}></span>` : a`<span>${e.icon}</span>` : a`<span aria-hidden="true">•</span>`;
+  renderNoteIcon(note) {
+    const isSicon = note.icon.startsWith("sicon-");
+    return note.image && !note.image.startsWith("sicon-") ? html`<img src=${note.image} alt="" loading="lazy" decoding="async" />` : note.icon ? isSicon ? html`<span class=${note.icon}></span>` : html`<span>${note.icon}</span>` : html`<span aria-hidden="true">•</span>`;
   }
-  renderNote(e) {
-    return a`
+  renderNote(note) {
+    return html`
       <div class="inp-note" role="listitem">
-        <span class="inp-note__icon">${this.renderNoteIcon(e)}</span>
+        <span class="inp-note__icon">${this.renderNoteIcon(note)}</span>
         <div>
-          <p class="inp-note__name">${e.name}</p>
-          ${e.desc ? a`<p class="inp-note__desc">${e.desc}</p>` : p}
+          <p class="inp-note__name">${note.name}</p>
+          ${note.desc ? html`<p class="inp-note__desc">${note.desc}</p>` : nothing}
         </div>
       </div>
     `;
   }
-  renderTier(e) {
-    const t = this.openTier === e.key, i = e.color ? { "--tier-color": e.color } : {};
-    return a`
+  renderTier(tier) {
+    const isOpen = this.openTier === tier.key, style = tier.color ? { "--tier-color": tier.color } : {};
+    return html`
       <div
-        class=${v({ "inp-tier": !0, "is-open": t })}
-        style=${_(i)}
+        class=${classMap({ "inp-tier": !0, "is-open": isOpen })}
+        style=${styleMap(style)}
       >
         <button
           type="button"
           class="inp-tier__toggle fs-tap"
-          aria-expanded=${t ? "true" : "false"}
-          aria-controls="inp-panel-${e.key}"
-          @click=${() => this.toggleTier(e.key)}
+          aria-expanded=${isOpen ? "true" : "false"}
+          aria-controls="inp-panel-${tier.key}"
+          @click=${() => this.toggleTier(tier.key)}
         >
-          <span class="inp-tier__badge">${K[e.key]}</span>
+          <span class="inp-tier__badge">${TIER_SHORT[tier.key]}</span>
           <span class="inp-tier__meta">
-            <span class="inp-tier__label">${e.label}</span>
-            ${e.desc ? a`<p class="inp-tier__desc">${e.desc}</p>` : p}
+            <span class="inp-tier__label">${tier.label}</span>
+            ${tier.desc ? html`<p class="inp-tier__desc">${tier.desc}</p>` : nothing}
           </span>
           <span class="inp-tier__chevron" aria-hidden="true">▾</span>
         </button>
-        ${t ? z(e.key, a`<div id="inp-panel-${e.key}" class="inp-tier__panel fs-fade-swap" role="list">
-              ${e.notes.length ? e.notes.map((r) => this.renderNote(r)) : a`<p class="inp-tier__empty">${g("لا توجد نوتات بعد.", "No notes yet.")}</p>`}
-            </div>`) : p}
+        ${isOpen ? keyed(tier.key, html`<div id="inp-panel-${tier.key}" class="inp-tier__panel fs-fade-swap" role="list">
+              ${tier.notes.length ? tier.notes.map((note) => this.renderNote(note)) : html`<p class="inp-tier__empty">${t("لا توجد نوتات بعد.", "No notes yet.")}</p>`}
+            </div>`) : nothing}
       </div>
     `;
   }
   render() {
-    const e = this.config || {}, t = N(e, "inp_"), i = t.animate && !H(), r = c(e.inp_title), o = c(e.inp_desc), s = this.tiers, l = U(s);
-    return a`
+    const c = this.config || {}, theme = readSectionTheme(c, "inp_"), animate = theme.animate && !prefersReducedMotion(), title = localizedString(c.inp_title), desc = localizedString(c.inp_desc), tiers = this.tiers, hasContent = hasPyramidContent(tiers);
+    return html`
       <section
-        class=${v({ "fs-section": !0, "fs-animate": i })}
-        style=${_(B(t))}
-        aria-label=${r || g("هرم النوتات التفاعلي", "Interactive notes pyramid")}
+        class=${classMap({ "fs-section": !0, "fs-animate": animate })}
+        style=${styleMap(themeStyleMap(theme))}
+        aria-label=${title || t("هرم النوتات التفاعلي", "Interactive notes pyramid")}
       >
         <div class="fs-container">
-          ${r || o ? a`<div class="fs-header">
-                ${r ? a`<h2 class="fs-title">${r}</h2>` : p}
-                ${o ? a`<p class="fs-desc">${o}</p>` : p}
-              </div>` : p}
+          ${title || desc ? html`<div class="fs-header">
+                ${title ? html`<h2 class="fs-title">${title}</h2>` : nothing}
+                ${desc ? html`<p class="fs-desc">${desc}</p>` : nothing}
+              </div>` : nothing}
 
-          ${l ? a`<div class="inp-pyramid" role="group" aria-label=${g("هرم النوتات", "Notes pyramid")}>
-                ${s.map((m) => this.renderTier(m))}
-              </div>` : a`<div class="fs-empty" role="status">
-                ${g("أضف طبقات أو نوتات من إعدادات العنصر.", "Add tiers or notes in the element settings.")}
+          ${hasContent ? html`<div class="inp-pyramid" role="group" aria-label=${t("هرم النوتات", "Notes pyramid")}>
+                ${tiers.map((tier) => this.renderTier(tier))}
+              </div>` : html`<div class="fs-empty" role="status">
+                ${t("أضف طبقات أو نوتات من إعدادات العنصر.", "Add tiers or notes in the element settings.")}
               </div>`}
-          ${M({ config: e, prefix: "inp_" })}
+          ${renderCommerceOutcome({ config: c, prefix: "inp_" })}
         </div>
       </section>
     `;
   }
 };
-u.styles = [R, O];
-let d = u;
-w([
-  L({ type: Object })
-], d.prototype, "config");
-w([
-  k()
-], d.prototype, "openTier");
-typeof d < "u" && d.registerSallaComponent("salla-interactive-notes-pyramid");
+__name(_InteractiveNotesPyramid, "InteractiveNotesPyramid"), _InteractiveNotesPyramid.styles = [sharedSectionCss, componentStyles];
+let InteractiveNotesPyramid = _InteractiveNotesPyramid;
+__decorateClass([
+  property({ type: Object })
+], InteractiveNotesPyramid.prototype, "config");
+__decorateClass([
+  state()
+], InteractiveNotesPyramid.prototype, "openTier");
+typeof InteractiveNotesPyramid < "u" && InteractiveNotesPyramid.registerSallaComponent("salla-interactive-notes-pyramid");
 export {
-  d as default
+  InteractiveNotesPyramid as default
 };

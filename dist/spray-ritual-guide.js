@@ -1,10 +1,12 @@
-import { css as k, LitElement as I, html as t, nothing as i } from "lit";
-import { property as Z, state as _ } from "lit/decorators.js";
-import { classMap as f } from "lit/directives/class-map.js";
-import { keyed as h } from "lit/directives/keyed.js";
-import { styleMap as v } from "lit/directives/style-map.js";
-import { n as $, l as n, f as m, d as y, g as C, o as L, s as R, t as o, r as S, p as E, q as N, b as A, c as B } from "./commerceOutcome-CCLcV5SW.js";
-const M = k`
+var __defProp = Object.defineProperty;
+var __name = (target, value) => __defProp(target, "name", { value, configurable: !0 });
+import { css, LitElement, html, nothing } from "lit";
+import { property, state } from "lit/decorators.js";
+import { classMap } from "lit/directives/class-map.js";
+import { keyed } from "lit/directives/keyed.js";
+import { styleMap } from "lit/directives/style-map.js";
+import { n as normalizeCollection, l as localizedString, f as toNumber, d as clamp, g as getRadioValue, o as getPageLocale, s as sharedSectionCss, t, r as readSectionTheme, p as prefersReducedMotion, q as isTruthy, b as themeStyleMap, c as renderCommerceOutcome } from "./commerceOutcome-DYfJre3y.js";
+const componentStyles = css`
   :host {
     direction: inherit;
   }
@@ -218,55 +220,59 @@ const M = k`
       transform: none;
     }
   }
-`, g = {
+`, INTENSITY_LABELS = {
   light: { ar: "خفيف", en: "Light" },
   daily: { ar: "يومي", en: "Daily" },
   strong: { ar: "قوي", en: "Strong" },
   event: { ar: "مناسبة", en: "Event" }
 };
-function x() {
-  return L() === "en";
+function isEn() {
+  return getPageLocale() === "en";
 }
-function T(c) {
-  const r = C(c, "daily").toLowerCase().trim();
-  if (r in g) {
-    const a = r;
-    return { key: a, label: x() ? g[a].en : g[a].ar };
+__name(isEn, "isEn");
+function resolveIntensity(raw) {
+  const value = getRadioValue(raw, "daily").toLowerCase().trim();
+  if (value in INTENSITY_LABELS) {
+    const key = value;
+    return { key, label: isEn() ? INTENSITY_LABELS[key].en : INTENSITY_LABELS[key].ar };
   }
-  const e = m(r, NaN);
-  return Number.isFinite(e) ? { key: "custom", label: String(e) } : { key: "daily", label: x() ? g.daily.en : g.daily.ar };
+  const num = toNumber(value, NaN);
+  return Number.isFinite(num) ? { key: "custom", label: String(num) } : { key: "daily", label: isEn() ? INTENSITY_LABELS.daily.en : INTENSITY_LABELS.daily.ar };
 }
-function D(c) {
-  return $(c).map((r, e) => {
-    const a = T(r.intensity);
+__name(resolveIntensity, "resolveIntensity");
+function parseRituals(raw) {
+  return normalizeCollection(raw).map((row, index) => {
+    const intensity = resolveIntensity(row.intensity);
     return {
-      id: `ritual-${e}`,
-      name: n(r.name),
-      intensity: a.key,
-      intensityLabel: a.label,
-      spraysCount: Math.max(0, m(r.sprays_count, 0)),
-      zones: n(r.zones),
-      distance: n(r.distance),
-      tips: n(r.tips),
-      color: n(r.color) || "#9a7b4f"
+      id: `ritual-${index}`,
+      name: localizedString(row.name),
+      intensity: intensity.key,
+      intensityLabel: intensity.label,
+      spraysCount: Math.max(0, toNumber(row.sprays_count, 0)),
+      zones: localizedString(row.zones),
+      distance: localizedString(row.distance),
+      tips: localizedString(row.tips),
+      color: localizedString(row.color) || "#9a7b4f"
     };
-  }).filter((r) => r.name || r.zones || r.tips);
+  }).filter((ritual) => ritual.name || ritual.zones || ritual.tips);
 }
-function Y(c) {
-  return $(c).map((r, e) => ({
-    id: `zone-${e}`,
-    label: n(r.label),
-    x: y(m(r.x, 50), 0, 100),
-    y: y(m(r.y, 50), 0, 100),
-    tip: n(r.tip)
-  })).filter((r) => r.label || r.tip);
+__name(parseRituals, "parseRituals");
+function parseZones(raw) {
+  return normalizeCollection(raw).map((row, index) => ({
+    id: `zone-${index}`,
+    label: localizedString(row.label),
+    x: clamp(toNumber(row.x, 50), 0, 100),
+    y: clamp(toNumber(row.y, 50), 0, 100),
+    tip: localizedString(row.tip)
+  })).filter((zone) => zone.label || zone.tip);
 }
-var j = Object.defineProperty, b = (c, r, e, a) => {
-  for (var s = void 0, d = c.length - 1, p; d >= 0; d--)
-    (p = c[d]) && (s = p(r, e, s) || s);
-  return s && j(r, e, s), s;
-};
-const u = class u extends I {
+__name(parseZones, "parseZones");
+var __defProp2 = Object.defineProperty, __decorateClass = /* @__PURE__ */ __name((decorators, target, key, kind) => {
+  for (var result = void 0, i = decorators.length - 1, decorator; i >= 0; i--)
+    (decorator = decorators[i]) && (result = decorator(target, key, result) || result);
+  return result && __defProp2(target, key, result), result;
+}, "__decorateClass");
+const _SprayRitualGuide = class _SprayRitualGuide extends LitElement {
   constructor() {
     super(...arguments), this.config = {}, this.activeRitualId = "", this.activeZoneId = "", this.boundLangHandler = () => this.requestUpdate();
   }
@@ -276,135 +282,135 @@ const u = class u extends I {
   disconnectedCallback() {
     window.removeEventListener("language-changed", this.boundLangHandler), super.disconnectedCallback();
   }
-  updated(r) {
-    r.has("config") && this.ensureActive();
+  updated(changed) {
+    changed.has("config") && this.ensureActive();
   }
   get rituals() {
-    var r;
-    return D((r = this.config) == null ? void 0 : r.srg_rituals);
+    var _a;
+    return parseRituals((_a = this.config) == null ? void 0 : _a.srg_rituals);
   }
   get zones() {
-    var r;
-    return Y((r = this.config) == null ? void 0 : r.srg_zones);
+    var _a;
+    return parseZones((_a = this.config) == null ? void 0 : _a.srg_zones);
   }
   ensureActive() {
-    var a;
-    const r = this.rituals;
-    r.some((s) => s.id === this.activeRitualId) || (this.activeRitualId = ((a = r[0]) == null ? void 0 : a.id) ?? "");
-    const e = this.zones;
-    this.activeZoneId && !e.some((s) => s.id === this.activeZoneId) && (this.activeZoneId = "");
+    var _a;
+    const rituals = this.rituals;
+    rituals.some((r) => r.id === this.activeRitualId) || (this.activeRitualId = ((_a = rituals[0]) == null ? void 0 : _a.id) ?? "");
+    const zones = this.zones;
+    this.activeZoneId && !zones.some((z) => z.id === this.activeZoneId) && (this.activeZoneId = "");
   }
   get activeRitual() {
     return this.rituals.find((r) => r.id === this.activeRitualId) ?? this.rituals[0] ?? null;
   }
   get activeZone() {
-    return this.zones.find((r) => r.id === this.activeZoneId) ?? null;
+    return this.zones.find((z) => z.id === this.activeZoneId) ?? null;
   }
-  selectRitual(r) {
-    this.activeRitualId = r;
+  selectRitual(id) {
+    this.activeRitualId = id;
   }
-  selectZone(r) {
-    this.activeZoneId = this.activeZoneId === r ? "" : r;
+  selectZone(id) {
+    this.activeZoneId = this.activeZoneId === id ? "" : id;
   }
-  renderZoneDot(r, e) {
-    const a = r.id === this.activeZoneId;
-    return t`
+  renderZoneDot(zone, index) {
+    const active = zone.id === this.activeZoneId;
+    return html`
       <button
         type="button"
-        class=${f({ "srg-dot": !0, "is-active": a, "fs-tap": !0 })}
-        style=${v({ left: `${r.x}%`, top: `${r.y}%` })}
-        aria-pressed=${a ? "true" : "false"}
-        aria-label=${r.label || o("منطقة", "Zone")}
-        title=${r.label}
-        @click=${() => this.selectZone(r.id)}
+        class=${classMap({ "srg-dot": !0, "is-active": active, "fs-tap": !0 })}
+        style=${styleMap({ left: `${zone.x}%`, top: `${zone.y}%` })}
+        aria-pressed=${active ? "true" : "false"}
+        aria-label=${zone.label || t("منطقة", "Zone")}
+        title=${zone.label}
+        @click=${() => this.selectZone(zone.id)}
       >
-        ${e + 1}
+        ${index + 1}
       </button>
     `;
   }
-  renderBody(r) {
-    if (!r || !this.zones.length) return i;
-    const e = this.activeZone;
-    return t`
+  renderBody(showBody) {
+    if (!showBody || !this.zones.length) return nothing;
+    const activeZone = this.activeZone;
+    return html`
       <div class="srg-body-wrap">
-        <div class="srg-body" role="img" aria-label=${o("مناطق الرش على الجسم", "Body spray zones")}>
+        <div class="srg-body" role="img" aria-label=${t("مناطق الرش على الجسم", "Body spray zones")}>
           <div class="srg-body__silhouette" aria-hidden="true"></div>
-          ${this.zones.map((a, s) => this.renderZoneDot(a, s))}
+          ${this.zones.map((zone, index) => this.renderZoneDot(zone, index))}
         </div>
-        ${e != null && e.tip ? h(e.id, t`<p class="srg-zone-tip fs-fade-swap">
-              ${e.label ? t`<span class="srg-zone-tip__label">${e.label}</span> ` : i}${e.tip}
-            </p>`) : t`<p class="srg-zone-tip">
-              ${o("اضغط على نقطة لعرض نصيحة المنطقة.", "Tap a dot to see zone tips.")}
+        ${activeZone != null && activeZone.tip ? keyed(activeZone.id, html`<p class="srg-zone-tip fs-fade-swap">
+              ${activeZone.label ? html`<span class="srg-zone-tip__label">${activeZone.label}</span> ` : nothing}${activeZone.tip}
+            </p>`) : html`<p class="srg-zone-tip">
+              ${t("اضغط على نقطة لعرض نصيحة المنطقة.", "Tap a dot to see zone tips.")}
             </p>`}
       </div>
     `;
   }
-  renderRitualCard(r) {
-    const e = r.id === this.activeRitualId;
-    return t`
+  renderRitualCard(ritual) {
+    const active = ritual.id === this.activeRitualId;
+    return html`
       <button
         type="button"
-        class=${f({ "srg-card": !0, "is-active": e, "fs-tap": !0 })}
-        style=${v({ "--rit-color": r.color })}
-        aria-pressed=${e ? "true" : "false"}
-        @click=${() => this.selectRitual(r.id)}
+        class=${classMap({ "srg-card": !0, "is-active": active, "fs-tap": !0 })}
+        style=${styleMap({ "--rit-color": ritual.color })}
+        aria-pressed=${active ? "true" : "false"}
+        @click=${() => this.selectRitual(ritual.id)}
       >
         <div class="srg-card__head">
-          <h3 class="srg-card__name">${r.name || o("طقس الرش", "Spray ritual")}</h3>
-          <span class="srg-card__intensity">${r.intensityLabel}</span>
+          <h3 class="srg-card__name">${ritual.name || t("طقس الرش", "Spray ritual")}</h3>
+          <span class="srg-card__intensity">${ritual.intensityLabel}</span>
         </div>
         <div class="srg-card__meta">
-          ${r.spraysCount ? t`<span><span class="srg-card__meta-label">${o("عدد الرشات", "Sprays")}</span> ${r.spraysCount}</span>` : i}
-          ${r.zones ? t`<span><span class="srg-card__meta-label">${o("المناطق", "Zones")}</span> ${r.zones}</span>` : i}
-          ${r.distance ? t`<span><span class="srg-card__meta-label">${o("المسافة", "Distance")}</span> ${r.distance}</span>` : i}
+          ${ritual.spraysCount ? html`<span><span class="srg-card__meta-label">${t("عدد الرشات", "Sprays")}</span> ${ritual.spraysCount}</span>` : nothing}
+          ${ritual.zones ? html`<span><span class="srg-card__meta-label">${t("المناطق", "Zones")}</span> ${ritual.zones}</span>` : nothing}
+          ${ritual.distance ? html`<span><span class="srg-card__meta-label">${t("المسافة", "Distance")}</span> ${ritual.distance}</span>` : nothing}
         </div>
-        ${e && r.tips ? h(`${r.id}-tips`, t`<p class="srg-card__tips fs-fade-swap">${r.tips}</p>`) : i}
+        ${active && ritual.tips ? keyed(`${ritual.id}-tips`, html`<p class="srg-card__tips fs-fade-swap">${ritual.tips}</p>`) : nothing}
       </button>
     `;
   }
   render() {
-    const r = this.config || {}, e = S(r, "srg_"), a = e.animate && !E(), s = n(r.srg_title), d = n(r.srg_desc), p = this.rituals, w = N(r.srg_show_body, !1);
-    return p.length ? t`
+    const c = this.config || {}, theme = readSectionTheme(c, "srg_"), animate = theme.animate && !prefersReducedMotion(), title = localizedString(c.srg_title), desc = localizedString(c.srg_desc), rituals = this.rituals, showBody = isTruthy(c.srg_show_body, !1);
+    return rituals.length ? html`
       <section
-        class=${f({ "fs-section": !0, "fs-animate": a })}
-        style=${v(A(e))}
-        aria-label=${s || o("دليل قوة الاستخدام", "Spray ritual guide")}
+        class=${classMap({ "fs-section": !0, "fs-animate": animate })}
+        style=${styleMap(themeStyleMap(theme))}
+        aria-label=${title || t("دليل قوة الاستخدام", "Spray ritual guide")}
       >
         <div class="fs-container">
-          ${s || d ? t`<div class="fs-header">
-                ${s ? t`<h2 class="fs-title">${s}</h2>` : i}
-                ${d ? t`<p class="fs-desc">${d}</p>` : i}
-              </div>` : i}
+          ${title || desc ? html`<div class="fs-header">
+                ${title ? html`<h2 class="fs-title">${title}</h2>` : nothing}
+                ${desc ? html`<p class="fs-desc">${desc}</p>` : nothing}
+              </div>` : nothing}
 
           <div class="srg-shell">
-            ${this.renderBody(w)}
+            ${this.renderBody(showBody)}
             <div class="srg-cards" role="list">
-              ${p.map((z) => this.renderRitualCard(z))}
+              ${rituals.map((ritual) => this.renderRitualCard(ritual))}
             </div>
           </div>
-          ${B({ config: r, prefix: "srg_" })}
+          ${renderCommerceOutcome({ config: c, prefix: "srg_" })}
         </div>
       </section>
-    ` : t`<div class="fs-empty" role="status">
-        ${o(
+    ` : html`<div class="fs-empty" role="status">
+        ${t(
       "أضف طقوس الرش من إعدادات العنصر.",
       "Add spray rituals in the element settings."
     )}
       </div>`;
   }
 };
-u.styles = [R, M];
-let l = u;
-b([
-  Z({ type: Object })
-], l.prototype, "config");
-b([
-  _()
-], l.prototype, "activeRitualId");
-b([
-  _()
-], l.prototype, "activeZoneId");
-typeof l < "u" && l.registerSallaComponent("salla-spray-ritual-guide");
+__name(_SprayRitualGuide, "SprayRitualGuide"), _SprayRitualGuide.styles = [sharedSectionCss, componentStyles];
+let SprayRitualGuide = _SprayRitualGuide;
+__decorateClass([
+  property({ type: Object })
+], SprayRitualGuide.prototype, "config");
+__decorateClass([
+  state()
+], SprayRitualGuide.prototype, "activeRitualId");
+__decorateClass([
+  state()
+], SprayRitualGuide.prototype, "activeZoneId");
+typeof SprayRitualGuide < "u" && SprayRitualGuide.registerSallaComponent("salla-spray-ritual-guide");
 export {
-  l as default
+  SprayRitualGuide as default
 };

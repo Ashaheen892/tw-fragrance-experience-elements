@@ -1,249 +1,277 @@
-import { css as $, nothing as f, html as k } from "lit";
-function z() {
-  var r, e, t;
+var __defProp = Object.defineProperty;
+var __name = (target, value) => __defProp(target, "name", { value, configurable: !0 });
+import { css, nothing, html } from "lit";
+function getPageLocale() {
+  var _a, _b, _c;
   try {
-    const o = typeof Salla < "u" ? (e = (r = Salla == null ? void 0 : Salla.lang) == null ? void 0 : r.getLocale) == null ? void 0 : e.call(r) : void 0, a = (t = document.documentElement.lang) == null ? void 0 : t.split("-")[0];
-    return String(o || a || "ar").toLowerCase();
+    const sallaLocale = typeof Salla < "u" ? (_b = (_a = Salla == null ? void 0 : Salla.lang) == null ? void 0 : _a.getLocale) == null ? void 0 : _b.call(_a) : void 0, htmlLocale = (_c = document.documentElement.lang) == null ? void 0 : _c.split("-")[0];
+    return String(sallaLocale || htmlLocale || "ar").toLowerCase();
   } catch {
     return "ar";
   }
 }
-function b(r, e = "") {
-  if (r == null)
-    return e;
-  if (typeof r == "string")
-    return r.trim() || e;
-  if (typeof r == "number")
-    return String(r);
-  if (typeof r == "object") {
-    const t = r, a = [z(), "ar", "en", ...Object.keys(t)];
-    for (const i of a) {
-      const s = t[i];
-      if (typeof s == "string" && s.trim())
-        return s.trim();
+__name(getPageLocale, "getPageLocale");
+function localizedString(value, fallback = "") {
+  if (value == null)
+    return fallback;
+  if (typeof value == "string")
+    return value.trim() || fallback;
+  if (typeof value == "number")
+    return String(value);
+  if (typeof value == "object") {
+    const obj = value, candidates = [getPageLocale(), "ar", "en", ...Object.keys(obj)];
+    for (const key of candidates) {
+      const v = obj[key];
+      if (typeof v == "string" && v.trim())
+        return v.trim();
     }
   }
-  return e;
+  return fallback;
 }
-const m = "var(--color-primary, var(--primary-color, var(--color-main, #64748b)))";
-function h() {
-  var t;
+__name(localizedString, "localizedString");
+const PRIMARY = "var(--color-primary, var(--primary-color, var(--color-main, #64748b)))";
+function detectFsTheme() {
+  var _a;
   if (typeof document > "u") return "light";
-  const r = document.documentElement, e = (r.getAttribute("data-theme") || r.getAttribute("data-mode") || "").toLowerCase();
-  if (e === "dark") return "dark";
-  if (e === "light") return "light";
-  if (r.classList.contains("dark") || (t = document.body) != null && t.classList.contains("dark"))
+  const root = document.documentElement, attr = (root.getAttribute("data-theme") || root.getAttribute("data-mode") || "").toLowerCase();
+  if (attr === "dark") return "dark";
+  if (attr === "light") return "light";
+  if (root.classList.contains("dark") || (_a = document.body) != null && _a.classList.contains("dark"))
     return "dark";
   try {
-    const o = localStorage.getItem("salla_demo_theme");
-    if (o === "dark" || o === "light") return o;
+    const stored = localStorage.getItem("salla_demo_theme");
+    if (stored === "dark" || stored === "light") return stored;
   } catch {
   }
   return "light";
 }
-function j(r = h()) {
-  const e = r === "dark";
+__name(detectFsTheme, "detectFsTheme");
+function fsThemeVars(mode = detectFsTheme()) {
+  const dark = mode === "dark";
   return {
-    "--fs-store-primary": m,
-    "--accent-color": m,
-    "--button-bg": m,
+    "--fs-store-primary": PRIMARY,
+    "--accent-color": PRIMARY,
+    "--button-bg": PRIMARY,
     "--button-color": "#ffffff",
-    "--text-color": e ? "#ffffff" : "#000000",
-    "--muted-color": e ? "#aaaaaa" : "#666666",
-    "--card-bg": e ? "#0f0f0f" : "#ffffff",
-    "--fs-surface": e ? "#0a0a0a" : "#f0f0f0",
-    "--border-color": e ? "rgba(255, 255, 255, 0.12)" : "#e5e7eb",
+    "--text-color": dark ? "#ffffff" : "#000000",
+    "--muted-color": dark ? "#aaaaaa" : "#666666",
+    "--card-bg": dark ? "#0f0f0f" : "#ffffff",
+    "--fs-surface": dark ? "#0a0a0a" : "#f0f0f0",
+    "--border-color": dark ? "rgba(255, 255, 255, 0.12)" : "#e5e7eb",
     "--section-bg": "transparent"
   };
 }
-function S(r, e) {
-  for (const [t, o] of Object.entries(e))
-    r.style.setProperty(t, o);
-  r.setAttribute("data-fs-theme", h());
+__name(fsThemeVars, "fsThemeVars");
+function applyVars(el, vars) {
+  for (const [key, value] of Object.entries(vars))
+    el.style.setProperty(key, value);
+  el.setAttribute("data-fs-theme", detectFsTheme());
 }
-function u(r, e) {
-  r.querySelectorAll(".fs-section").forEach((t) => {
-    S(t, e);
+__name(applyVars, "applyVars");
+function walkAndApply(root, vars) {
+  root.querySelectorAll(".fs-section").forEach((node) => {
+    applyVars(node, vars);
   });
 }
-function L(r = h()) {
+__name(walkAndApply, "walkAndApply");
+function applyFsThemeToDocument(mode = detectFsTheme()) {
   if (typeof document > "u") return;
-  const e = j(r);
-  u(document, e), document.querySelectorAll("*").forEach((t) => {
-    const o = t, a = o.shadowRoot;
-    a && a.querySelector(".fs-section") && (S(o, e), u(a, e));
+  const vars = fsThemeVars(mode);
+  walkAndApply(document, vars), document.querySelectorAll("*").forEach((node) => {
+    const el = node, shadow = el.shadowRoot;
+    shadow && shadow.querySelector(".fs-section") && (applyVars(el, vars), walkAndApply(shadow, vars));
   });
 }
-let g = !1, c = null;
-function n() {
-  c && clearTimeout(c), c = setTimeout(() => {
-    c = null, L();
+__name(applyFsThemeToDocument, "applyFsThemeToDocument");
+let watching = !1, syncTimer = null;
+function scheduleSync() {
+  syncTimer && clearTimeout(syncTimer), syncTimer = setTimeout(() => {
+    syncTimer = null, applyFsThemeToDocument();
   }, 50);
 }
-function M() {
-  if (!(g || typeof document > "u")) {
-    g = !0, n();
+__name(scheduleSync, "scheduleSync");
+function ensureFsThemeWatch() {
+  if (!(watching || typeof document > "u")) {
+    watching = !0, scheduleSync();
     try {
-      new MutationObserver(n).observe(document.documentElement, {
+      new MutationObserver(scheduleSync).observe(document.documentElement, {
         attributes: !0,
         attributeFilter: ["data-theme", "data-mode", "class"]
-      }), document.body && new MutationObserver(n).observe(document.body, {
+      }), document.body && new MutationObserver(scheduleSync).observe(document.body, {
         attributes: !0,
         attributeFilter: ["class", "data-theme", "data-mode"]
       });
     } catch {
     }
-    window.addEventListener("storage", (r) => {
-      r.key === "salla_demo_theme" && n();
+    window.addEventListener("storage", (event) => {
+      event.key === "salla_demo_theme" && scheduleSync();
     });
     try {
-      new MutationObserver((r) => {
-        r.some((e) => e.addedNodes.length) && n();
+      new MutationObserver((records) => {
+        records.some((r) => r.addedNodes.length) && scheduleSync();
       }).observe(document.documentElement, { childList: !0, subtree: !0 });
     } catch {
     }
   }
 }
-function T(r) {
-  return Object.entries(r || {}).reduce((e, [t, o]) => {
-    const a = t.includes(".") ? t.split(".").pop() : t;
-    return e[a] = o, e;
+__name(ensureFsThemeWatch, "ensureFsThemeWatch");
+function normalizeItem(item) {
+  return Object.entries(item || {}).reduce((acc, [key, value]) => {
+    const normalizedKey = key.includes(".") ? key.split(".").pop() : key;
+    return acc[normalizedKey] = value, acc;
   }, {});
 }
-function x(r, e = "") {
-  const t = typeof r == "string" || typeof r == "number" ? String(r).trim() : b(r, "").trim();
-  return t && t.toLowerCase().replace(/[^a-z0-9\u0600-\u06ff]+/gi, "-").replace(/^-+|-+$/g, "").slice(0, 48) || e;
+__name(normalizeItem, "normalizeItem");
+function slugifyId(value, fallback = "") {
+  const raw = typeof value == "string" || typeof value == "number" ? String(value).trim() : localizedString(value, "").trim();
+  return raw && raw.toLowerCase().replace(/[^a-z0-9\u0600-\u06ff]+/gi, "-").replace(/^-+|-+$/g, "").slice(0, 48) || fallback;
 }
-function C(r, e = "") {
-  if (r && typeof r == "object" && !Array.isArray(r)) {
-    const t = r, o = String(t.en ?? "").trim(), a = String(t.ar ?? "").trim();
-    return x(o || a, e);
+__name(slugifyId, "slugifyId");
+function itemIdFromLabel(value, fallback = "") {
+  if (value && typeof value == "object" && !Array.isArray(value)) {
+    const row = value, en = String(row.en ?? "").trim(), ar = String(row.ar ?? "").trim();
+    return slugifyId(en || ar, fallback);
   }
-  return x(r, e);
+  return slugifyId(value, fallback);
 }
-function N(r, e, t = "item") {
-  const o = String(r.id ?? r.value ?? r.key ?? "").trim();
-  return o || C(r.name ?? r.title ?? r.label ?? r.brand ?? r.model, "") || `${t}-${e + 1}`;
+__name(itemIdFromLabel, "itemIdFromLabel");
+function resolveItemId(item, index, prefix = "item") {
+  const explicit = String(item.id ?? item.value ?? item.key ?? "").trim();
+  return explicit || itemIdFromLabel(item.name ?? item.title ?? item.label ?? item.brand ?? item.model, "") || `${prefix}-${index + 1}`;
 }
-function W(r) {
-  return Array.isArray(r) ? r.filter((e) => !!e && typeof e == "object").map((e, t) => {
-    const o = T(e), a = o;
-    return String(a.id ?? "").trim() || (a.id = N(a, t)), o;
+__name(resolveItemId, "resolveItemId");
+function normalizeCollection(items) {
+  return Array.isArray(items) ? items.filter((item) => !!item && typeof item == "object").map((item, index) => {
+    const normalized = normalizeItem(item), row = normalized;
+    return String(row.id ?? "").trim() || (row.id = resolveItemId(row, index)), normalized;
   }) : [];
 }
-function d(r, e = 0) {
-  return typeof r == "number" && Number.isFinite(r) ? r : typeof r == "string" && r.trim() !== "" && Number.isFinite(Number(r)) ? Number(r) : r && typeof r == "object" && "value" in r ? d(r.value, e) : e;
+__name(normalizeCollection, "normalizeCollection");
+function getUnitValue(val, fallback = 0) {
+  return typeof val == "number" && Number.isFinite(val) ? val : typeof val == "string" && val.trim() !== "" && Number.isFinite(Number(val)) ? Number(val) : val && typeof val == "object" && "value" in val ? getUnitValue(val.value, fallback) : fallback;
 }
-function v(r, e = 0) {
-  if (typeof r == "number" && Number.isFinite(r)) return r;
-  if (typeof r == "string" && r.trim() !== "") {
-    const t = Number(r.replace(",", "."));
-    return Number.isFinite(t) ? t : e;
+__name(getUnitValue, "getUnitValue");
+function toNumber(val, fallback = 0) {
+  if (typeof val == "number" && Number.isFinite(val)) return val;
+  if (typeof val == "string" && val.trim() !== "") {
+    const n = Number(val.replace(",", "."));
+    return Number.isFinite(n) ? n : fallback;
   }
-  return e;
+  return fallback;
 }
-function q(r, e, t) {
-  return Math.min(t, Math.max(e, r));
+__name(toNumber, "toNumber");
+function clamp(value, min, max) {
+  return Math.min(max, Math.max(min, value));
 }
-function p(r, e = !1) {
-  if (typeof r == "boolean") return r;
-  if (typeof r == "string") {
-    const t = r.toLowerCase().trim();
-    if (["true", "1", "yes", "on"].includes(t)) return !0;
-    if (["false", "0", "no", "off", ""].includes(t)) return !1;
+__name(clamp, "clamp");
+function isTruthy(val, fallback = !1) {
+  if (typeof val == "boolean") return val;
+  if (typeof val == "string") {
+    const v = val.toLowerCase().trim();
+    if (["true", "1", "yes", "on"].includes(v)) return !0;
+    if (["false", "0", "no", "off", ""].includes(v)) return !1;
   }
-  return typeof r == "number" ? r !== 0 : e;
+  return typeof val == "number" ? val !== 0 : fallback;
 }
-function l(r) {
-  if (!r) return "";
-  if (typeof r == "string") {
-    const e = r.trim();
-    return Y(e) ? e : "";
+__name(isTruthy, "isTruthy");
+function extractLink(value) {
+  if (!value) return "";
+  if (typeof value == "string") {
+    const trimmed = value.trim();
+    return isValidHref(trimmed) ? trimmed : "";
   }
-  if (Array.isArray(r)) {
-    for (const e of r) {
-      const t = l(e);
-      if (t) return t;
+  if (Array.isArray(value)) {
+    for (const item of value) {
+      const link = extractLink(item);
+      if (link) return link;
     }
     return "";
   }
-  if (typeof r == "object") {
-    const e = r, t = [
-      e.url,
-      e.href,
-      e.link,
-      e.value,
-      e.custom,
-      e.path
+  if (typeof value == "object") {
+    const obj = value, candidates = [
+      obj.url,
+      obj.href,
+      obj.link,
+      obj.value,
+      obj.custom,
+      obj.path
     ];
-    for (const o of t) {
-      const a = l(o);
-      if (a) return a;
+    for (const candidate of candidates) {
+      const link = extractLink(candidate);
+      if (link) return link;
     }
   }
   return "";
 }
-function Y(r) {
-  if (!r || r === "#") return !1;
-  if (r.startsWith("/") || r.startsWith("#") || r.startsWith("?") || r.startsWith("mailto:") || r.startsWith("tel:") || r.startsWith("whatsapp:"))
+__name(extractLink, "extractLink");
+function isValidHref(url) {
+  if (!url || url === "#") return !1;
+  if (url.startsWith("/") || url.startsWith("#") || url.startsWith("?") || url.startsWith("mailto:") || url.startsWith("tel:") || url.startsWith("whatsapp:"))
     return !0;
   try {
-    const e = new URL(r, window.location.origin);
-    return ["http:", "https:", "mailto:", "tel:"].includes(e.protocol);
+    const parsed = new URL(url, window.location.origin);
+    return ["http:", "https:", "mailto:", "tel:"].includes(parsed.protocol);
   } catch {
     return !1;
   }
 }
-function _(r) {
+__name(isValidHref, "isValidHref");
+function isExternalUrl(url) {
   try {
-    return new URL(r, window.location.origin).origin !== window.location.origin;
+    return new URL(url, window.location.origin).origin !== window.location.origin;
   } catch {
     return !1;
   }
 }
-function F(r) {
-  if (!r || typeof r != "string") return !1;
+__name(isExternalUrl, "isExternalUrl");
+function isDirectMediaUrl(url) {
+  if (!url || typeof url != "string") return !1;
   try {
-    const e = new URL(r, window.location.origin);
-    return !!["http:", "https:"].includes(e.protocol);
+    const parsed = new URL(url, window.location.origin);
+    return !!["http:", "https:"].includes(parsed.protocol);
   } catch {
     return !1;
   }
 }
-function U(r, e = "group_order") {
-  return [...r].sort(
-    (t, o) => v(t[e], 0) - v(o[e], 0)
+__name(isDirectMediaUrl, "isDirectMediaUrl");
+function sortByOrder(items, orderKey = "group_order") {
+  return [...items].sort(
+    (a, b) => toNumber(a[orderKey], 0) - toNumber(b[orderKey], 0)
   );
 }
-function A(r, e, t, o) {
-  return z() === "en" ? e : o || r;
+__name(sortByOrder, "sortByOrder");
+function t(ar, en, value, fallbackAr) {
+  return getPageLocale() === "en" ? en : fallbackAr || ar;
 }
-async function D(r) {
-  var e;
-  if (!r) return !1;
+__name(t, "t");
+async function copyText(text) {
+  var _a;
+  if (!text) return !1;
   try {
-    if ((e = navigator.clipboard) != null && e.writeText)
-      return await navigator.clipboard.writeText(r), !0;
+    if ((_a = navigator.clipboard) != null && _a.writeText)
+      return await navigator.clipboard.writeText(text), !0;
   } catch {
   }
   try {
-    const t = document.createElement("textarea");
-    t.value = r, t.setAttribute("readonly", ""), t.style.position = "fixed", t.style.opacity = "0", document.body.appendChild(t), t.select();
-    const o = document.execCommand("copy");
-    return document.body.removeChild(t), o;
+    const area = document.createElement("textarea");
+    area.value = text, area.setAttribute("readonly", ""), area.style.position = "fixed", area.style.opacity = "0", document.body.appendChild(area), area.select();
+    const ok = document.execCommand("copy");
+    return document.body.removeChild(area), ok;
   } catch {
     return !1;
   }
 }
-function P() {
+__name(copyText, "copyText");
+function prefersReducedMotion() {
   try {
     return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   } catch {
     return !1;
   }
 }
-function O(r, e, t) {
-  const o = r || {};
+__name(prefersReducedMotion, "prefersReducedMotion");
+function readSectionTheme(config, prefix, defaults) {
+  const c = config || {};
   return {
     bg: "transparent",
     text: "#000000",
@@ -253,83 +281,88 @@ function O(r, e, t) {
     border: "var(--color-border, #e5e7eb)",
     buttonBg: "var(--color-primary, var(--primary-color, var(--color-main, #64748b)))",
     buttonColor: "#ffffff",
-    radius: `${d(o[`${e}radius`], 20)}px`,
-    spaceDesktop: d(
-      o[`${e}space_desktop`],
+    radius: `${getUnitValue(c[`${prefix}radius`], 20)}px`,
+    spaceDesktop: getUnitValue(
+      c[`${prefix}space_desktop`],
       48
     ),
-    spaceMobile: d(
-      o[`${e}space_mobile`],
+    spaceMobile: getUnitValue(
+      c[`${prefix}space_mobile`],
       28
     ),
-    animate: p(o[`${e}animate`], !0),
-    fullWidth: p(o[`${e}full_width`], !1),
+    animate: isTruthy(c[`${prefix}animate`], !0),
+    fullWidth: isTruthy(c[`${prefix}full_width`], !1),
     noBottomMargin: !1,
     hasContainer: !0
   };
 }
-function V(r) {
-  const e = r.hasContainer !== !1;
-  return M(), {
-    ...j(),
-    "--section-radius": r.radius,
-    "--space-desktop": `${r.spaceDesktop}px`,
-    "--space-mobile": `${r.spaceMobile}px`,
-    "--space-desktop-bottom": r.noBottomMargin ? "0px" : `${r.spaceDesktop}px`,
-    "--space-mobile-bottom": r.noBottomMargin ? "0px" : `${r.spaceMobile}px`,
-    "--section-container-max": e ? "1440px" : "none",
-    "--section-container-pad": e ? "16px" : "0px",
-    "--section-container-pad-sm": e ? "12px" : "0px"
+__name(readSectionTheme, "readSectionTheme");
+function themeStyleMap(theme) {
+  const useContainer = theme.hasContainer !== !1;
+  return ensureFsThemeWatch(), {
+    ...fsThemeVars(),
+    "--section-radius": theme.radius,
+    "--space-desktop": `${theme.spaceDesktop}px`,
+    "--space-mobile": `${theme.spaceMobile}px`,
+    "--space-desktop-bottom": theme.noBottomMargin ? "0px" : `${theme.spaceDesktop}px`,
+    "--space-mobile-bottom": theme.noBottomMargin ? "0px" : `${theme.spaceMobile}px`,
+    "--section-container-max": useContainer ? "1440px" : "none",
+    "--section-container-pad": useContainer ? "16px" : "0px",
+    "--section-container-pad-sm": useContainer ? "12px" : "0px"
   };
 }
-function y(r, e = "") {
-  if (typeof r == "string" && r.trim()) return r.trim();
-  if (Array.isArray(r) && r[0]) {
-    const t = r[0];
-    if (typeof t == "string") return t;
-    if (t && typeof t == "object" && "value" in t)
-      return String(t.value ?? e);
-    if (t && typeof t == "object" && "key" in t)
-      return String(t.key ?? e);
+__name(themeStyleMap, "themeStyleMap");
+function getRadioValue(value, fallback = "") {
+  if (typeof value == "string" && value.trim()) return value.trim();
+  if (Array.isArray(value) && value[0]) {
+    const first = value[0];
+    if (typeof first == "string") return first;
+    if (first && typeof first == "object" && "value" in first)
+      return String(first.value ?? fallback);
+    if (first && typeof first == "object" && "key" in first)
+      return String(first.key ?? fallback);
   }
-  if (r && typeof r == "object") {
-    const t = r;
-    if (Array.isArray(t.selected) && t.selected[0])
-      return y(t.selected, e);
-    if ("value" in t && t.value != null && !Array.isArray(t.value))
-      return String(t.value ?? e);
-    if (Array.isArray(t.value) && t.value[0])
-      return y(t.value, e);
+  if (value && typeof value == "object") {
+    const obj = value;
+    if (Array.isArray(obj.selected) && obj.selected[0])
+      return getRadioValue(obj.selected, fallback);
+    if ("value" in obj && obj.value != null && !Array.isArray(obj.value))
+      return String(obj.value ?? fallback);
+    if (Array.isArray(obj.value) && obj.value[0])
+      return getRadioValue(obj.value, fallback);
   }
-  return e;
+  return fallback;
 }
-function X(r) {
-  const e = b(r, "");
-  return e ? e.split(/[,،|/]/).map((t) => t.trim()).filter(Boolean) : [];
+__name(getRadioValue, "getRadioValue");
+function parseTags(raw) {
+  const text = localizedString(raw, "");
+  return text ? text.split(/[,،|/]/).map((part) => part.trim()).filter(Boolean) : [];
 }
-function w(r) {
-  if (!r) return "";
-  if (typeof r == "string") {
-    const e = r.trim();
-    return F(e) || e.startsWith("/") ? e : "";
+__name(parseTags, "parseTags");
+function extractImageUrl(val) {
+  if (!val) return "";
+  if (typeof val == "string") {
+    const trimmed = val.trim();
+    return isDirectMediaUrl(trimmed) || trimmed.startsWith("/") ? trimmed : "";
   }
-  if (Array.isArray(r)) {
-    for (const e of r) {
-      const t = w(e);
-      if (t) return t;
+  if (Array.isArray(val)) {
+    for (const item of val) {
+      const url = extractImageUrl(item);
+      if (url) return url;
     }
     return "";
   }
-  if (typeof r == "object") {
-    const e = r, t = [e.url, e.src, e.image, e.thumbnail, e.original];
-    for (const o of t) {
-      const a = w(o);
-      if (a) return a;
+  if (typeof val == "object") {
+    const obj = val, candidates = [obj.url, obj.src, obj.image, obj.thumbnail, obj.original];
+    for (const candidate of candidates) {
+      const url = extractImageUrl(candidate);
+      if (url) return url;
     }
   }
   return "";
 }
-const H = $`
+__name(extractImageUrl, "extractImageUrl");
+const sharedSectionCss = css`
   :host {
     direction: inherit;
     width: 100%;
@@ -2216,65 +2249,68 @@ const H = $`
     }
   }
 `;
-function B(r, e, t) {
-  if (r && typeof r == "object" && "config" in r && "prefix" in r) {
-    const a = r;
+function normalizeArgs(optionsOrConfig, legacyPrefix, legacyOptions) {
+  if (optionsOrConfig && typeof optionsOrConfig == "object" && "config" in optionsOrConfig && "prefix" in optionsOrConfig) {
+    const o = optionsOrConfig;
     return {
-      ...a,
-      config: a.config || {},
-      prefix: a.prefix || ""
+      ...o,
+      config: o.config || {},
+      prefix: o.prefix || ""
     };
   }
   return {
     ...{},
-    config: r || {},
+    config: optionsOrConfig || {},
     prefix: ""
   };
 }
-function E(r, e, t = {}) {
-  const o = (t.href || "").trim() || l(r[`${e}result_link`] ?? r[`${e}cta_link`]) || "/", a = b(r[`${e}cta_label`], "").trim() || A("تسوق الآن", "Shop now"), i = ["fs-btn", "fs-tap", t.className || ""].filter(Boolean).join(" ");
-  return k`<a
-    class=${i}
-    href=${o}
-    target=${_(o) ? "_blank" : f}
-    rel=${_(o) ? "noopener noreferrer" : f}
+__name(normalizeArgs, "normalizeArgs");
+function renderCommerceCtaButton(config, prefix, options = {}) {
+  const ctaLink = (options.href || "").trim() || extractLink(config[`${prefix}result_link`] ?? config[`${prefix}cta_link`]) || "/", ctaLabel = localizedString(config[`${prefix}cta_label`], "").trim() || t("تسوق الآن", "Shop now"), className = ["fs-btn", "fs-tap", options.className || ""].filter(Boolean).join(" ");
+  return html`<a
+    class=${className}
+    href=${ctaLink}
+    target=${isExternalUrl(ctaLink) ? "_blank" : nothing}
+    rel=${isExternalUrl(ctaLink) ? "noopener noreferrer" : nothing}
   >
-    ${a}
+    ${ctaLabel}
   </a>`;
 }
-function K(r, e, t) {
-  const o = B(r);
-  if (o.ready === !1) return f;
-  const a = o.config || {}, i = o.prefix || "", s = l(
-    a[`${i}result_link`] ?? a[`${i}cta_link`]
+__name(renderCommerceCtaButton, "renderCommerceCtaButton");
+function renderCommerceOutcome(optionsOrConfig, legacyPrefix, legacyOptions) {
+  const opts = normalizeArgs(optionsOrConfig);
+  if (opts.ready === !1) return nothing;
+  const c = opts.config || {}, prefix = opts.prefix || "", ctaLink = extractLink(
+    c[`${prefix}result_link`] ?? c[`${prefix}cta_link`]
   );
-  return p(a[`${i}show_cta`], !!s) && !!s ? k`
-    <aside class="fs-commerce" aria-label=${A("التسوق", "Shopping")}>
+  return isTruthy(c[`${prefix}show_cta`], !!ctaLink) && !!ctaLink ? html`
+    <aside class="fs-commerce" aria-label=${t("التسوق", "Shopping")}>
       <div class="fs-commerce__actions">
-        ${E(a, i, { className: "fs-commerce__cta" })}
+        ${renderCommerceCtaButton(c, prefix, { className: "fs-commerce__cta" })}
       </div>
     </aside>
-  ` : f;
+  ` : nothing;
 }
+__name(renderCommerceOutcome, "renderCommerceOutcome");
 export {
-  w as a,
-  V as b,
-  K as c,
-  q as d,
-  l as e,
-  v as f,
-  y as g,
-  U as h,
-  _ as i,
-  F as j,
-  X as k,
-  b as l,
-  D as m,
-  W as n,
-  z as o,
-  P as p,
-  p as q,
-  O as r,
-  H as s,
-  A as t
+  extractImageUrl as a,
+  themeStyleMap as b,
+  renderCommerceOutcome as c,
+  clamp as d,
+  extractLink as e,
+  toNumber as f,
+  getRadioValue as g,
+  sortByOrder as h,
+  isExternalUrl as i,
+  isDirectMediaUrl as j,
+  parseTags as k,
+  localizedString as l,
+  copyText as m,
+  normalizeCollection as n,
+  getPageLocale as o,
+  prefersReducedMotion as p,
+  isTruthy as q,
+  readSectionTheme as r,
+  sharedSectionCss as s,
+  t
 };

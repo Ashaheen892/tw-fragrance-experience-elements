@@ -1,10 +1,12 @@
-import { css as _, LitElement as y, nothing as a, html as i } from "lit";
-import { property as k, state as L } from "lit/decorators.js";
-import { classMap as f } from "lit/directives/class-map.js";
-import { keyed as w } from "lit/directives/keyed.js";
-import { styleMap as b } from "lit/directives/style-map.js";
-import { t as r, n as S, f as A, e as C, l as c, a as I, s as T, p as m, i as h, r as X, b as M, c as P } from "./commerceOutcome-CCLcV5SW.js";
-const z = _`
+var __defProp = Object.defineProperty;
+var __name = (target, value) => __defProp(target, "name", { value, configurable: !0 });
+import { css, LitElement, nothing, html } from "lit";
+import { property, state } from "lit/decorators.js";
+import { classMap } from "lit/directives/class-map.js";
+import { keyed } from "lit/directives/keyed.js";
+import { styleMap } from "lit/directives/style-map.js";
+import { t, n as normalizeCollection, f as toNumber, e as extractLink, l as localizedString, a as extractImageUrl, s as sharedSectionCss, p as prefersReducedMotion, i as isExternalUrl, r as readSectionTheme, b as themeStyleMap, c as renderCommerceOutcome } from "./commerceOutcome-DYfJre3y.js";
+const componentStyles = css`
   :host {
     direction: inherit;
   }
@@ -131,65 +133,66 @@ const z = _`
       transform: translateY(-50%);
     }
   }
-`, g = [
+`, DEFAULTS = [
   {
     id: "launch",
-    heading: r("إصدار محدود", "Limited edition"),
-    subheading: r("عطور الموسم بتركيبة فاخرة", "Seasonal scents in a luxurious blend"),
+    heading: t("إصدار محدود", "Limited edition"),
+    subheading: t("عطور الموسم بتركيبة فاخرة", "Seasonal scents in a luxurious blend"),
     image: "https://images.unsplash.com/photo-1615634260167-c8cdede054de?auto=format&fit=crop&w=1400&q=80",
-    ctaLabel: r("اكتشف المجموعة", "Explore collection"),
+    ctaLabel: t("اكتشف المجموعة", "Explore collection"),
     ctaLink: "",
     overlayOpacity: 45
   },
   {
     id: "gift",
-    heading: r("هدايا عطرية", "Scented gifts"),
-    subheading: r("اختيارات أنيقة لكل مناسبة", "Elegant picks for every occasion"),
+    heading: t("هدايا عطرية", "Scented gifts"),
+    subheading: t("اختيارات أنيقة لكل مناسبة", "Elegant picks for every occasion"),
     image: "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=1400&q=80",
-    ctaLabel: r("تسوّق الهدايا", "Shop gifts"),
+    ctaLabel: t("تسوّق الهدايا", "Shop gifts"),
     ctaLink: "",
     overlayOpacity: 45
   }
 ];
-function E(p) {
-  const t = S(p).map((e, n) => ({
-    id: `banner-${n}`,
-    heading: c(e.heading) || c(e.title),
-    subheading: c(e.subheading),
-    image: I(e.image),
-    ctaLabel: c(e.cta_label),
-    ctaLink: C(e.cta_link ?? e.link),
-    overlayOpacity: Math.max(0, Math.min(100, A(e.overlay_opacity, 45)))
-  })).filter((e) => e.image || e.heading);
-  return t.length ? t.map((e, n) => {
-    const s = g[n % g.length];
+function parseBanners(raw) {
+  const parsed = normalizeCollection(raw).map((row, index) => ({
+    id: `banner-${index}`,
+    heading: localizedString(row.heading) || localizedString(row.title),
+    subheading: localizedString(row.subheading),
+    image: extractImageUrl(row.image),
+    ctaLabel: localizedString(row.cta_label),
+    ctaLink: extractLink(row.cta_link ?? row.link),
+    overlayOpacity: Math.max(0, Math.min(100, toNumber(row.overlay_opacity, 45)))
+  })).filter((item) => item.image || item.heading);
+  return parsed.length ? parsed.map((item, i) => {
+    const d = DEFAULTS[i % DEFAULTS.length];
     return {
-      ...e,
-      image: e.image || s.image,
-      heading: e.heading || s.heading,
-      subheading: e.subheading || s.subheading,
-      ctaLabel: e.ctaLabel || s.ctaLabel
+      ...item,
+      image: item.image || d.image,
+      heading: item.heading || d.heading,
+      subheading: item.subheading || d.subheading,
+      ctaLabel: item.ctaLabel || d.ctaLabel
     };
-  }) : g.map((e) => ({ ...e }));
+  }) : DEFAULTS.map((d) => ({ ...d }));
 }
-var O = Object.defineProperty, v = (p, t, e, n) => {
-  for (var s = void 0, o = p.length - 1, l; o >= 0; o--)
-    (l = p[o]) && (s = l(t, e, s) || s);
-  return s && O(t, e, s), s;
-};
-const u = class u extends y {
+__name(parseBanners, "parseBanners");
+var __defProp2 = Object.defineProperty, __decorateClass = /* @__PURE__ */ __name((decorators, target, key, kind) => {
+  for (var result = void 0, i = decorators.length - 1, decorator; i >= 0; i--)
+    (decorator = decorators[i]) && (result = decorator(target, key, result) || result);
+  return result && __defProp2(target, key, result), result;
+}, "__decorateClass");
+const _ScentPromoBanners = class _ScentPromoBanners extends LitElement {
   constructor() {
-    super(...arguments), this.config = {}, this.activeIndex = 0, this.autoTimer = 0, this.boundLangHandler = () => this.requestUpdate(), this.swipeStartX = null, this.onPointerDown = (t) => {
-      t.pointerType === "mouse" && t.button !== 0 || (this.swipeStartX = t.clientX, this.stopAuto());
-    }, this.onPointerUp = (t) => {
-      const e = this.swipeStartX;
-      if (this.swipeStartX = null, this.startAuto(), e == null) return;
-      const n = t.clientX - e;
-      if (Math.abs(n) < 40) return;
-      (getComputedStyle(this).direction === "rtl" ? n > 0 : n < 0) ? this.next() : this.prev();
+    super(...arguments), this.config = {}, this.activeIndex = 0, this.autoTimer = 0, this.boundLangHandler = () => this.requestUpdate(), this.swipeStartX = null, this.onPointerDown = (e) => {
+      e.pointerType === "mouse" && e.button !== 0 || (this.swipeStartX = e.clientX, this.stopAuto());
+    }, this.onPointerUp = (e) => {
+      const startX = this.swipeStartX;
+      if (this.swipeStartX = null, this.startAuto(), startX == null) return;
+      const dx = e.clientX - startX;
+      if (Math.abs(dx) < 40) return;
+      (getComputedStyle(this).direction === "rtl" ? dx > 0 : dx < 0) ? this.next() : this.prev();
     }, this.onPointerCancel = () => {
       this.swipeStartX = null, this.startAuto();
-    }, this.onDragStart = (t) => t.preventDefault();
+    }, this.onDragStart = (e) => e.preventDefault();
   }
   connectedCallback() {
     super.connectedCallback(), window.addEventListener("language-changed", this.boundLangHandler), this.startAuto();
@@ -197,80 +200,80 @@ const u = class u extends y {
   disconnectedCallback() {
     window.removeEventListener("language-changed", this.boundLangHandler), this.stopAuto(), super.disconnectedCallback();
   }
-  updated(t) {
-    if (t.has("config")) {
-      const e = this.banners;
-      this.activeIndex >= e.length && (this.activeIndex = 0), this.startAuto();
+  updated(changed) {
+    if (changed.has("config")) {
+      const banners = this.banners;
+      this.activeIndex >= banners.length && (this.activeIndex = 0), this.startAuto();
     }
   }
   get banners() {
-    var t;
-    return E((t = this.config) == null ? void 0 : t.spb_banners);
+    var _a;
+    return parseBanners((_a = this.config) == null ? void 0 : _a.spb_banners);
   }
   startAuto() {
-    var e;
-    if (this.stopAuto(), this.banners.length <= 1 || m()) return;
-    const t = Math.max(3e3, Number((e = this.config) == null ? void 0 : e.spb_interval) || 5e3);
-    this.autoTimer = window.setInterval(() => this.next(), t);
+    var _a;
+    if (this.stopAuto(), this.banners.length <= 1 || prefersReducedMotion()) return;
+    const interval = Math.max(3e3, Number((_a = this.config) == null ? void 0 : _a.spb_interval) || 5e3);
+    this.autoTimer = window.setInterval(() => this.next(), interval);
   }
   stopAuto() {
     this.autoTimer && (window.clearInterval(this.autoTimer), this.autoTimer = 0);
   }
-  goTo(t) {
-    this.activeIndex = t, this.startAuto();
+  goTo(index) {
+    this.activeIndex = index, this.startAuto();
   }
   prev() {
-    const t = this.banners.length;
-    this.goTo((this.activeIndex - 1 + t) % t);
+    const len = this.banners.length;
+    this.goTo((this.activeIndex - 1 + len) % len);
   }
   next() {
     this.goTo((this.activeIndex + 1) % this.banners.length);
   }
-  renderSlide(t, e) {
-    const n = e === this.activeIndex;
-    return i`
+  renderSlide(banner, index) {
+    const active = index === this.activeIndex;
+    return html`
       <div
-        class=${f({ "spb-slide": !0, "is-active": n })}
+        class=${classMap({ "spb-slide": !0, "is-active": active })}
         role="tabpanel"
-        aria-hidden=${n ? "false" : "true"}
+        aria-hidden=${active ? "false" : "true"}
       >
-        ${t.image ? i`<img class="spb-slide__bg" src=${t.image} alt="" loading=${e === 0 ? "eager" : "lazy"} decoding="async" />` : a}
-        <div class="spb-slide__overlay" style=${b({ "--spb-overlay": `${t.overlayOpacity / 100}` })}></div>
-        ${n ? w(e, i`<div class="spb-slide__content fs-fade-swap">
-              ${t.heading ? i`<h3 class="spb-slide__heading">${t.heading}</h3>` : a}
-              ${t.subheading ? i`<p class="spb-slide__sub">${t.subheading}</p>` : a}
-              ${t.ctaLabel && t.ctaLink ? i`<a
+        ${banner.image ? html`<img class="spb-slide__bg" src=${banner.image} alt="" loading=${index === 0 ? "eager" : "lazy"} decoding="async" />` : nothing}
+        <div class="spb-slide__overlay" style=${styleMap({ "--spb-overlay": `${banner.overlayOpacity / 100}` })}></div>
+        ${active ? keyed(index, html`<div class="spb-slide__content fs-fade-swap">
+              ${banner.heading ? html`<h3 class="spb-slide__heading">${banner.heading}</h3>` : nothing}
+              ${banner.subheading ? html`<p class="spb-slide__sub">${banner.subheading}</p>` : nothing}
+              ${banner.ctaLabel && banner.ctaLink ? html`<a
                     class="fs-btn fs-tap"
-                    href=${t.ctaLink}
-                    target=${h(t.ctaLink) ? "_blank" : a}
-                    rel=${h(t.ctaLink) ? "noopener noreferrer" : a}
-                  >${t.ctaLabel}</a>` : a}
-            </div>`) : i`<div class="spb-slide__content">
-              ${t.heading ? i`<h3 class="spb-slide__heading">${t.heading}</h3>` : a}
-              ${t.subheading ? i`<p class="spb-slide__sub">${t.subheading}</p>` : a}
-              ${t.ctaLabel && t.ctaLink ? i`<a
+                    href=${banner.ctaLink}
+                    target=${isExternalUrl(banner.ctaLink) ? "_blank" : nothing}
+                    rel=${isExternalUrl(banner.ctaLink) ? "noopener noreferrer" : nothing}
+                  >${banner.ctaLabel}</a>` : nothing}
+            </div>`) : html`<div class="spb-slide__content">
+              ${banner.heading ? html`<h3 class="spb-slide__heading">${banner.heading}</h3>` : nothing}
+              ${banner.subheading ? html`<p class="spb-slide__sub">${banner.subheading}</p>` : nothing}
+              ${banner.ctaLabel && banner.ctaLink ? html`<a
                     class="fs-btn fs-tap"
-                    href=${t.ctaLink}
-                    target=${h(t.ctaLink) ? "_blank" : a}
-                    rel=${h(t.ctaLink) ? "noopener noreferrer" : a}
-                  >${t.ctaLabel}</a>` : a}
+                    href=${banner.ctaLink}
+                    target=${isExternalUrl(banner.ctaLink) ? "_blank" : nothing}
+                    rel=${isExternalUrl(banner.ctaLink) ? "noopener noreferrer" : nothing}
+                  >${banner.ctaLabel}</a>` : nothing}
             </div>`}
       </div>
     `;
   }
   render() {
-    const t = this.config || {}, e = X(t, "spb_"), n = e.animate && !m(), s = c(t.spb_title), o = c(t.spb_desc), l = this.banners;
-    return l.length ? i`
+    const c = this.config || {}, theme = readSectionTheme(c, "spb_"), animate = theme.animate && !prefersReducedMotion(), title = localizedString(c.spb_title), desc = localizedString(c.spb_desc), banners = this.banners;
+    return banners.length ? html`
       <section
-        class=${f({ "fs-section": !0, "fs-animate": n })}
-        style=${b(M(e))}
-        aria-label=${s || r("بانرات ترويجية", "Promotional banners")}
+        class=${classMap({ "fs-section": !0, "fs-animate": animate })}
+        style=${styleMap(themeStyleMap(theme))}
+        aria-label=${title || t("بانرات ترويجية", "Promotional banners")}
       >
         <div class="fs-container">
-          ${s || o ? i`<div class="fs-header">
-                ${s ? i`<h2 class="fs-title">${s}</h2>` : a}
-                ${o ? i`<p class="fs-desc">${o}</p>` : a}
-              </div>` : a}
+          ${title || desc ? html`<div class="fs-header">
+                ${title ? html`<h2 class="fs-title">${title}</h2>` : nothing}
+                ${desc ? html`<p class="fs-desc">${desc}</p>` : nothing}
+              </div>` : nothing}
 
           <div
             class="spb-carousel"
@@ -283,37 +286,37 @@ const u = class u extends y {
           >
             <div
               class="spb-track"
-              style=${b({ transform: `translateX(${-this.activeIndex * 100}%)` })}
+              style=${styleMap({ transform: `translateX(${-this.activeIndex * 100}%)` })}
             >
-              ${l.map((x, $) => this.renderSlide(x, $))}
+              ${banners.map((b, i) => this.renderSlide(b, i))}
             </div>
 
-            ${l.length > 1 ? i`
-                <button type="button" class="spb-nav spb-nav--prev fs-icon-btn fs-icon-btn--on-media fs-tap" aria-label=${r("السابق", "Previous")} @click=${() => this.prev()}>‹</button>
-                <button type="button" class="spb-nav spb-nav--next fs-icon-btn fs-icon-btn--on-media fs-tap" aria-label=${r("التالي", "Next")} @click=${() => this.next()}>›</button>
-              ` : a}
+            ${banners.length > 1 ? html`
+                <button type="button" class="spb-nav spb-nav--prev fs-icon-btn fs-icon-btn--on-media fs-tap" aria-label=${t("السابق", "Previous")} @click=${() => this.prev()}>‹</button>
+                <button type="button" class="spb-nav spb-nav--next fs-icon-btn fs-icon-btn--on-media fs-tap" aria-label=${t("التالي", "Next")} @click=${() => this.next()}>›</button>
+              ` : nothing}
           </div>
 
-          ${P({ config: t, prefix: "spb_" })}
+          ${renderCommerceOutcome({ config: c, prefix: "spb_" })}
         </div>
       </section>
-    ` : i`<div class="fs-empty" role="status">
-        ${r(
+    ` : html`<div class="fs-empty" role="status">
+        ${t(
       "أضف بانرات ترويجية من إعدادات العنصر.",
       "Add promo banners in the element settings."
     )}
       </div>`;
   }
 };
-u.styles = [T, z];
-let d = u;
-v([
-  k({ type: Object })
-], d.prototype, "config");
-v([
-  L()
-], d.prototype, "activeIndex");
-typeof d < "u" && d.registerSallaComponent("salla-scent-promo-banners");
+__name(_ScentPromoBanners, "ScentPromoBanners"), _ScentPromoBanners.styles = [sharedSectionCss, componentStyles];
+let ScentPromoBanners = _ScentPromoBanners;
+__decorateClass([
+  property({ type: Object })
+], ScentPromoBanners.prototype, "config");
+__decorateClass([
+  state()
+], ScentPromoBanners.prototype, "activeIndex");
+typeof ScentPromoBanners < "u" && ScentPromoBanners.registerSallaComponent("salla-scent-promo-banners");
 export {
-  d as default
+  ScentPromoBanners as default
 };

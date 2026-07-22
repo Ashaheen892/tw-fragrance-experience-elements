@@ -1,10 +1,12 @@
-import { css as R, LitElement as E, nothing as p, html as a } from "lit";
-import { property as O, state as w } from "lit/decorators.js";
-import { classMap as h } from "lit/directives/class-map.js";
-import { keyed as z } from "lit/directives/keyed.js";
-import { styleMap as _ } from "lit/directives/style-map.js";
-import { n as v, l, t as n, s as T, c as B, r as P, p as L, b as M } from "./commerceOutcome-CCLcV5SW.js";
-const j = R`
+var __defProp = Object.defineProperty;
+var __name = (target, value) => __defProp(target, "name", { value, configurable: !0 });
+import { css, LitElement, nothing, html } from "lit";
+import { property, state } from "lit/decorators.js";
+import { classMap } from "lit/directives/class-map.js";
+import { keyed } from "lit/directives/keyed.js";
+import { styleMap } from "lit/directives/style-map.js";
+import { n as normalizeCollection, l as localizedString, t, s as sharedSectionCss, c as renderCommerceOutcome, r as readSectionTheme, p as prefersReducedMotion, b as themeStyleMap } from "./commerceOutcome-DYfJre3y.js";
+const componentStyles = css`
   .sgb-shell {
     display: grid;
     gap: clamp(1rem, 2.5vw, 1.35rem);
@@ -238,105 +240,114 @@ const j = R`
     }
   }
 `;
-function $(r) {
-  if (Array.isArray(r))
-    return r.map((e) => {
-      if (typeof e == "string") return e.trim();
-      if (e && typeof e == "object") {
-        const t = e;
-        return String(t.id ?? t.value ?? t.key ?? "").trim();
+function parseMatchIds(raw) {
+  if (Array.isArray(raw))
+    return raw.map((item) => {
+      if (typeof item == "string") return item.trim();
+      if (item && typeof item == "object") {
+        const obj = item;
+        return String(obj.id ?? obj.value ?? obj.key ?? "").trim();
       }
       return "";
     }).filter(Boolean);
-  const s = String(r ?? "").trim();
-  return s ? s.split(/[,،|/]/).map((e) => e.trim()).filter(Boolean) : [];
+  const text = String(raw ?? "").trim();
+  return text ? text.split(/[,،|/]/).map((part) => part.trim()).filter(Boolean) : [];
 }
-function Y(r) {
-  return v(r).map((s, e) => ({
-    id: String(s.id ?? s.person_id ?? "").trim() || `person-${e + 1}`,
-    name: l(s.name),
-    icon: String(s.icon ?? "").trim()
+__name(parseMatchIds, "parseMatchIds");
+function parsePersons(raw) {
+  return normalizeCollection(raw).map((item, i) => ({
+    id: String(item.id ?? item.person_id ?? "").trim() || `person-${i + 1}`,
+    name: localizedString(item.name),
+    icon: String(item.icon ?? "").trim()
+  })).filter((p) => p.name);
+}
+__name(parsePersons, "parsePersons");
+function parseOccasions(raw) {
+  return normalizeCollection(raw).map((item, i) => ({
+    id: String(item.id ?? item.occasion_id ?? "").trim() || `occasion-${i + 1}`,
+    name: localizedString(item.name),
+    desc: localizedString(item.desc)
+  })).filter((o) => o.name);
+}
+__name(parseOccasions, "parseOccasions");
+function parseBudgets(raw) {
+  return normalizeCollection(raw).map((item, i) => ({
+    id: String(item.id ?? item.budget_id ?? "").trim() || `budget-${i + 1}`,
+    label: localizedString(item.label) || localizedString(item.name),
+    rangeText: localizedString(item.range_text) || localizedString(item.range) || localizedString(item.desc)
+  })).filter((b) => b.label);
+}
+__name(parseBudgets, "parseBudgets");
+function parseStyles(raw) {
+  return normalizeCollection(raw).map((item, i) => ({
+    id: String(item.id ?? item.style_id ?? "").trim() || `style-${i + 1}`,
+    name: localizedString(item.name),
+    desc: localizedString(item.desc),
+    color: String(item.color ?? "").trim()
   })).filter((s) => s.name);
 }
-function K(r) {
-  return v(r).map((s, e) => ({
-    id: String(s.id ?? s.occasion_id ?? "").trim() || `occasion-${e + 1}`,
-    name: l(s.name),
-    desc: l(s.desc)
-  })).filter((s) => s.name);
-}
-function N(r) {
-  return v(r).map((s, e) => ({
-    id: String(s.id ?? s.budget_id ?? "").trim() || `budget-${e + 1}`,
-    label: l(s.label) || l(s.name),
-    rangeText: l(s.range_text) || l(s.range) || l(s.desc)
-  })).filter((s) => s.label);
-}
-function W(r) {
-  return v(r).map((s, e) => ({
-    id: String(s.id ?? s.style_id ?? "").trim() || `style-${e + 1}`,
-    name: l(s.name),
-    desc: l(s.desc),
-    color: String(s.color ?? "").trim()
-  })).filter((s) => s.name);
-}
-function F(r) {
-  return v(r).map((s, e) => ({
-    id: String(s.id ?? s.recipe_id ?? "").trim() || `recipe-${e + 1}`,
-    personIds: $(s.person_id ?? s.person_ids),
-    occasionIds: $(s.occasion_id ?? s.occasion_ids),
-    budgetIds: $(s.budget_id ?? s.budget_ids),
-    styleIds: $(s.style_id ?? s.style_ids),
-    wrapSuggestion: l(s.wrap_suggestion),
-    message: l(s.message),
-    boxColor: String(s.box_color ?? s.color ?? "").trim(),
-    scentCharacter: l(s.scent_character)
+__name(parseStyles, "parseStyles");
+function parseRecipes(raw) {
+  return normalizeCollection(raw).map((item, i) => ({
+    id: String(item.id ?? item.recipe_id ?? "").trim() || `recipe-${i + 1}`,
+    personIds: parseMatchIds(item.person_id ?? item.person_ids),
+    occasionIds: parseMatchIds(item.occasion_id ?? item.occasion_ids),
+    budgetIds: parseMatchIds(item.budget_id ?? item.budget_ids),
+    styleIds: parseMatchIds(item.style_id ?? item.style_ids),
+    wrapSuggestion: localizedString(item.wrap_suggestion),
+    message: localizedString(item.message),
+    boxColor: String(item.box_color ?? item.color ?? "").trim(),
+    scentCharacter: localizedString(item.scent_character)
   })).filter(
-    (s) => s.wrapSuggestion || s.message || s.scentCharacter || s.personIds.length || s.occasionIds.length
+    (r) => r.wrapSuggestion || r.message || r.scentCharacter || r.personIds.length || r.occasionIds.length
   );
 }
-function S(r) {
+__name(parseRecipes, "parseRecipes");
+function parseNavLabels(config) {
   return {
-    next: l(r.sgb_next_btn) || n("التالي", "Next"),
-    back: l(r.sgb_back_btn) || n("السابق", "Back"),
-    see: l(r.sgb_see_btn) || n("اعرض الهدية", "See your gift"),
-    reset: l(r.sgb_reset_btn) || n("ابدأ من جديد", "Start over"),
-    ctaLabel: l(r.sgb_cta_label) || n("تسوق الآن", "Shop now")
+    next: localizedString(config.sgb_next_btn) || t("التالي", "Next"),
+    back: localizedString(config.sgb_back_btn) || t("السابق", "Back"),
+    see: localizedString(config.sgb_see_btn) || t("اعرض الهدية", "See your gift"),
+    reset: localizedString(config.sgb_reset_btn) || t("ابدأ من جديد", "Start over"),
+    ctaLabel: localizedString(config.sgb_cta_label) || t("تسوق الآن", "Shop now")
   };
 }
-function H(r, s) {
-  if (!r.length) return null;
-  const { personId: e, occasionId: t, budgetId: o, styleId: d } = s, u = r.find((i) => {
-    const c = !i.personIds.length || i.personIds.includes(e), y = !i.occasionIds.length || i.occasionIds.includes(t), A = !i.budgetIds.length || i.budgetIds.includes(o), C = !i.styleIds.length || i.styleIds.includes(d);
-    return c && y && A && C && i.personIds.length > 0;
+__name(parseNavLabels, "parseNavLabels");
+function findMatchingRecipe(recipes, selections) {
+  if (!recipes.length) return null;
+  const { personId, occasionId, budgetId, styleId } = selections, exact = recipes.find((recipe) => {
+    const personOk = !recipe.personIds.length || recipe.personIds.includes(personId), occasionOk = !recipe.occasionIds.length || recipe.occasionIds.includes(occasionId), budgetOk = !recipe.budgetIds.length || recipe.budgetIds.includes(budgetId), styleOk = !recipe.styleIds.length || recipe.styleIds.includes(styleId);
+    return personOk && occasionOk && budgetOk && styleOk && recipe.personIds.length > 0;
   });
-  if (u) return u;
-  let g = null, m = -1;
-  for (const i of r) {
-    let c = 0;
-    e && i.personIds.includes(e) ? c += 4 : i.personIds.length || (c += 1), t && i.occasionIds.includes(t) ? c += 3 : i.occasionIds.length || (c += 1), d && i.styleIds.includes(d) ? c += 2 : i.styleIds.length || (c += 1), o && i.budgetIds.includes(o) ? c += 2 : i.budgetIds.length || (c += 1), c > m && (m = c, g = i);
+  if (exact) return exact;
+  let best = null, bestScore = -1;
+  for (const recipe of recipes) {
+    let score = 0;
+    personId && recipe.personIds.includes(personId) ? score += 4 : recipe.personIds.length || (score += 1), occasionId && recipe.occasionIds.includes(occasionId) ? score += 3 : recipe.occasionIds.length || (score += 1), styleId && recipe.styleIds.includes(styleId) ? score += 2 : recipe.styleIds.length || (score += 1), budgetId && recipe.budgetIds.includes(budgetId) ? score += 2 : recipe.budgetIds.length || (score += 1), score > bestScore && (bestScore = score, best = recipe);
   }
-  return g;
+  return best;
 }
-function q(r, s, e, t) {
-  const o = [];
-  return r != null && r.name && o.push(n(`لـ ${r.name}`, `For ${r.name}`)), s != null && s.name && o.push(n(`مناسبة: ${s.name}`, `Occasion: ${s.name}`)), e != null && e.label && o.push(
-    n(
-      `الميزانية: ${e.label}${e.rangeText ? ` (${e.rangeText})` : ""}`,
-      `Budget: ${e.label}${e.rangeText ? ` (${e.rangeText})` : ""}`
+__name(findMatchingRecipe, "findMatchingRecipe");
+function buildFallbackGiftSummary(person, occasion, budget, style) {
+  const parts = [];
+  return person != null && person.name && parts.push(t(`لـ ${person.name}`, `For ${person.name}`)), occasion != null && occasion.name && parts.push(t(`مناسبة: ${occasion.name}`, `Occasion: ${occasion.name}`)), budget != null && budget.label && parts.push(
+    t(
+      `الميزانية: ${budget.label}${budget.rangeText ? ` (${budget.rangeText})` : ""}`,
+      `Budget: ${budget.label}${budget.rangeText ? ` (${budget.rangeText})` : ""}`
     )
-  ), t != null && t.name && o.push(n(`الأسلوب: ${t.name}`, `Style: ${t.name}`)), o.length ? o.join(" · ") : n(
+  ), style != null && style.name && parts.push(t(`الأسلوب: ${style.name}`, `Style: ${style.name}`)), parts.length ? parts.join(" · ") : t(
     "اختر التفاصيل لبناء صندوق هدية عطري مخصّص.",
     "Pick details to build a custom fragrance gift box."
   );
 }
-const f = [
+__name(buildFallbackGiftSummary, "buildFallbackGiftSummary");
+const GIFT_STEPS = [
   { key: "person", labelAr: "لمن الهدية؟", labelEn: "Who is it for?" },
   { key: "occasion", labelAr: "المناسبة", labelEn: "Occasion" },
   { key: "budget", labelAr: "الميزانية", labelEn: "Budget" },
   { key: "style", labelAr: "أسلوب التغليف", labelEn: "Presentation style" }
 ];
-function I() {
+function emptySelections() {
   return {
     personId: "",
     occasionId: "",
@@ -344,26 +355,31 @@ function I() {
     styleId: ""
   };
 }
-function G(r, s) {
-  return r.find((e) => e.id === s) ?? null;
+__name(emptySelections, "emptySelections");
+function resolvePerson(persons, id) {
+  return persons.find((p) => p.id === id) ?? null;
 }
-function U(r, s) {
-  return r.find((e) => e.id === s) ?? null;
+__name(resolvePerson, "resolvePerson");
+function resolveOccasion(occasions, id) {
+  return occasions.find((o) => o.id === id) ?? null;
 }
-function D(r, s) {
-  return r.find((e) => e.id === s) ?? null;
+__name(resolveOccasion, "resolveOccasion");
+function resolveBudget(budgets, id) {
+  return budgets.find((b) => b.id === id) ?? null;
 }
-function J(r, s) {
-  return r.find((e) => e.id === s) ?? null;
+__name(resolveBudget, "resolveBudget");
+function resolveStyle(styles, id) {
+  return styles.find((s) => s.id === id) ?? null;
 }
-var Q = Object.defineProperty, x = (r, s, e, t) => {
-  for (var o = void 0, d = r.length - 1, u; d >= 0; d--)
-    (u = r[d]) && (o = u(s, e, o) || o);
-  return o && Q(s, e, o), o;
-};
-const k = class k extends E {
+__name(resolveStyle, "resolveStyle");
+var __defProp2 = Object.defineProperty, __decorateClass = /* @__PURE__ */ __name((decorators, target, key, kind) => {
+  for (var result = void 0, i = decorators.length - 1, decorator; i >= 0; i--)
+    (decorator = decorators[i]) && (result = decorator(target, key, result) || result);
+  return result && __defProp2(target, key, result), result;
+}, "__decorateClass");
+const _SmartGiftBuilder = class _SmartGiftBuilder extends LitElement {
   constructor() {
-    super(...arguments), this.config = {}, this.stepIndex = 0, this.showResult = !1, this.selections = I(), this.boundLangHandler = () => this.requestUpdate();
+    super(...arguments), this.config = {}, this.stepIndex = 0, this.showResult = !1, this.selections = emptySelections(), this.boundLangHandler = () => this.requestUpdate();
   }
   connectedCallback() {
     super.connectedCallback(), window.addEventListener("language-changed", this.boundLangHandler);
@@ -371,40 +387,40 @@ const k = class k extends E {
   disconnectedCallback() {
     window.removeEventListener("language-changed", this.boundLangHandler), super.disconnectedCallback();
   }
-  updated(s) {
-    s.has("config") && (this.stepIndex = 0, this.showResult = !1, this.selections = I());
+  updated(changed) {
+    changed.has("config") && (this.stepIndex = 0, this.showResult = !1, this.selections = emptySelections());
   }
   get persons() {
-    var s;
-    return Y((s = this.config) == null ? void 0 : s.sgb_persons);
+    var _a;
+    return parsePersons((_a = this.config) == null ? void 0 : _a.sgb_persons);
   }
   get occasions() {
-    var s;
-    return K((s = this.config) == null ? void 0 : s.sgb_occasions);
+    var _a;
+    return parseOccasions((_a = this.config) == null ? void 0 : _a.sgb_occasions);
   }
   get budgets() {
-    var s;
-    return N((s = this.config) == null ? void 0 : s.sgb_budgets);
+    var _a;
+    return parseBudgets((_a = this.config) == null ? void 0 : _a.sgb_budgets);
   }
   get styles() {
-    var s;
-    return W((s = this.config) == null ? void 0 : s.sgb_styles);
+    var _a;
+    return parseStyles((_a = this.config) == null ? void 0 : _a.sgb_styles);
   }
   get recipes() {
-    var s;
-    return F((s = this.config) == null ? void 0 : s.sgb_recipes);
+    var _a;
+    return parseRecipes((_a = this.config) == null ? void 0 : _a.sgb_recipes);
   }
   get currentStepKey() {
-    var s;
-    return ((s = f[this.stepIndex]) == null ? void 0 : s.key) ?? "person";
+    var _a;
+    return ((_a = GIFT_STEPS[this.stepIndex]) == null ? void 0 : _a.key) ?? "person";
   }
   canAdvance() {
-    const s = this.currentStepKey;
-    return s === "person" ? !!this.selections.personId || !this.persons.length : s === "occasion" ? !!this.selections.occasionId || !this.occasions.length : s === "budget" ? !!this.selections.budgetId || !this.budgets.length : s === "style" ? !!this.selections.styleId || !this.styles.length : !0;
+    const key = this.currentStepKey;
+    return key === "person" ? !!this.selections.personId || !this.persons.length : key === "occasion" ? !!this.selections.occasionId || !this.occasions.length : key === "budget" ? !!this.selections.budgetId || !this.budgets.length : key === "style" ? !!this.selections.styleId || !this.styles.length : !0;
   }
   goNext() {
     if (this.canAdvance()) {
-      if (this.stepIndex >= f.length - 1) {
+      if (this.stepIndex >= GIFT_STEPS.length - 1) {
         this.showResult = !0;
         return;
       }
@@ -419,142 +435,142 @@ const k = class k extends E {
     this.stepIndex > 0 && (this.stepIndex -= 1);
   }
   reset() {
-    this.stepIndex = 0, this.showResult = !1, this.selections = I();
+    this.stepIndex = 0, this.showResult = !1, this.selections = emptySelections();
   }
   get matchedRecipe() {
-    return H(this.recipes, this.selections);
+    return findMatchingRecipe(this.recipes, this.selections);
   }
-  renderPersonCard(s) {
-    const e = this.selections.personId === s.id;
-    return a`
+  renderPersonCard(item) {
+    const active = this.selections.personId === item.id;
+    return html`
       <button
         type="button"
-        class=${h({ "sgb-card": !0, "fs-tap": !0, "is-active": e })}
-        aria-pressed=${e ? "true" : "false"}
+        class=${classMap({ "sgb-card": !0, "fs-tap": !0, "is-active": active })}
+        aria-pressed=${active ? "true" : "false"}
         @click=${() => {
-      this.selections = { ...this.selections, personId: s.id };
+      this.selections = { ...this.selections, personId: item.id };
     }}
       >
-        ${s.icon ? a`<span class="sgb-card__icon">${s.icon}</span>` : p}
-        <span class="sgb-card__name">${s.name}</span>
+        ${item.icon ? html`<span class="sgb-card__icon">${item.icon}</span>` : nothing}
+        <span class="sgb-card__name">${item.name}</span>
       </button>
     `;
   }
-  renderOccasionCard(s) {
-    const e = this.selections.occasionId === s.id;
-    return a`
+  renderOccasionCard(item) {
+    const active = this.selections.occasionId === item.id;
+    return html`
       <button
         type="button"
-        class=${h({ "sgb-card": !0, "fs-tap": !0, "is-active": e })}
-        aria-pressed=${e ? "true" : "false"}
+        class=${classMap({ "sgb-card": !0, "fs-tap": !0, "is-active": active })}
+        aria-pressed=${active ? "true" : "false"}
         @click=${() => {
-      this.selections = { ...this.selections, occasionId: s.id };
+      this.selections = { ...this.selections, occasionId: item.id };
     }}
       >
-        <span class="sgb-card__name">${s.name}</span>
-        ${s.desc ? a`<p class="sgb-card__desc">${s.desc}</p>` : p}
+        <span class="sgb-card__name">${item.name}</span>
+        ${item.desc ? html`<p class="sgb-card__desc">${item.desc}</p>` : nothing}
       </button>
     `;
   }
-  renderBudgetOption(s) {
-    const e = this.selections.budgetId === s.id;
-    return a`
+  renderBudgetOption(item) {
+    const active = this.selections.budgetId === item.id;
+    return html`
       <button
         type="button"
-        class=${h({ "sgb-option": !0, "fs-tap": !0, "is-active": e })}
-        aria-pressed=${e ? "true" : "false"}
+        class=${classMap({ "sgb-option": !0, "fs-tap": !0, "is-active": active })}
+        aria-pressed=${active ? "true" : "false"}
         @click=${() => {
-      this.selections = { ...this.selections, budgetId: s.id };
+      this.selections = { ...this.selections, budgetId: item.id };
     }}
       >
-        <span class="sgb-option__label">${s.label}</span>
-        ${s.rangeText ? a`<p class="sgb-option__range">${s.rangeText}</p>` : p}
+        <span class="sgb-option__label">${item.label}</span>
+        ${item.rangeText ? html`<p class="sgb-option__range">${item.rangeText}</p>` : nothing}
       </button>
     `;
   }
-  renderStyleCard(s) {
-    const e = this.selections.styleId === s.id, t = s.color ? { "--item-color": s.color } : {};
-    return a`
+  renderStyleCard(item) {
+    const active = this.selections.styleId === item.id, style = item.color ? { "--item-color": item.color } : {};
+    return html`
       <button
         type="button"
-        class=${h({ "sgb-card": !0, "fs-tap": !0, "is-active": e })}
-        style=${_(t)}
-        aria-pressed=${e ? "true" : "false"}
+        class=${classMap({ "sgb-card": !0, "fs-tap": !0, "is-active": active })}
+        style=${styleMap(style)}
+        aria-pressed=${active ? "true" : "false"}
         @click=${() => {
-      this.selections = { ...this.selections, styleId: s.id };
+      this.selections = { ...this.selections, styleId: item.id };
     }}
       >
-        <span class="sgb-card__name">${s.name}</span>
-        ${s.desc ? a`<p class="sgb-card__desc">${s.desc}</p>` : p}
+        <span class="sgb-card__name">${item.name}</span>
+        ${item.desc ? html`<p class="sgb-card__desc">${item.desc}</p>` : nothing}
       </button>
     `;
   }
   renderStepBody() {
-    const s = this.currentStepKey, e = f[this.stepIndex];
-    return s === "person" ? a`
-        <div class="sgb-step" role="radiogroup" aria-label=${n(e.labelAr, e.labelEn)}>
-          <h3 class="sgb-step__title">${n(e.labelAr, e.labelEn)}</h3>
-          ${this.persons.length ? a`<div class="sgb-grid">${this.persons.map((t) => this.renderPersonCard(t))}</div>` : a`<div class="sgb-step__empty">
-                ${n("أضف خيارات الأشخاص من إعدادات العنصر.", "Add person options in element settings.")}
+    const key = this.currentStepKey, stepMeta = GIFT_STEPS[this.stepIndex];
+    return key === "person" ? html`
+        <div class="sgb-step" role="radiogroup" aria-label=${t(stepMeta.labelAr, stepMeta.labelEn)}>
+          <h3 class="sgb-step__title">${t(stepMeta.labelAr, stepMeta.labelEn)}</h3>
+          ${this.persons.length ? html`<div class="sgb-grid">${this.persons.map((item) => this.renderPersonCard(item))}</div>` : html`<div class="sgb-step__empty">
+                ${t("أضف خيارات الأشخاص من إعدادات العنصر.", "Add person options in element settings.")}
               </div>`}
         </div>
-      ` : s === "occasion" ? a`
-        <div class="sgb-step" role="radiogroup" aria-label=${n(e.labelAr, e.labelEn)}>
-          <h3 class="sgb-step__title">${n(e.labelAr, e.labelEn)}</h3>
-          ${this.occasions.length ? a`<div class="sgb-grid">${this.occasions.map((t) => this.renderOccasionCard(t))}</div>` : a`<div class="sgb-step__empty">
-                ${n("أضف المناسبات من إعدادات العنصر.", "Add occasions in element settings.")}
+      ` : key === "occasion" ? html`
+        <div class="sgb-step" role="radiogroup" aria-label=${t(stepMeta.labelAr, stepMeta.labelEn)}>
+          <h3 class="sgb-step__title">${t(stepMeta.labelAr, stepMeta.labelEn)}</h3>
+          ${this.occasions.length ? html`<div class="sgb-grid">${this.occasions.map((item) => this.renderOccasionCard(item))}</div>` : html`<div class="sgb-step__empty">
+                ${t("أضف المناسبات من إعدادات العنصر.", "Add occasions in element settings.")}
               </div>`}
         </div>
-      ` : s === "budget" ? a`
-        <div class="sgb-step" role="radiogroup" aria-label=${n(e.labelAr, e.labelEn)}>
-          <h3 class="sgb-step__title">${n(e.labelAr, e.labelEn)}</h3>
-          ${this.budgets.length ? a`<div class="sgb-list">${this.budgets.map((t) => this.renderBudgetOption(t))}</div>` : a`<div class="sgb-step__empty">
-                ${n("أضف خيارات الميزانية من إعدادات العنصر.", "Add budget options in element settings.")}
+      ` : key === "budget" ? html`
+        <div class="sgb-step" role="radiogroup" aria-label=${t(stepMeta.labelAr, stepMeta.labelEn)}>
+          <h3 class="sgb-step__title">${t(stepMeta.labelAr, stepMeta.labelEn)}</h3>
+          ${this.budgets.length ? html`<div class="sgb-list">${this.budgets.map((item) => this.renderBudgetOption(item))}</div>` : html`<div class="sgb-step__empty">
+                ${t("أضف خيارات الميزانية من إعدادات العنصر.", "Add budget options in element settings.")}
               </div>`}
         </div>
-      ` : a`
-      <div class="sgb-step" role="radiogroup" aria-label=${n(e.labelAr, e.labelEn)}>
-        <h3 class="sgb-step__title">${n(e.labelAr, e.labelEn)}</h3>
-        ${this.styles.length ? a`<div class="sgb-grid">${this.styles.map((t) => this.renderStyleCard(t))}</div>` : a`<div class="sgb-step__empty">
-              ${n("أضف أساليب التغليف من إعدادات العنصر.", "Add presentation styles in element settings.")}
+      ` : html`
+      <div class="sgb-step" role="radiogroup" aria-label=${t(stepMeta.labelAr, stepMeta.labelEn)}>
+        <h3 class="sgb-step__title">${t(stepMeta.labelAr, stepMeta.labelEn)}</h3>
+        ${this.styles.length ? html`<div class="sgb-grid">${this.styles.map((item) => this.renderStyleCard(item))}</div>` : html`<div class="sgb-step__empty">
+              ${t("أضف أساليب التغليف من إعدادات العنصر.", "Add presentation styles in element settings.")}
             </div>`}
       </div>
     `;
   }
   renderResult() {
-    const s = this.config || {}, e = S(s), t = this.matchedRecipe, o = G(this.persons, this.selections.personId), d = U(this.occasions, this.selections.occasionId), u = D(this.budgets, this.selections.budgetId), g = J(this.styles, this.selections.styleId), m = (t == null ? void 0 : t.boxColor) || (g == null ? void 0 : g.color) || "#9a7b4f", i = (t == null ? void 0 : t.wrapSuggestion) || (g != null && g.name ? n(`تغليف ${g.name}`, `${g.name} wrapping`) : n("تغليف أنيق بشريط ذهبي", "Elegant wrap with a gold ribbon")), c = (t == null ? void 0 : t.message) || q(o, d, u, g), y = (t == null ? void 0 : t.scentCharacter) || n("عطر متوازن يناسب ذوق المُهدى إليه", "A balanced scent suited to the recipient");
-    return a`
+    const c = this.config || {}, labels = parseNavLabels(c), recipe = this.matchedRecipe, person = resolvePerson(this.persons, this.selections.personId), occasion = resolveOccasion(this.occasions, this.selections.occasionId), budget = resolveBudget(this.budgets, this.selections.budgetId), style = resolveStyle(this.styles, this.selections.styleId), accent = (recipe == null ? void 0 : recipe.boxColor) || (style == null ? void 0 : style.color) || "#9a7b4f", wrapText = (recipe == null ? void 0 : recipe.wrapSuggestion) || (style != null && style.name ? t(`تغليف ${style.name}`, `${style.name} wrapping`) : t("تغليف أنيق بشريط ذهبي", "Elegant wrap with a gold ribbon")), messageText = (recipe == null ? void 0 : recipe.message) || buildFallbackGiftSummary(person, occasion, budget, style), scentText = (recipe == null ? void 0 : recipe.scentCharacter) || t("عطر متوازن يناسب ذوق المُهدى إليه", "A balanced scent suited to the recipient");
+    return html`
       <article
         class="sgb-result fs-result"
-        style=${_({ "--gift-accent": m })}
+        style=${styleMap({ "--gift-accent": accent })}
         role="region"
         aria-live="polite"
       >
         <div class="sgb-result__box" aria-hidden="true"></div>
-        <h3 class="sgb-result__title">${n("صندوق هديتك", "Your gift box")}</h3>
+        <h3 class="sgb-result__title">${t("صندوق هديتك", "Your gift box")}</h3>
 
         <div class="sgb-result__block">
-          <span class="sgb-result__label">${n("التغليف", "Wrapping")}</span>
-          <p class="sgb-result__text">${i}</p>
+          <span class="sgb-result__label">${t("التغليف", "Wrapping")}</span>
+          <p class="sgb-result__text">${wrapText}</p>
         </div>
 
         <div class="sgb-result__block">
-          <span class="sgb-result__label">${n("رسالة الهدية", "Gift message")}</span>
-          <p class="sgb-result__text">${c}</p>
+          <span class="sgb-result__label">${t("رسالة الهدية", "Gift message")}</span>
+          <p class="sgb-result__text">${messageText}</p>
         </div>
 
         <div class="sgb-result__block">
-          <span class="sgb-result__label">${n("الطابع العطري", "Scent character")}</span>
-          <p class="sgb-result__text">${y}</p>
+          <span class="sgb-result__label">${t("الطابع العطري", "Scent character")}</span>
+          <p class="sgb-result__text">${scentText}</p>
         </div>
 
         <div class="fs-actions">
           <button type="button" class="fs-btn fs-btn--ghost fs-tap" @click=${this.reset}>
-            ${e.reset}
+            ${labels.reset}
           </button>
         </div>
-        ${B({
-      config: s,
+        ${renderCommerceOutcome({
+      config: c,
       prefix: "sgb_",
       ready: !0,
       matchTags: [
@@ -568,90 +584,90 @@ const k = class k extends E {
     `;
   }
   renderProgress() {
-    const s = f.length, e = this.showResult ? s : this.stepIndex + 1, t = Math.round(e / s * 100);
-    return a`
+    const total = GIFT_STEPS.length, current = this.showResult ? total : this.stepIndex + 1, percent = Math.round(current / total * 100);
+    return html`
       <div
         class="fs-progress"
         role="progressbar"
         aria-valuemin="0"
         aria-valuemax="100"
-        aria-valuenow=${t}
-        aria-label=${n(`الخطوة ${e} من ${s}`, `Step ${e} of ${s}`)}
+        aria-valuenow=${percent}
+        aria-label=${t(`الخطوة ${current} من ${total}`, `Step ${current} of ${total}`)}
       >
         <div class="fs-progress__bar">
-          <span style=${_({ width: `${t}%` })}></span>
+          <span style=${styleMap({ width: `${percent}%` })}></span>
         </div>
         <p class="fs-progress__label">
-          ${n(`الخطوة ${e} من ${s}`, `Step ${e} of ${s}`)}
+          ${t(`الخطوة ${current} من ${total}`, `Step ${current} of ${total}`)}
         </p>
       </div>
     `;
   }
   renderWizard() {
-    const s = this.config || {}, e = S(s), t = this.stepIndex >= f.length - 1, o = this.showResult ? "result" : `step-${this.stepIndex}`;
-    return a`
+    const c = this.config || {}, labels = parseNavLabels(c), isLast = this.stepIndex >= GIFT_STEPS.length - 1, bodyKey = this.showResult ? "result" : `step-${this.stepIndex}`;
+    return html`
       <div class="sgb-shell">
         ${this.renderProgress()}
 
-        ${z(
-      o,
-      a`<div class="fs-fade-swap">
+        ${keyed(
+      bodyKey,
+      html`<div class="fs-fade-swap">
             ${this.showResult ? this.renderResult() : this.renderStepBody()}
           </div>`
     )}
 
-        ${this.showResult ? p : a`<div class="fs-nav">
-              ${this.stepIndex > 0 ? a`<button type="button" class="fs-btn fs-btn--ghost fs-tap" @click=${this.goBack}>
-                    ${e.back}
-                  </button>` : p}
+        ${this.showResult ? nothing : html`<div class="fs-nav">
+              ${this.stepIndex > 0 ? html`<button type="button" class="fs-btn fs-btn--ghost fs-tap" @click=${this.goBack}>
+                    ${labels.back}
+                  </button>` : nothing}
               <button
                 type="button"
                 class="fs-btn fs-tap"
                 ?disabled=${!this.canAdvance()}
                 aria-disabled=${this.canAdvance() ? "false" : "true"}
-                title=${this.canAdvance() ? "" : n("اختر خياراً للمتابعة", "Choose an option to continue")}
+                title=${this.canAdvance() ? "" : t("اختر خياراً للمتابعة", "Choose an option to continue")}
                 @click=${this.goNext}
               >
-                ${t ? e.see : e.next}
+                ${isLast ? labels.see : labels.next}
               </button>
             </div>`}
       </div>
     `;
   }
   render() {
-    const s = this.config || {}, e = P(s, "sgb_"), t = e.animate && !L(), o = l(s.sgb_title), d = l(s.sgb_desc);
-    return a`
+    const c = this.config || {}, theme = readSectionTheme(c, "sgb_"), animate = theme.animate && !prefersReducedMotion(), title = localizedString(c.sgb_title), desc = localizedString(c.sgb_desc);
+    return html`
       <section
-        class=${h({ "fs-section": !0, "fs-animate": t })}
-        style=${_(M(e))}
-        aria-label=${o || n("صندوق الهدية الذكي", "Smart gift builder")}
+        class=${classMap({ "fs-section": !0, "fs-animate": animate })}
+        style=${styleMap(themeStyleMap(theme))}
+        aria-label=${title || t("صندوق الهدية الذكي", "Smart gift builder")}
       >
         <div class="fs-container">
-          ${o || d ? a`<div class="fs-header">
-                ${o ? a`<h2 class="fs-title">${o}</h2>` : p}
-                ${d ? a`<p class="fs-desc">${d}</p>` : p}
-              </div>` : p}
+          ${title || desc ? html`<div class="fs-header">
+                ${title ? html`<h2 class="fs-title">${title}</h2>` : nothing}
+                ${desc ? html`<p class="fs-desc">${desc}</p>` : nothing}
+              </div>` : nothing}
           ${this.renderWizard()}
         </div>
       </section>
     `;
   }
 };
-k.styles = [T, j];
-let b = k;
-x([
-  O({ type: Object })
-], b.prototype, "config");
-x([
-  w()
-], b.prototype, "stepIndex");
-x([
-  w()
-], b.prototype, "showResult");
-x([
-  w()
-], b.prototype, "selections");
-typeof b < "u" && b.registerSallaComponent("salla-smart-gift-builder");
+__name(_SmartGiftBuilder, "SmartGiftBuilder"), _SmartGiftBuilder.styles = [sharedSectionCss, componentStyles];
+let SmartGiftBuilder = _SmartGiftBuilder;
+__decorateClass([
+  property({ type: Object })
+], SmartGiftBuilder.prototype, "config");
+__decorateClass([
+  state()
+], SmartGiftBuilder.prototype, "stepIndex");
+__decorateClass([
+  state()
+], SmartGiftBuilder.prototype, "showResult");
+__decorateClass([
+  state()
+], SmartGiftBuilder.prototype, "selections");
+typeof SmartGiftBuilder < "u" && SmartGiftBuilder.registerSallaComponent("salla-smart-gift-builder");
 export {
-  b as default
+  SmartGiftBuilder as default
 };

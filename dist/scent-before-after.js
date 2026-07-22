@@ -1,10 +1,12 @@
-import { css as L, html as s, LitElement as I, nothing as h } from "lit";
-import { property as z, state as k } from "lit/decorators.js";
-import { classMap as g } from "lit/directives/class-map.js";
-import { keyed as M } from "lit/directives/keyed.js";
-import { styleMap as y } from "lit/directives/style-map.js";
-import { t as i, n as C, l as m, a as $, g as E, s as D, r as R, p as S, b as A, c as U } from "./commerceOutcome-CCLcV5SW.js";
-const j = L`
+var __defProp = Object.defineProperty;
+var __name = (target, value) => __defProp(target, "name", { value, configurable: !0 });
+import { css, html, LitElement, nothing } from "lit";
+import { property, state } from "lit/decorators.js";
+import { classMap } from "lit/directives/class-map.js";
+import { keyed } from "lit/directives/keyed.js";
+import { styleMap } from "lit/directives/style-map.js";
+import { t, n as normalizeCollection, l as localizedString, a as extractImageUrl, g as getRadioValue, s as sharedSectionCss, r as readSectionTheme, p as prefersReducedMotion, b as themeStyleMap, c as renderCommerceOutcome } from "./commerceOutcome-DYfJre3y.js";
+const componentStyles = css`
   :host {
     direction: inherit;
   }
@@ -242,54 +244,56 @@ const j = L`
       transform: none;
     }
   }
-`, v = [
+`, DEFAULTS = [
   {
     id: "layering",
     beforeImage: "https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&w=1000&q=80",
     afterImage: "https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=1000&q=80",
-    beforeLabel: i("قبل", "Before"),
-    afterLabel: i("بعد", "After"),
-    caption: i("طبقة عطرية أغنى", "Richer scent layering")
+    beforeLabel: t("قبل", "Before"),
+    afterLabel: t("بعد", "After"),
+    caption: t("طبقة عطرية أغنى", "Richer scent layering")
   },
   {
     id: "evolution",
     beforeImage: "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=1000&q=80",
     afterImage: "https://images.unsplash.com/photo-1615634260167-c8cdede054de?auto=format&fit=crop&w=1000&q=80",
-    beforeLabel: i("افتتاحية", "Opening"),
-    afterLabel: i("قاعدة", "Base"),
-    caption: i("تطور الرائحة عبر الساعات", "Scent evolution over hours")
+    beforeLabel: t("افتتاحية", "Opening"),
+    afterLabel: t("قاعدة", "Base"),
+    caption: t("تطور الرائحة عبر الساعات", "Scent evolution over hours")
   }
 ];
-function O(d) {
-  return E(d.sba_direction, "vertical") === "horizontal" ? "horizontal" : "vertical";
+function resolveDirection(config) {
+  return getRadioValue(config.sba_direction, "vertical") === "horizontal" ? "horizontal" : "vertical";
 }
-function q(d) {
-  const a = C(d).map((e, r) => ({
-    id: `slide-${r}`,
-    beforeImage: $(e.before_image),
-    afterImage: $(e.after_image),
-    beforeLabel: m(e.before_label) || "",
-    afterLabel: m(e.after_label) || "",
-    caption: m(e.caption)
-  })).filter((e) => e.beforeImage || e.afterImage || e.caption);
-  return a.length ? a.map((e, r) => {
-    const t = v[r % v.length];
+__name(resolveDirection, "resolveDirection");
+function parseSlides(raw) {
+  const parsed = normalizeCollection(raw).map((row, index) => ({
+    id: `slide-${index}`,
+    beforeImage: extractImageUrl(row.before_image),
+    afterImage: extractImageUrl(row.after_image),
+    beforeLabel: localizedString(row.before_label) || "",
+    afterLabel: localizedString(row.after_label) || "",
+    caption: localizedString(row.caption)
+  })).filter((item) => item.beforeImage || item.afterImage || item.caption);
+  return parsed.length ? parsed.map((item, i) => {
+    const d = DEFAULTS[i % DEFAULTS.length];
     return {
-      ...e,
-      beforeImage: e.beforeImage || t.beforeImage,
-      afterImage: e.afterImage || t.afterImage,
-      beforeLabel: e.beforeLabel || t.beforeLabel,
-      afterLabel: e.afterLabel || t.afterLabel,
-      caption: e.caption || t.caption
+      ...item,
+      beforeImage: item.beforeImage || d.beforeImage,
+      afterImage: item.afterImage || d.afterImage,
+      beforeLabel: item.beforeLabel || d.beforeLabel,
+      afterLabel: item.afterLabel || d.afterLabel,
+      caption: item.caption || d.caption
     };
-  }) : v.map((e) => ({ ...e }));
+  }) : DEFAULTS.map((d) => ({ ...d }));
 }
-var P = Object.defineProperty, u = (d, a, e, r) => {
-  for (var t = void 0, n = d.length - 1, b; n >= 0; n--)
-    (b = d[n]) && (t = b(a, e, t) || t);
-  return t && P(a, e, t), t;
-};
-const B = s`
+__name(parseSlides, "parseSlides");
+var __defProp2 = Object.defineProperty, __decorateClass = /* @__PURE__ */ __name((decorators, target, key, kind) => {
+  for (var result = void 0, i = decorators.length - 1, decorator; i >= 0; i--)
+    (decorator = decorators[i]) && (result = decorator(target, key, result) || result);
+  return result && __defProp2(target, key, result), result;
+}, "__decorateClass");
+const DRAG_ICON_H = html`
   <svg class="sba-handle__svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
     <path
       d="M8 12H16M8 12l2.2-2.2M8 12l2.2 2.2M16 12l-2.2-2.2M16 12l-2.2 2.2"
@@ -300,7 +304,7 @@ const B = s`
       stroke-linejoin="round"
     />
   </svg>
-`, H = s`
+`, DRAG_ICON_V = html`
   <svg class="sba-handle__svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
     <path
       d="M12 8V16M12 8l-2.2 2.2M12 8l2.2 2.2M12 16l-2.2-2.2M12 16l2.2-2.2"
@@ -311,13 +315,13 @@ const B = s`
       stroke-linejoin="round"
     />
   </svg>
-`, x = class x extends I {
+`, _ScentBeforeAfter = class _ScentBeforeAfter extends LitElement {
   constructor() {
-    super(...arguments), this.config = {}, this.activeIndex = 0, this.position = 50, this.dragging = !1, this.boundLangHandler = () => this.requestUpdate(), this.onDown = (a) => {
-      var e, r;
-      a.preventDefault(), this.dragging = !0, (r = (e = a.target).setPointerCapture) == null || r.call(e, a.pointerId), window.addEventListener("pointermove", this.onMove), window.addEventListener("pointerup", this.onUp), this.updatePosition(a);
-    }, this.onMove = (a) => {
-      this.dragging && this.updatePosition(a);
+    super(...arguments), this.config = {}, this.activeIndex = 0, this.position = 50, this.dragging = !1, this.boundLangHandler = () => this.requestUpdate(), this.onDown = (e) => {
+      var _a, _b;
+      e.preventDefault(), this.dragging = !0, (_b = (_a = e.target).setPointerCapture) == null || _b.call(_a, e.pointerId), window.addEventListener("pointermove", this.onMove), window.addEventListener("pointerup", this.onUp), this.updatePosition(e);
+    }, this.onMove = (e) => {
+      this.dragging && this.updatePosition(e);
     }, this.onUp = () => {
       this.dragging = !1, window.removeEventListener("pointermove", this.onMove), window.removeEventListener("pointerup", this.onUp);
     };
@@ -328,122 +332,122 @@ const B = s`
   disconnectedCallback() {
     window.removeEventListener("language-changed", this.boundLangHandler), window.removeEventListener("pointermove", this.onMove), window.removeEventListener("pointerup", this.onUp), super.disconnectedCallback();
   }
-  updated(a) {
-    if (a.has("config")) {
-      const e = this.slides;
-      this.activeIndex >= e.length && (this.activeIndex = 0), this.position = 50;
+  updated(changed) {
+    if (changed.has("config")) {
+      const slides = this.slides;
+      this.activeIndex >= slides.length && (this.activeIndex = 0), this.position = 50;
     }
   }
   get slides() {
-    var a;
-    return q((a = this.config) == null ? void 0 : a.sba_slides);
+    var _a;
+    return parseSlides((_a = this.config) == null ? void 0 : _a.sba_slides);
   }
   get direction() {
-    return O(this.config || {});
+    return resolveDirection(this.config || {});
   }
   get active() {
     return this.slides[this.activeIndex] ?? null;
   }
-  selectSlide(a) {
-    this.activeIndex = a, this.position = 50;
+  selectSlide(index) {
+    this.activeIndex = index, this.position = 50;
   }
-  updatePosition(a) {
-    const e = this.renderRoot.querySelector(".sba-compare");
-    if (!e) return;
-    const r = e.getBoundingClientRect(), n = this.direction === "vertical" ? (a.clientX - r.left) / r.width * 100 : (a.clientY - r.top) / r.height * 100;
-    this.position = Math.max(5, Math.min(95, n));
+  updatePosition(e) {
+    const container = this.renderRoot.querySelector(".sba-compare");
+    if (!container) return;
+    const rect = container.getBoundingClientRect(), raw = this.direction === "vertical" ? (e.clientX - rect.left) / rect.width * 100 : (e.clientY - rect.top) / rect.height * 100;
+    this.position = Math.max(5, Math.min(95, raw));
   }
   render() {
-    const a = this.config || {}, e = R(a, "sba_"), r = e.animate && !S(), t = m(a.sba_title), n = m(a.sba_desc), b = this.slides, o = this.active, f = this.direction;
-    if (!b.length)
-      return s`<div class="fs-empty" role="status">
-        ${i(
+    const c = this.config || {}, theme = readSectionTheme(c, "sba_"), animate = theme.animate && !prefersReducedMotion(), title = localizedString(c.sba_title), desc = localizedString(c.sba_desc), slides = this.slides, active = this.active, dir = this.direction;
+    if (!slides.length)
+      return html`<div class="fs-empty" role="status">
+        ${t(
         "أضف شرائح قبل/بعد من إعدادات العنصر.",
         "Add before/after slides in the element settings."
       )}
       </div>`;
-    const _ = (o == null ? void 0 : o.beforeLabel) || i("قبل", "BEFORE"), w = (o == null ? void 0 : o.afterLabel) || i("بعد", "AFTER");
-    return s`
+    const beforeLabel = (active == null ? void 0 : active.beforeLabel) || t("قبل", "BEFORE"), afterLabel = (active == null ? void 0 : active.afterLabel) || t("بعد", "AFTER");
+    return html`
       <section
-        class=${g({ "fs-section": !0, "fs-animate": r })}
-        style=${y(A(e))}
-        aria-label=${t || i("مقارنة قبل وبعد", "Before & after comparison")}
+        class=${classMap({ "fs-section": !0, "fs-animate": animate })}
+        style=${styleMap(themeStyleMap(theme))}
+        aria-label=${title || t("مقارنة قبل وبعد", "Before & after comparison")}
       >
         <div class="fs-container">
-          ${t || n ? s`<div class="fs-header">
-                ${t ? s`<h2 class="fs-title">${t}</h2>` : h}
-                ${n ? s`<p class="fs-desc">${n}</p>` : h}
-              </div>` : h}
+          ${title || desc ? html`<div class="fs-header">
+                ${title ? html`<h2 class="fs-title">${title}</h2>` : nothing}
+                ${desc ? html`<p class="fs-desc">${desc}</p>` : nothing}
+              </div>` : nothing}
 
-          ${b.length > 1 ? s`<div class="sba-tabs" role="tablist">
-                ${b.map((l, c) => s`
+          ${slides.length > 1 ? html`<div class="sba-tabs" role="tablist">
+                ${slides.map((s, i) => html`
                   <button
                     type="button"
                     role="tab"
-                    class=${g({ "sba-tab": !0, "fs-tap": !0, "is-active": c === this.activeIndex })}
-                    aria-selected=${c === this.activeIndex ? "true" : "false"}
-                    @click=${() => this.selectSlide(c)}
-                  >${l.caption || `${c + 1}`}</button>
+                    class=${classMap({ "sba-tab": !0, "fs-tap": !0, "is-active": i === this.activeIndex })}
+                    aria-selected=${i === this.activeIndex ? "true" : "false"}
+                    @click=${() => this.selectSlide(i)}
+                  >${s.caption || `${i + 1}`}</button>
                 `)}
-              </div>` : h}
+              </div>` : nothing}
 
-          ${o ? M(this.activeIndex, s`
+          ${active ? keyed(this.activeIndex, html`
               <div
-                class=${g({
+                class=${classMap({
       "sba-compare": !0,
-      "sba-compare--vertical": f === "vertical",
-      "sba-compare--horizontal": f === "horizontal",
+      "sba-compare--vertical": dir === "vertical",
+      "sba-compare--horizontal": dir === "horizontal",
       "fs-fade-swap": !0
     })}
-                style=${y({ "--sba-pos": `${this.position}%` })}
+                style=${styleMap({ "--sba-pos": `${this.position}%` })}
                 @pointerdown=${this.onDown}
               >
-                <img class="sba-compare__img sba-compare__before" src=${o.beforeImage} alt=${_} loading="lazy" decoding="async" />
-                <img class="sba-compare__img sba-compare__after" src=${o.afterImage} alt=${w} loading="lazy" decoding="async" />
-                <span class="sba-label sba-label--before">${_}</span>
-                <span class="sba-label sba-label--after">${w}</span>
+                <img class="sba-compare__img sba-compare__before" src=${active.beforeImage} alt=${beforeLabel} loading="lazy" decoding="async" />
+                <img class="sba-compare__img sba-compare__after" src=${active.afterImage} alt=${afterLabel} loading="lazy" decoding="async" />
+                <span class="sba-label sba-label--before">${beforeLabel}</span>
+                <span class="sba-label sba-label--after">${afterLabel}</span>
                 <div
                   class="sba-handle"
                   @pointerdown=${this.onDown}
                   role="slider"
                   tabindex="0"
-                  aria-orientation=${f === "vertical" ? "horizontal" : "vertical"}
-                  aria-label=${i("اسحب للمقارنة", "Drag to compare")}
+                  aria-orientation=${dir === "vertical" ? "horizontal" : "vertical"}
+                  aria-label=${t("اسحب للمقارنة", "Drag to compare")}
                   aria-valuenow=${Math.round(this.position)}
                   aria-valuemin="5"
                   aria-valuemax="95"
-                  @keydown=${(l) => {
-      const c = l.key === "ArrowLeft" || l.key === "ArrowUp" ? -4 : l.key === "ArrowRight" || l.key === "ArrowDown" ? 4 : 0;
-      c && (l.preventDefault(), this.position = Math.max(5, Math.min(95, this.position + c)));
+                  @keydown=${(e) => {
+      const step = e.key === "ArrowLeft" || e.key === "ArrowUp" ? -4 : e.key === "ArrowRight" || e.key === "ArrowDown" ? 4 : 0;
+      step && (e.preventDefault(), this.position = Math.max(5, Math.min(95, this.position + step)));
     }}
                 >
                   <span class="sba-handle__rail" aria-hidden="true"></span>
                   <span class="sba-handle__grip" aria-hidden="true">
-                    ${f === "vertical" ? B : H}
+                    ${dir === "vertical" ? DRAG_ICON_H : DRAG_ICON_V}
                   </span>
                 </div>
               </div>
-              ${o.caption ? s`<p class="sba-caption">${o.caption}</p>` : h}
-            `) : h}
+              ${active.caption ? html`<p class="sba-caption">${active.caption}</p>` : nothing}
+            `) : nothing}
 
-          ${U({ config: a, prefix: "sba_" })}
+          ${renderCommerceOutcome({ config: c, prefix: "sba_" })}
         </div>
       </section>
     `;
   }
 };
-x.styles = [D, j];
-let p = x;
-u([
-  z({ type: Object })
-], p.prototype, "config");
-u([
-  k()
-], p.prototype, "activeIndex");
-u([
-  k()
-], p.prototype, "position");
-typeof p < "u" && p.registerSallaComponent("salla-scent-before-after");
+__name(_ScentBeforeAfter, "ScentBeforeAfter"), _ScentBeforeAfter.styles = [sharedSectionCss, componentStyles];
+let ScentBeforeAfter = _ScentBeforeAfter;
+__decorateClass([
+  property({ type: Object })
+], ScentBeforeAfter.prototype, "config");
+__decorateClass([
+  state()
+], ScentBeforeAfter.prototype, "activeIndex");
+__decorateClass([
+  state()
+], ScentBeforeAfter.prototype, "position");
+typeof ScentBeforeAfter < "u" && ScentBeforeAfter.registerSallaComponent("salla-scent-before-after");
 export {
-  p as default
+  ScentBeforeAfter as default
 };

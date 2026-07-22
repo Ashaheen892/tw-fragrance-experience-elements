@@ -1,9 +1,11 @@
-import { css as u, LitElement as x, nothing as o, html as s } from "lit";
-import { property as _, state as $ } from "lit/decorators.js";
-import { classMap as v } from "lit/directives/class-map.js";
-import { styleMap as p } from "lit/directives/style-map.js";
-import { n as y, e as k, l as c, a as w, s as C, t as i, i as z, r as I, p as P, b as L, c as E } from "./commerceOutcome-CCLcV5SW.js";
-const O = u`
+var __defProp = Object.defineProperty;
+var __name = (target, value) => __defProp(target, "name", { value, configurable: !0 });
+import { css, LitElement, nothing, html } from "lit";
+import { property, state } from "lit/decorators.js";
+import { classMap } from "lit/directives/class-map.js";
+import { styleMap } from "lit/directives/style-map.js";
+import { n as normalizeCollection, e as extractLink, l as localizedString, a as extractImageUrl, s as sharedSectionCss, t, i as isExternalUrl, r as readSectionTheme, p as prefersReducedMotion, b as themeStyleMap, c as renderCommerceOutcome } from "./commerceOutcome-DYfJre3y.js";
+const componentStyles = css`
   :host {
     direction: inherit;
   }
@@ -161,23 +163,24 @@ const O = u`
     }
   }
 `;
-function S(d) {
-  return y(d).map((e, r) => ({
-    id: `occasion-${r}`,
-    name: c(e.name),
-    desc: c(e.desc),
-    scentProfile: c(e.scent_profile),
-    image: w(e.image),
-    color: c(e.color) || "#9a7b4f",
-    link: k(e.link)
-  })).filter((e) => e.name || e.desc || e.scentProfile);
+function parseOccasions(raw) {
+  return normalizeCollection(raw).map((row, index) => ({
+    id: `occasion-${index}`,
+    name: localizedString(row.name),
+    desc: localizedString(row.desc),
+    scentProfile: localizedString(row.scent_profile),
+    image: extractImageUrl(row.image),
+    color: localizedString(row.color) || "#9a7b4f",
+    link: extractLink(row.link)
+  })).filter((item) => item.name || item.desc || item.scentProfile);
 }
-var A = Object.defineProperty, h = (d, e, r, g) => {
-  for (var a = void 0, t = d.length - 1, l; t >= 0; t--)
-    (l = d[t]) && (a = l(e, r, a) || a);
-  return a && A(e, r, a), a;
-};
-const m = class m extends x {
+__name(parseOccasions, "parseOccasions");
+var __defProp2 = Object.defineProperty, __decorateClass = /* @__PURE__ */ __name((decorators, target, key, kind) => {
+  for (var result = void 0, i = decorators.length - 1, decorator; i >= 0; i--)
+    (decorator = decorators[i]) && (result = decorator(target, key, result) || result);
+  return result && __defProp2(target, key, result), result;
+}, "__decorateClass");
+const _OccasionScentGuide = class _OccasionScentGuide extends LitElement {
   constructor() {
     super(...arguments), this.config = {}, this.activeId = "", this.boundLangHandler = () => this.requestUpdate();
   }
@@ -187,110 +190,110 @@ const m = class m extends x {
   disconnectedCallback() {
     window.removeEventListener("language-changed", this.boundLangHandler), super.disconnectedCallback();
   }
-  updated(e) {
-    e.has("config") && this.ensureActive();
+  updated(changed) {
+    changed.has("config") && this.ensureActive();
   }
   get occasions() {
-    var e;
-    return S((e = this.config) == null ? void 0 : e.osg_occasions);
+    var _a;
+    return parseOccasions((_a = this.config) == null ? void 0 : _a.osg_occasions);
   }
   ensureActive() {
-    var r;
-    const e = this.occasions;
-    e.some((g) => g.id === this.activeId) || (this.activeId = ((r = e[0]) == null ? void 0 : r.id) ?? "");
+    var _a;
+    const list = this.occasions;
+    list.some((o) => o.id === this.activeId) || (this.activeId = ((_a = list[0]) == null ? void 0 : _a.id) ?? "");
   }
   get active() {
-    return this.occasions.find((e) => e.id === this.activeId) ?? this.occasions[0] ?? null;
+    return this.occasions.find((o) => o.id === this.activeId) ?? this.occasions[0] ?? null;
   }
-  select(e) {
-    this.activeId = e;
+  select(id) {
+    this.activeId = id;
   }
-  renderCard(e) {
-    const r = e.id === this.activeId;
-    return s`
+  renderCard(occasion) {
+    const active = occasion.id === this.activeId;
+    return html`
       <button
         type="button"
-        class=${v({ "osg-card": !0, "is-active": r, "fs-tap": !0 })}
-        style=${p({ "--occ-color": e.color })}
-        aria-pressed=${r ? "true" : "false"}
+        class=${classMap({ "osg-card": !0, "is-active": active, "fs-tap": !0 })}
+        style=${styleMap({ "--occ-color": occasion.color })}
+        aria-pressed=${active ? "true" : "false"}
         aria-controls="osg-detail"
-        @click=${() => this.select(e.id)}
+        @click=${() => this.select(occasion.id)}
       >
-        ${e.image ? s`<div class="osg-card__media">
-              <img src=${e.image} alt="" loading="lazy" decoding="async" />
-            </div>` : s`<div class="osg-card__media" aria-hidden="true"></div>`}
-        <h3 class="osg-card__name">${e.name || i("مناسبة", "Occasion")}</h3>
-        ${e.desc ? s`<p class="osg-card__desc">${e.desc}</p>` : o}
+        ${occasion.image ? html`<div class="osg-card__media">
+              <img src=${occasion.image} alt="" loading="lazy" decoding="async" />
+            </div>` : html`<div class="osg-card__media" aria-hidden="true"></div>`}
+        <h3 class="osg-card__name">${occasion.name || t("مناسبة", "Occasion")}</h3>
+        ${occasion.desc ? html`<p class="osg-card__desc">${occasion.desc}</p>` : nothing}
       </button>
     `;
   }
-  renderPanel(e) {
-    const r = e.link ? z(e.link) : !1;
-    return s`
+  renderPanel(occasion) {
+    const external = occasion.link ? isExternalUrl(occasion.link) : !1;
+    return html`
       <div
         class="osg-panel"
         id="osg-detail"
         role="region"
         aria-live="polite"
-        style=${p({ "--occ-color": e.color })}
+        style=${styleMap({ "--occ-color": occasion.color })}
       >
-        <h3 class="osg-panel__title">${e.name || i("مناسبة", "Occasion")}</h3>
-        ${e.desc ? s`<p class="osg-panel__desc">${e.desc}</p>` : o}
-        ${e.scentProfile ? s`<div class="osg-profile">
-              <span class="osg-profile__label">${i("الملف العطري المقترح", "Suggested scent profile")}</span>
-              <p class="osg-profile__text">${e.scentProfile}</p>
-            </div>` : o}
-        ${e.link ? s`<a
+        <h3 class="osg-panel__title">${occasion.name || t("مناسبة", "Occasion")}</h3>
+        ${occasion.desc ? html`<p class="osg-panel__desc">${occasion.desc}</p>` : nothing}
+        ${occasion.scentProfile ? html`<div class="osg-profile">
+              <span class="osg-profile__label">${t("الملف العطري المقترح", "Suggested scent profile")}</span>
+              <p class="osg-profile__text">${occasion.scentProfile}</p>
+            </div>` : nothing}
+        ${occasion.link ? html`<a
               class="fs-btn fs-tap"
-              href=${e.link}
-              target=${r ? "_blank" : "_self"}
-              rel=${r ? "noopener noreferrer" : o}
+              href=${occasion.link}
+              target=${external ? "_blank" : "_self"}
+              rel=${external ? "noopener noreferrer" : nothing}
             >
-              ${i("استكشف التوصية", "Explore recommendation")}
-            </a>` : o}
+              ${t("استكشف التوصية", "Explore recommendation")}
+            </a>` : nothing}
       </div>
     `;
   }
   render() {
-    const e = this.config || {}, r = I(e, "osg_"), g = r.animate && !P(), a = c(e.osg_title), t = c(e.osg_desc), l = this.occasions, f = this.active;
-    return l.length ? s`
+    const c = this.config || {}, theme = readSectionTheme(c, "osg_"), animate = theme.animate && !prefersReducedMotion(), title = localizedString(c.osg_title), desc = localizedString(c.osg_desc), occasions = this.occasions, active = this.active;
+    return occasions.length ? html`
       <section
-        class=${v({ "fs-section": !0, "fs-animate": g })}
-        style=${p(L(r))}
-        aria-label=${a || i("دليل اختيار العطر حسب المناسبة", "Occasion scent guide")}
+        class=${classMap({ "fs-section": !0, "fs-animate": animate })}
+        style=${styleMap(themeStyleMap(theme))}
+        aria-label=${title || t("دليل اختيار العطر حسب المناسبة", "Occasion scent guide")}
       >
         <div class="fs-container">
-          ${a || t ? s`<div class="fs-header">
-                ${a ? s`<h2 class="fs-title">${a}</h2>` : o}
-                ${t ? s`<p class="fs-desc">${t}</p>` : o}
-              </div>` : o}
+          ${title || desc ? html`<div class="fs-header">
+                ${title ? html`<h2 class="fs-title">${title}</h2>` : nothing}
+                ${desc ? html`<p class="fs-desc">${desc}</p>` : nothing}
+              </div>` : nothing}
 
           <div class="osg-shell">
             <div class="osg-cards" role="list">
-              ${l.map((b) => this.renderCard(b))}
+              ${occasions.map((occasion) => this.renderCard(occasion))}
             </div>
-            ${f ? this.renderPanel(f) : o}
+            ${active ? this.renderPanel(active) : nothing}
           </div>
-          ${E({ config: e, prefix: "osg_" })}
+          ${renderCommerceOutcome({ config: c, prefix: "osg_" })}
         </div>
       </section>
-    ` : s`<div class="fs-empty" role="status">
-        ${i(
+    ` : html`<div class="fs-empty" role="status">
+        ${t(
       "أضف مناسبات من إعدادات العنصر.",
       "Add occasions in the element settings."
     )}
       </div>`;
   }
 };
-m.styles = [C, O];
-let n = m;
-h([
-  _({ type: Object })
-], n.prototype, "config");
-h([
-  $()
-], n.prototype, "activeId");
-typeof n < "u" && n.registerSallaComponent("salla-occasion-scent-guide");
+__name(_OccasionScentGuide, "OccasionScentGuide"), _OccasionScentGuide.styles = [sharedSectionCss, componentStyles];
+let OccasionScentGuide = _OccasionScentGuide;
+__decorateClass([
+  property({ type: Object })
+], OccasionScentGuide.prototype, "config");
+__decorateClass([
+  state()
+], OccasionScentGuide.prototype, "activeId");
+typeof OccasionScentGuide < "u" && OccasionScentGuide.registerSallaComponent("salla-occasion-scent-guide");
 export {
-  n as default
+  OccasionScentGuide as default
 };

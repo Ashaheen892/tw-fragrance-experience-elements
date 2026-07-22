@@ -1,9 +1,11 @@
-import { css as b, LitElement as $, html as i, nothing as f } from "lit";
-import { property as y } from "lit/decorators.js";
-import { classMap as x } from "lit/directives/class-map.js";
-import { styleMap as c } from "lit/directives/style-map.js";
-import { n as w, l as p, g as S, d as k, f as L, s as C, p as g, r as M, b as E, t as u, c as R } from "./commerceOutcome-CCLcV5SW.js";
-const j = b`
+var __defProp = Object.defineProperty;
+var __name = (target, value) => __defProp(target, "name", { value, configurable: !0 });
+import { css, LitElement, html, nothing } from "lit";
+import { property } from "lit/decorators.js";
+import { classMap } from "lit/directives/class-map.js";
+import { styleMap } from "lit/directives/style-map.js";
+import { n as normalizeCollection, l as localizedString, g as getRadioValue, d as clamp, f as toNumber, s as sharedSectionCss, p as prefersReducedMotion, r as readSectionTheme, b as themeStyleMap, t, c as renderCommerceOutcome } from "./commerceOutcome-DYfJre3y.js";
+const componentStyles = css`
   .fpm-panel {
     max-width: 880px;
     margin-inline: auto;
@@ -120,14 +122,14 @@ const j = b`
       transition: none !important;
     }
   }
-`, z = [
+`, FIXED_METRIC_KEYS = [
   "longevity",
   "sillage",
   "projection",
   "sweetness",
   "freshness",
   "warmth"
-], I = ["bars", "rings"], D = {
+], STYLES = ["bars", "rings"], DEFAULT_LABELS = {
   longevity: { ar: "الثبات", en: "Longevity" },
   sillage: { ar: "الأريج المحيط", en: "Sillage" },
   projection: { ar: "الانتشار", en: "Projection" },
@@ -135,51 +137,57 @@ const j = b`
   freshness: { ar: "الانتعاش", en: "Freshness" },
   warmth: { ar: "الدفء", en: "Warmth" }
 };
-function O(t) {
-  const e = S(t.fpm_style, "bars");
-  return I.includes(e) ? e : "bars";
+function resolveMeterStyle(config) {
+  const value = getRadioValue(config.fpm_style, "bars");
+  return STYLES.includes(value) ? value : "bars";
 }
-function v(t) {
-  return k(L(t, 0), 0, 100);
+__name(resolveMeterStyle, "resolveMeterStyle");
+function metricValue(raw) {
+  return clamp(toNumber(raw, 0), 0, 100);
 }
-function A(t) {
-  const e = w(t.fpm_metrics);
-  return e.length ? e.map((r, s) => {
-    const a = p(r.label), n = v(r.value);
+__name(metricValue, "metricValue");
+function parseMetrics(config) {
+  const collection = normalizeCollection(config.fpm_metrics);
+  return collection.length ? collection.map((item, i) => {
+    const label = localizedString(item.label), value = metricValue(item.value);
     return {
-      id: String(r.id ?? r.metric_id ?? "").trim() || `metric-${s + 1}`,
-      label: a,
-      value: n,
-      color: String(r.color ?? "").trim()
+      id: String(item.id ?? item.metric_id ?? "").trim() || `metric-${i + 1}`,
+      label,
+      value,
+      color: String(item.color ?? "").trim()
     };
-  }).filter((r) => r.label || r.value > 0) : z.flatMap((r) => {
-    const s = t[`fpm_${r}`], a = v(s), n = t[`fpm_${r}_label`], l = p(n);
-    return a <= 0 && !l && s == null ? [] : [
+  }).filter((m) => m.label || m.value > 0) : FIXED_METRIC_KEYS.flatMap((key) => {
+    const fieldValue = config[`fpm_${key}`], value = metricValue(fieldValue), labelRaw = config[`fpm_${key}_label`], customLabel = localizedString(labelRaw);
+    return value <= 0 && !customLabel && fieldValue == null ? [] : [
       {
-        id: r,
-        label: l || D[r].ar,
-        value: a,
-        color: String(t[`fpm_${r}_color`] ?? "").trim()
+        id: key,
+        label: customLabel || DEFAULT_LABELS[key].ar,
+        value,
+        color: String(config[`fpm_${key}_color`] ?? "").trim()
       }
     ];
   });
 }
-function B(t) {
-  return t.length > 0;
+__name(parseMetrics, "parseMetrics");
+function hasMetrics(metrics) {
+  return metrics.length > 0;
 }
-function T(t, e = 42) {
-  const r = 2 * Math.PI * e, s = t / 100 * r;
-  return String(r - s);
+__name(hasMetrics, "hasMetrics");
+function ringDashOffset(value, radius = 42) {
+  const circumference = 2 * Math.PI * radius, filled = value / 100 * circumference;
+  return String(circumference - filled);
 }
-function H(t = 42) {
-  return 2 * Math.PI * t;
+__name(ringDashOffset, "ringDashOffset");
+function ringCircumference(radius = 42) {
+  return 2 * Math.PI * radius;
 }
-var P = Object.defineProperty, U = (t, e, r, s) => {
-  for (var a = void 0, n = t.length - 1, l; n >= 0; n--)
-    (l = t[n]) && (a = l(e, r, a) || a);
-  return a && P(e, r, a), a;
-};
-const m = 42, d = class d extends $ {
+__name(ringCircumference, "ringCircumference");
+var __defProp2 = Object.defineProperty, __decorateClass = /* @__PURE__ */ __name((decorators, target, key, kind) => {
+  for (var result = void 0, i = decorators.length - 1, decorator; i >= 0; i--)
+    (decorator = decorators[i]) && (result = decorator(target, key, result) || result);
+  return result && __defProp2(target, key, result), result;
+}, "__decorateClass");
+const RING_RADIUS = 42, _FragrancePerformanceMeter = class _FragrancePerformanceMeter extends LitElement {
   constructor() {
     super(...arguments), this.config = {}, this.boundLangHandler = () => this.requestUpdate();
   }
@@ -190,81 +198,81 @@ const m = 42, d = class d extends $ {
     window.removeEventListener("language-changed", this.boundLangHandler), super.disconnectedCallback();
   }
   get metrics() {
-    return A(this.config || {});
+    return parseMetrics(this.config || {});
   }
-  renderBar(e) {
-    const r = {
-      ...e.color ? { "--metric-color": e.color } : {}
-    }, s = !g();
-    return i`
-      <div class="fpm-bar" style=${c(r)}>
+  renderBar(metric) {
+    const style = {
+      ...metric.color ? { "--metric-color": metric.color } : {}
+    }, animate = !prefersReducedMotion();
+    return html`
+      <div class="fpm-bar" style=${styleMap(style)}>
         <div class="fpm-bar__head">
-          <span class="fpm-bar__label">${e.label}</span>
-          <span class="fpm-bar__value">${e.value}%</span>
+          <span class="fpm-bar__label">${metric.label}</span>
+          <span class="fpm-bar__value">${metric.value}%</span>
         </div>
-        <div class="fpm-bar__track" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow=${e.value} aria-label=${e.label}>
+        <div class="fpm-bar__track" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow=${metric.value} aria-label=${metric.label}>
           <span
             class="fpm-bar__fill"
-            style=${c({ width: s ? `${e.value}%` : `${e.value}%` })}
+            style=${styleMap({ width: animate ? `${metric.value}%` : `${metric.value}%` })}
           ></span>
         </div>
       </div>
     `;
   }
-  renderRing(e) {
-    const r = e.color ? { "--metric-color": e.color } : {}, s = H(m), a = T(e.value, m);
-    return i`
-      <div class="fpm-ring" style=${c(r)}>
-        <svg class="fpm-ring__svg" viewBox="0 0 100 100" role="img" aria-label=${`${e.label}: ${e.value}%`}>
-          <circle class="fpm-ring__track" cx="50" cy="50" r=${m} />
+  renderRing(metric) {
+    const style = metric.color ? { "--metric-color": metric.color } : {}, circumference = ringCircumference(RING_RADIUS), dashOffset = ringDashOffset(metric.value, RING_RADIUS);
+    return html`
+      <div class="fpm-ring" style=${styleMap(style)}>
+        <svg class="fpm-ring__svg" viewBox="0 0 100 100" role="img" aria-label=${`${metric.label}: ${metric.value}%`}>
+          <circle class="fpm-ring__track" cx="50" cy="50" r=${RING_RADIUS} />
           <circle
             class="fpm-ring__arc"
             cx="50"
             cy="50"
-            r=${m}
-            stroke-dasharray=${String(s)}
-            stroke-dashoffset=${a}
+            r=${RING_RADIUS}
+            stroke-dasharray=${String(circumference)}
+            stroke-dashoffset=${dashOffset}
           />
           <text class="fpm-ring__value" x="50" y="50" text-anchor="middle" dominant-baseline="central">
-            ${e.value}%
+            ${metric.value}%
           </text>
         </svg>
-        <p class="fpm-ring__label">${e.label}</p>
+        <p class="fpm-ring__label">${metric.label}</p>
       </div>
     `;
   }
-  renderMetrics(e, r) {
-    return r === "rings" ? i`<div class="fpm-rings">${e.map((s) => this.renderRing(s))}</div>` : i`<div class="fpm-bars">${e.map((s) => this.renderBar(s))}</div>`;
+  renderMetrics(metrics, style) {
+    return style === "rings" ? html`<div class="fpm-rings">${metrics.map((m) => this.renderRing(m))}</div>` : html`<div class="fpm-bars">${metrics.map((m) => this.renderBar(m))}</div>`;
   }
   render() {
-    const e = this.config || {}, r = M(e, "fpm_"), s = r.animate && !g(), a = p(e.fpm_title), n = p(e.fpm_desc), l = this.metrics, h = O(e), _ = B(l);
-    return i`
+    const c = this.config || {}, theme = readSectionTheme(c, "fpm_"), animate = theme.animate && !prefersReducedMotion(), title = localizedString(c.fpm_title), desc = localizedString(c.fpm_desc), metrics = this.metrics, meterStyle = resolveMeterStyle(c), showData = hasMetrics(metrics);
+    return html`
       <section
-        class=${x({ "fs-section": !0, "fs-animate": s })}
-        style=${c(E(r))}
-        aria-label=${a || u("مؤشر الأداء العطري", "Fragrance performance meter")}
+        class=${classMap({ "fs-section": !0, "fs-animate": animate })}
+        style=${styleMap(themeStyleMap(theme))}
+        aria-label=${title || t("مؤشر الأداء العطري", "Fragrance performance meter")}
       >
         <div class="fs-container">
-          ${a || n ? i`<div class="fs-header">
-                ${a ? i`<h2 class="fs-title">${a}</h2>` : f}
-                ${n ? i`<p class="fs-desc">${n}</p>` : f}
-              </div>` : f}
+          ${title || desc ? html`<div class="fs-header">
+                ${title ? html`<h2 class="fs-title">${title}</h2>` : nothing}
+                ${desc ? html`<p class="fs-desc">${desc}</p>` : nothing}
+              </div>` : nothing}
 
-          ${_ ? i`<div class="fpm-panel fs-panel">${this.renderMetrics(l, h)}</div>` : i`<div class="fs-empty" role="status">
-                ${u("أضف مقاييس الأداء من إعدادات العنصر.", "Add performance metrics in the element settings.")}
+          ${showData ? html`<div class="fpm-panel fs-panel">${this.renderMetrics(metrics, meterStyle)}</div>` : html`<div class="fs-empty" role="status">
+                ${t("أضف مقاييس الأداء من إعدادات العنصر.", "Add performance metrics in the element settings.")}
               </div>`}
-          ${R({ config: e, prefix: "fpm_" })}
+          ${renderCommerceOutcome({ config: c, prefix: "fpm_" })}
         </div>
       </section>
     `;
   }
 };
-d.styles = [C, j];
-let o = d;
-U([
-  y({ type: Object })
-], o.prototype, "config");
-typeof o < "u" && o.registerSallaComponent("salla-fragrance-performance-meter");
+__name(_FragrancePerformanceMeter, "FragrancePerformanceMeter"), _FragrancePerformanceMeter.styles = [sharedSectionCss, componentStyles];
+let FragrancePerformanceMeter = _FragrancePerformanceMeter;
+__decorateClass([
+  property({ type: Object })
+], FragrancePerformanceMeter.prototype, "config");
+typeof FragrancePerformanceMeter < "u" && FragrancePerformanceMeter.registerSallaComponent("salla-fragrance-performance-meter");
 export {
-  o as default
+  FragrancePerformanceMeter as default
 };

@@ -1,10 +1,12 @@
-import { css as x, LitElement as _, nothing as i, html as s } from "lit";
-import { property as y, state as $ } from "lit/decorators.js";
-import { classMap as m } from "lit/directives/class-map.js";
-import { keyed as k } from "lit/directives/keyed.js";
-import { styleMap as f } from "lit/directives/style-map.js";
-import { n as w, a as L, l, g as S, s as z, t as n, r as C, p as I, b as A, c as M } from "./commerceOutcome-CCLcV5SW.js";
-const H = x`
+var __defProp = Object.defineProperty;
+var __name = (target, value) => __defProp(target, "name", { value, configurable: !0 });
+import { css, LitElement, nothing, html } from "lit";
+import { property, state } from "lit/decorators.js";
+import { classMap } from "lit/directives/class-map.js";
+import { keyed } from "lit/directives/keyed.js";
+import { styleMap } from "lit/directives/style-map.js";
+import { n as normalizeCollection, a as extractImageUrl, l as localizedString, g as getRadioValue, s as sharedSectionCss, t, r as readSectionTheme, p as prefersReducedMotion, b as themeStyleMap, c as renderCommerceOutcome } from "./commerceOutcome-DYfJre3y.js";
+const componentStyles = css`
   :host {
     direction: inherit;
   }
@@ -168,25 +170,27 @@ const H = x`
     }
   }
 `;
-function O(o) {
-  return S(o.set_layout, "horizontal") === "vertical" ? "vertical" : "horizontal";
+function resolveLayout(config) {
+  return getRadioValue(config.set_layout, "horizontal") === "vertical" ? "vertical" : "horizontal";
 }
-function P(o) {
-  return w(o).map((e, t) => ({
-    id: `stage-${t}`,
-    label: l(e.label),
-    timeLabel: l(e.time_label),
-    desc: l(e.desc),
-    color: l(e.color) || "#9a7b4f",
-    image: L(e.image)
-  })).filter((e) => e.label || e.timeLabel || e.desc);
+__name(resolveLayout, "resolveLayout");
+function parseStages(raw) {
+  return normalizeCollection(raw).map((row, index) => ({
+    id: `stage-${index}`,
+    label: localizedString(row.label),
+    timeLabel: localizedString(row.time_label),
+    desc: localizedString(row.desc),
+    color: localizedString(row.color) || "#9a7b4f",
+    image: extractImageUrl(row.image)
+  })).filter((stage) => stage.label || stage.timeLabel || stage.desc);
 }
-var Y = Object.defineProperty, u = (o, e, t, p) => {
-  for (var r = void 0, a = o.length - 1, d; a >= 0; a--)
-    (d = o[a]) && (r = d(e, t, r) || r);
-  return r && Y(e, t, r), r;
-};
-const g = class g extends _ {
+__name(parseStages, "parseStages");
+var __defProp2 = Object.defineProperty, __decorateClass = /* @__PURE__ */ __name((decorators, target, key, kind) => {
+  for (var result = void 0, i = decorators.length - 1, decorator; i >= 0; i--)
+    (decorator = decorators[i]) && (result = decorator(target, key, result) || result);
+  return result && __defProp2(target, key, result), result;
+}, "__decorateClass");
+const _ScentEvolutionTimeline = class _ScentEvolutionTimeline extends LitElement {
   constructor() {
     super(...arguments), this.config = {}, this.activeId = "", this.boundLangHandler = () => this.requestUpdate();
   }
@@ -196,113 +200,113 @@ const g = class g extends _ {
   disconnectedCallback() {
     window.removeEventListener("language-changed", this.boundLangHandler), super.disconnectedCallback();
   }
-  updated(e) {
-    e.has("config") && this.ensureActive();
+  updated(changed) {
+    changed.has("config") && this.ensureActive();
   }
   get stages() {
-    var e;
-    return P((e = this.config) == null ? void 0 : e.set_stages);
+    var _a;
+    return parseStages((_a = this.config) == null ? void 0 : _a.set_stages);
   }
   ensureActive() {
-    var t;
-    const e = this.stages;
-    e.some((p) => p.id === this.activeId) || (this.activeId = ((t = e[0]) == null ? void 0 : t.id) ?? "");
+    var _a;
+    const list = this.stages;
+    list.some((s) => s.id === this.activeId) || (this.activeId = ((_a = list[0]) == null ? void 0 : _a.id) ?? "");
   }
   get active() {
-    return this.stages.find((e) => e.id === this.activeId) ?? this.stages[0] ?? null;
+    return this.stages.find((s) => s.id === this.activeId) ?? this.stages[0] ?? null;
   }
-  select(e) {
-    this.activeId = e;
+  select(id) {
+    this.activeId = id;
   }
-  renderStep(e) {
-    const t = e.id === this.activeId;
-    return s`
+  renderStep(stage) {
+    const active = stage.id === this.activeId;
+    return html`
       <button
         type="button"
-        class=${m({ "set-step": !0, "is-active": t, "fs-tap": !0 })}
-        style=${f({ "--step-color": e.color })}
-        aria-pressed=${t ? "true" : "false"}
+        class=${classMap({ "set-step": !0, "is-active": active, "fs-tap": !0 })}
+        style=${styleMap({ "--step-color": stage.color })}
+        aria-pressed=${active ? "true" : "false"}
         aria-controls="set-detail"
-        @click=${() => this.select(e.id)}
+        @click=${() => this.select(stage.id)}
       >
         <span class="set-step__dot" aria-hidden="true"></span>
         <span>
-          <p class="set-step__label">${e.label || n("مرحلة", "Stage")}</p>
-          ${e.timeLabel ? s`<p class="set-step__time">${e.timeLabel}</p>` : i}
+          <p class="set-step__label">${stage.label || t("مرحلة", "Stage")}</p>
+          ${stage.timeLabel ? html`<p class="set-step__time">${stage.timeLabel}</p>` : nothing}
         </span>
       </button>
     `;
   }
-  renderDetail(e) {
-    return s`
+  renderDetail(stage) {
+    return html`
       <div class="set-detail fs-panel fs-fade-swap" id="set-detail" role="region" aria-live="polite">
-        ${e.image ? s`<div
+        ${stage.image ? html`<div
               class="set-detail__bg"
-              style=${f({ backgroundImage: `url("${e.image}")` })}
+              style=${styleMap({ backgroundImage: `url("${stage.image}")` })}
               aria-hidden="true"
-            ></div>` : i}
+            ></div>` : nothing}
         <div class="set-detail__body">
-          <h3 class="fs-panel__title">${e.label || n("مرحلة العطر", "Scent stage")}</h3>
-          ${e.timeLabel ? s`<p class="set-detail__time">${e.timeLabel}</p>` : i}
-          ${e.desc ? s`<p class="fs-panel__desc">${e.desc}</p>` : s`<p class="fs-panel__desc">
-                ${n("اختر مرحلة لعرض وصف تطور العطر.", "Pick a stage to see how the scent evolves.")}
+          <h3 class="fs-panel__title">${stage.label || t("مرحلة العطر", "Scent stage")}</h3>
+          ${stage.timeLabel ? html`<p class="set-detail__time">${stage.timeLabel}</p>` : nothing}
+          ${stage.desc ? html`<p class="fs-panel__desc">${stage.desc}</p>` : html`<p class="fs-panel__desc">
+                ${t("اختر مرحلة لعرض وصف تطور العطر.", "Pick a stage to see how the scent evolves.")}
               </p>`}
         </div>
       </div>
     `;
   }
   render() {
-    const e = this.config || {}, t = C(e, "set_"), p = t.animate && !I(), r = l(e.set_title), a = l(e.set_desc), d = this.stages, h = O(e), v = this.active;
-    return d.length ? s`
+    const c = this.config || {}, theme = readSectionTheme(c, "set_"), animate = theme.animate && !prefersReducedMotion(), title = localizedString(c.set_title), desc = localizedString(c.set_desc), stages = this.stages, layout = resolveLayout(c), active = this.active;
+    return stages.length ? html`
       <section
-        class=${m({ "fs-section": !0, "fs-animate": p })}
-        style=${f(A(t))}
-        aria-label=${r || n("رحلة العطر عبر الوقت", "Scent evolution timeline")}
+        class=${classMap({ "fs-section": !0, "fs-animate": animate })}
+        style=${styleMap(themeStyleMap(theme))}
+        aria-label=${title || t("رحلة العطر عبر الوقت", "Scent evolution timeline")}
       >
         <div class="fs-container">
-          ${r || a ? s`<div class="fs-header">
-                ${r ? s`<h2 class="fs-title">${r}</h2>` : i}
-                ${a ? s`<p class="fs-desc">${a}</p>` : i}
-              </div>` : i}
+          ${title || desc ? html`<div class="fs-header">
+                ${title ? html`<h2 class="fs-title">${title}</h2>` : nothing}
+                ${desc ? html`<p class="fs-desc">${desc}</p>` : nothing}
+              </div>` : nothing}
 
           <div
-            class=${m({
+            class=${classMap({
       "set-shell": !0,
-      "set-shell--vertical": h === "vertical"
+      "set-shell--vertical": layout === "vertical"
     })}
           >
             <div
-              class=${m({
+              class=${classMap({
       "set-track": !0,
-      "set-track--vertical": h === "vertical"
+      "set-track--vertical": layout === "vertical"
     })}
               role="tablist"
-              aria-label=${n("مراحل العطر", "Scent stages")}
+              aria-label=${t("مراحل العطر", "Scent stages")}
             >
-              ${d.map((b) => this.renderStep(b))}
+              ${stages.map((stage) => this.renderStep(stage))}
             </div>
-            ${v ? k(v.id, this.renderDetail(v)) : i}
+            ${active ? keyed(active.id, this.renderDetail(active)) : nothing}
           </div>
-          ${M({ config: e, prefix: "set_" })}
+          ${renderCommerceOutcome({ config: c, prefix: "set_" })}
         </div>
       </section>
-    ` : s`<div class="fs-empty" role="status">
-        ${n(
+    ` : html`<div class="fs-empty" role="status">
+        ${t(
       "أضف مراحل تطور العطر من إعدادات العنصر.",
       "Add scent evolution stages in the element settings."
     )}
       </div>`;
   }
 };
-g.styles = [z, H];
-let c = g;
-u([
-  y({ type: Object })
-], c.prototype, "config");
-u([
-  $()
-], c.prototype, "activeId");
-typeof c < "u" && c.registerSallaComponent("salla-scent-evolution-timeline");
+__name(_ScentEvolutionTimeline, "ScentEvolutionTimeline"), _ScentEvolutionTimeline.styles = [sharedSectionCss, componentStyles];
+let ScentEvolutionTimeline = _ScentEvolutionTimeline;
+__decorateClass([
+  property({ type: Object })
+], ScentEvolutionTimeline.prototype, "config");
+__decorateClass([
+  state()
+], ScentEvolutionTimeline.prototype, "activeId");
+typeof ScentEvolutionTimeline < "u" && ScentEvolutionTimeline.registerSallaComponent("salla-scent-evolution-timeline");
 export {
-  c as default
+  ScentEvolutionTimeline as default
 };

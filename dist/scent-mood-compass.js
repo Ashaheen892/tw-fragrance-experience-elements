@@ -1,10 +1,12 @@
-import { css as $, LitElement as _, html as r, nothing as p } from "lit";
-import { property as w, state as k } from "lit/decorators.js";
-import { classMap as b } from "lit/directives/class-map.js";
-import { keyed as L } from "lit/directives/keyed.js";
-import { styleMap as v } from "lit/directives/style-map.js";
-import { n as P, l as o, d as g, f as u, s as S, t as n, r as C, p as I, b as z, c as M } from "./commerceOutcome-CCLcV5SW.js";
-const A = $`
+var __defProp = Object.defineProperty;
+var __name = (target, value) => __defProp(target, "name", { value, configurable: !0 });
+import { css, LitElement, html, nothing } from "lit";
+import { property, state } from "lit/decorators.js";
+import { classMap } from "lit/directives/class-map.js";
+import { keyed } from "lit/directives/keyed.js";
+import { styleMap } from "lit/directives/style-map.js";
+import { n as normalizeCollection, l as localizedString, d as clamp, f as toNumber, s as sharedSectionCss, t, r as readSectionTheme, p as prefersReducedMotion, b as themeStyleMap, c as renderCommerceOutcome } from "./commerceOutcome-DYfJre3y.js";
+const componentStyles = css`
   :host {
     direction: inherit;
   }
@@ -154,30 +156,32 @@ const A = $`
     }
   }
 `;
-function T(a) {
+function parseLabels(config) {
   return {
-    xLeft: o(a.smc_x_left) || "Fresh",
-    xRight: o(a.smc_x_right) || "Warm",
-    yTop: o(a.smc_y_top) || "Soft",
-    yBottom: o(a.smc_y_bottom) || "Strong"
+    xLeft: localizedString(config.smc_x_left) || "Fresh",
+    xRight: localizedString(config.smc_x_right) || "Warm",
+    yTop: localizedString(config.smc_y_top) || "Soft",
+    yBottom: localizedString(config.smc_y_bottom) || "Strong"
   };
 }
-function E(a) {
-  return P(a).map((e, t) => ({
-    id: `point-${t}`,
-    name: o(e.name),
-    desc: o(e.desc),
-    x: g(u(e.x, 50), 0, 100),
-    y: g(u(e.y, 50), 0, 100),
-    color: o(e.color) || "#9a7b4f"
-  })).filter((e) => e.name || e.desc);
+__name(parseLabels, "parseLabels");
+function parsePoints(raw) {
+  return normalizeCollection(raw).map((row, index) => ({
+    id: `point-${index}`,
+    name: localizedString(row.name),
+    desc: localizedString(row.desc),
+    x: clamp(toNumber(row.x, 50), 0, 100),
+    y: clamp(toNumber(row.y, 50), 0, 100),
+    color: localizedString(row.color) || "#9a7b4f"
+  })).filter((point) => point.name || point.desc);
 }
-var H = Object.defineProperty, x = (a, e, t, c) => {
-  for (var s = void 0, i = a.length - 1, m; i >= 0; i--)
-    (m = a[i]) && (s = m(e, t, s) || s);
-  return s && H(e, t, s), s;
-};
-const h = class h extends _ {
+__name(parsePoints, "parsePoints");
+var __defProp2 = Object.defineProperty, __decorateClass = /* @__PURE__ */ __name((decorators, target, key, kind) => {
+  for (var result = void 0, i = decorators.length - 1, decorator; i >= 0; i--)
+    (decorator = decorators[i]) && (result = decorator(target, key, result) || result);
+  return result && __defProp2(target, key, result), result;
+}, "__decorateClass");
+const _ScentMoodCompass = class _ScentMoodCompass extends LitElement {
   constructor() {
     super(...arguments), this.config = {}, this.activeId = "", this.boundLangHandler = () => this.requestUpdate();
   }
@@ -187,104 +191,104 @@ const h = class h extends _ {
   disconnectedCallback() {
     window.removeEventListener("language-changed", this.boundLangHandler), super.disconnectedCallback();
   }
-  updated(e) {
-    e.has("config") && this.ensureActive();
+  updated(changed) {
+    changed.has("config") && this.ensureActive();
   }
   get points() {
-    var e;
-    return E((e = this.config) == null ? void 0 : e.smc_points);
+    var _a;
+    return parsePoints((_a = this.config) == null ? void 0 : _a.smc_points);
   }
   ensureActive() {
-    var t;
-    const e = this.points;
-    e.some((c) => c.id === this.activeId) || (this.activeId = ((t = e[0]) == null ? void 0 : t.id) ?? "");
+    var _a;
+    const list = this.points;
+    list.some((p) => p.id === this.activeId) || (this.activeId = ((_a = list[0]) == null ? void 0 : _a.id) ?? "");
   }
   get active() {
-    return this.points.find((e) => e.id === this.activeId) ?? this.points[0] ?? null;
+    return this.points.find((p) => p.id === this.activeId) ?? this.points[0] ?? null;
   }
-  select(e) {
-    this.activeId = e;
+  select(id) {
+    this.activeId = id;
   }
-  renderPoint(e) {
-    const t = e.id === this.activeId, c = (e.name || "•").slice(0, 1);
-    return r`
+  renderPoint(point) {
+    const active = point.id === this.activeId, initial = (point.name || "•").slice(0, 1);
+    return html`
       <button
         type="button"
-        class=${b({ "smc-point": !0, "is-active": t, "fs-tap": !0 })}
-        style=${v({
-      "--point-color": e.color,
-      left: `${e.x}%`,
-      top: `${100 - e.y}%`
+        class=${classMap({ "smc-point": !0, "is-active": active, "fs-tap": !0 })}
+        style=${styleMap({
+      "--point-color": point.color,
+      left: `${point.x}%`,
+      top: `${100 - point.y}%`
     })}
-        aria-pressed=${t ? "true" : "false"}
+        aria-pressed=${active ? "true" : "false"}
         aria-controls="smc-detail"
-        aria-label=${e.name || n("نقطة", "Point")}
-        title=${e.name}
-        @click=${() => this.select(e.id)}
+        aria-label=${point.name || t("نقطة", "Point")}
+        title=${point.name}
+        @click=${() => this.select(point.id)}
       >
-        ${c}
+        ${initial}
       </button>
     `;
   }
-  renderPanel(e) {
-    return r`
+  renderPanel(point) {
+    return html`
       <div class="smc-panel fs-panel fs-fade-swap" id="smc-detail" role="region" aria-live="polite">
-        <h3 class="fs-panel__title">${e.name || n("نقطة عطرية", "Scent point")}</h3>
-        ${e.desc ? r`<p class="fs-panel__desc">${e.desc}</p>` : r`<p class="fs-panel__desc">
-              ${n("اضغط على نقطة في البوصلة لعرض التفاصيل.", "Tap a point on the compass to see details.")}
+        <h3 class="fs-panel__title">${point.name || t("نقطة عطرية", "Scent point")}</h3>
+        ${point.desc ? html`<p class="fs-panel__desc">${point.desc}</p>` : html`<p class="fs-panel__desc">
+              ${t("اضغط على نقطة في البوصلة لعرض التفاصيل.", "Tap a point on the compass to see details.")}
             </p>`}
         <p class="smc-panel__coords">
-          ${n("الموضع", "Position")}: ${Math.round(e.x)}% × ${Math.round(e.y)}%
+          ${t("الموضع", "Position")}: ${Math.round(point.x)}% × ${Math.round(point.y)}%
         </p>
       </div>
     `;
   }
   render() {
-    const e = this.config || {}, t = C(e, "smc_"), c = t.animate && !I(), s = o(e.smc_title), i = o(e.smc_desc), m = this.points, d = T(e), f = this.active;
-    return m.length ? r`
+    const c = this.config || {}, theme = readSectionTheme(c, "smc_"), animate = theme.animate && !prefersReducedMotion(), title = localizedString(c.smc_title), desc = localizedString(c.smc_desc), points = this.points, labels = parseLabels(c), active = this.active;
+    return points.length ? html`
       <section
-        class=${b({ "fs-section": !0, "fs-animate": c })}
-        style=${v(z(t))}
-        aria-label=${s || n("بوصلة الطابع العطري", "Scent mood compass")}
+        class=${classMap({ "fs-section": !0, "fs-animate": animate })}
+        style=${styleMap(themeStyleMap(theme))}
+        aria-label=${title || t("بوصلة الطابع العطري", "Scent mood compass")}
       >
         <div class="fs-container">
-          ${s || i ? r`<div class="fs-header">
-                ${s ? r`<h2 class="fs-title">${s}</h2>` : p}
-                ${i ? r`<p class="fs-desc">${i}</p>` : p}
-              </div>` : p}
+          ${title || desc ? html`<div class="fs-header">
+                ${title ? html`<h2 class="fs-title">${title}</h2>` : nothing}
+                ${desc ? html`<p class="fs-desc">${desc}</p>` : nothing}
+              </div>` : nothing}
 
           <div class="smc-shell">
-            <div class="smc-board" role="img" aria-label=${n("بوصلة الطابع", "Mood compass")}>
+            <div class="smc-board" role="img" aria-label=${t("بوصلة الطابع", "Mood compass")}>
               <span class="smc-axis smc-axis--x" aria-hidden="true"></span>
               <span class="smc-axis smc-axis--y" aria-hidden="true"></span>
-              <span class="smc-label smc-label--left">${d.xLeft}</span>
-              <span class="smc-label smc-label--right">${d.xRight}</span>
-              <span class="smc-label smc-label--top">${d.yTop}</span>
-              <span class="smc-label smc-label--bottom">${d.yBottom}</span>
-              ${m.map((y) => this.renderPoint(y))}
+              <span class="smc-label smc-label--left">${labels.xLeft}</span>
+              <span class="smc-label smc-label--right">${labels.xRight}</span>
+              <span class="smc-label smc-label--top">${labels.yTop}</span>
+              <span class="smc-label smc-label--bottom">${labels.yBottom}</span>
+              ${points.map((point) => this.renderPoint(point))}
             </div>
-            ${f ? L(f.id, this.renderPanel(f)) : p}
+            ${active ? keyed(active.id, this.renderPanel(active)) : nothing}
           </div>
-          ${M({ config: e, prefix: "smc_" })}
+          ${renderCommerceOutcome({ config: c, prefix: "smc_" })}
         </div>
       </section>
-    ` : r`<div class="fs-empty" role="status">
-        ${n(
+    ` : html`<div class="fs-empty" role="status">
+        ${t(
       "أضف نقاط الطابع العطري من إعدادات العنصر.",
       "Add scent mood points in the element settings."
     )}
       </div>`;
   }
 };
-h.styles = [S, A];
-let l = h;
-x([
-  w({ type: Object })
-], l.prototype, "config");
-x([
-  k()
-], l.prototype, "activeId");
-typeof l < "u" && l.registerSallaComponent("salla-scent-mood-compass");
+__name(_ScentMoodCompass, "ScentMoodCompass"), _ScentMoodCompass.styles = [sharedSectionCss, componentStyles];
+let ScentMoodCompass = _ScentMoodCompass;
+__decorateClass([
+  property({ type: Object })
+], ScentMoodCompass.prototype, "config");
+__decorateClass([
+  state()
+], ScentMoodCompass.prototype, "activeId");
+typeof ScentMoodCompass < "u" && ScentMoodCompass.registerSallaComponent("salla-scent-mood-compass");
 export {
-  l as default
+  ScentMoodCompass as default
 };

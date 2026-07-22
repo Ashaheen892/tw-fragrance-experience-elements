@@ -1,10 +1,12 @@
-import { css as _, LitElement as x, html as a, nothing as n } from "lit";
-import { property as y, state as $ } from "lit/decorators.js";
-import { classMap as m } from "lit/directives/class-map.js";
-import { keyed as k } from "lit/directives/keyed.js";
-import { styleMap as g } from "lit/directives/style-map.js";
-import { n as I, l as c, f as S, e as z, a as C, h as L, s as j, t as i, i as A, r as D, p as E, b as h, c as N } from "./commerceOutcome-CCLcV5SW.js";
-const O = _`
+var __defProp = Object.defineProperty;
+var __name = (target, value) => __defProp(target, "name", { value, configurable: !0 });
+import { css, LitElement, html, nothing } from "lit";
+import { property, state } from "lit/decorators.js";
+import { classMap } from "lit/directives/class-map.js";
+import { keyed } from "lit/directives/keyed.js";
+import { styleMap } from "lit/directives/style-map.js";
+import { n as normalizeCollection, l as localizedString, f as toNumber, e as extractLink, a as extractImageUrl, h as sortByOrder, s as sharedSectionCss, t, i as isExternalUrl, r as readSectionTheme, p as prefersReducedMotion, b as themeStyleMap, c as renderCommerceOutcome } from "./commerceOutcome-DYfJre3y.js";
+const componentStyles = css`
   :host {
     direction: inherit;
   }
@@ -308,28 +310,29 @@ const O = _`
     }
   }
 `;
-function M(p) {
-  const r = I(p).map((e, t) => {
-    const o = c(e.name);
+function parseSlots(raw) {
+  const items = normalizeCollection(raw).map((item, i) => {
+    const name = localizedString(item.name);
     return {
-      id: String(e.id ?? "").trim() || `slot-${t + 1}`,
-      name: o,
-      desc: c(e.desc),
-      icon: String(e.icon ?? "").trim(),
-      image: C(e.image),
-      color: String(e.color ?? "").trim() || "#9a7b4f",
-      link: z(e.link),
-      order: S(e.order, t + 1)
+      id: String(item.id ?? "").trim() || `slot-${i + 1}`,
+      name,
+      desc: localizedString(item.desc),
+      icon: String(item.icon ?? "").trim(),
+      image: extractImageUrl(item.image),
+      color: String(item.color ?? "").trim() || "#9a7b4f",
+      link: extractLink(item.link),
+      order: toNumber(item.order, i + 1)
     };
-  }).filter((e) => e.name || e.desc || e.image);
-  return L(r, "order");
+  }).filter((slot) => slot.name || slot.desc || slot.image);
+  return sortByOrder(items, "order");
 }
-var P = Object.defineProperty, b = (p, r, e, t) => {
-  for (var o = void 0, s = p.length - 1, d; s >= 0; s--)
-    (d = p[s]) && (o = d(r, e, o) || o);
-  return o && P(r, e, o), o;
-};
-const v = class v extends x {
+__name(parseSlots, "parseSlots");
+var __defProp2 = Object.defineProperty, __decorateClass = /* @__PURE__ */ __name((decorators, target, key, kind) => {
+  for (var result = void 0, i = decorators.length - 1, decorator; i >= 0; i--)
+    (decorator = decorators[i]) && (result = decorator(target, key, result) || result);
+  return result && __defProp2(target, key, result), result;
+}, "__decorateClass");
+const _FragranceWardrobe = class _FragranceWardrobe extends LitElement {
   constructor() {
     super(...arguments), this.config = {}, this.activeId = "", this.boundLangHandler = () => this.requestUpdate();
   }
@@ -339,94 +342,94 @@ const v = class v extends x {
   disconnectedCallback() {
     window.removeEventListener("language-changed", this.boundLangHandler), super.disconnectedCallback();
   }
-  updated(r) {
-    r.has("config") && this.ensureActive();
+  updated(changed) {
+    changed.has("config") && this.ensureActive();
   }
   get slots() {
-    var r;
-    return M((r = this.config) == null ? void 0 : r.fwd_slots);
+    var _a;
+    return parseSlots((_a = this.config) == null ? void 0 : _a.fwd_slots);
   }
   get coachText() {
-    var r;
-    return c((r = this.config) == null ? void 0 : r.fwd_open_label) || i("اختَر خانة لفتح درج العطر المناسب", "Pick a slot to open that fragrance drawer");
+    var _a;
+    return localizedString((_a = this.config) == null ? void 0 : _a.fwd_open_label) || t("اختَر خانة لفتح درج العطر المناسب", "Pick a slot to open that fragrance drawer");
   }
   get exploreLabel() {
-    var r;
-    return c((r = this.config) == null ? void 0 : r.fwd_close_label) || i("استكشف هذه الخانة", "Explore this slot");
+    var _a;
+    return localizedString((_a = this.config) == null ? void 0 : _a.fwd_close_label) || t("استكشف هذه الخانة", "Explore this slot");
   }
   ensureActive() {
-    var e;
-    const r = this.slots;
-    r.some((t) => t.id === this.activeId) || (this.activeId = ((e = r[0]) == null ? void 0 : e.id) ?? "");
+    var _a;
+    const list = this.slots;
+    list.some((s) => s.id === this.activeId) || (this.activeId = ((_a = list[0]) == null ? void 0 : _a.id) ?? "");
   }
   get active() {
-    return this.slots.find((r) => r.id === this.activeId) ?? this.slots[0] ?? null;
+    return this.slots.find((s) => s.id === this.activeId) ?? this.slots[0] ?? null;
   }
-  select(r) {
-    this.activeId = r;
+  select(id) {
+    this.activeId = id;
   }
-  step(r) {
-    var s;
-    const e = this.slots;
-    if (e.length < 2) return;
-    const o = (e.findIndex((d) => d.id === this.activeId) + r + e.length) % e.length;
-    this.activeId = ((s = e[o]) == null ? void 0 : s.id) ?? "";
+  step(dir) {
+    var _a;
+    const list = this.slots;
+    if (list.length < 2) return;
+    const next = (list.findIndex((s) => s.id === this.activeId) + dir + list.length) % list.length;
+    this.activeId = ((_a = list[next]) == null ? void 0 : _a.id) ?? "";
   }
-  onKeyNav(r) {
-    if (r.key === "ArrowRight" || r.key === "ArrowLeft") {
-      r.preventDefault();
-      const e = getComputedStyle(this).direction === "rtl", t = r.key === "ArrowRight";
-      this.step(e ? t ? -1 : 1 : t ? 1 : -1);
+  onKeyNav(e) {
+    if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+      e.preventDefault();
+      const rtl = getComputedStyle(this).direction === "rtl", forward = e.key === "ArrowRight";
+      this.step(rtl ? forward ? -1 : 1 : forward ? 1 : -1);
     }
   }
-  renderIcon(r) {
-    if (r.image)
-      return a`<img src=${r.image} alt="" loading="lazy" decoding="async" />`;
-    const e = r.icon.startsWith("sicon-");
-    return r.icon ? e ? a`<span class=${r.icon}></span>` : a`<span>${r.icon}</span>` : a`<span aria-hidden="true">${(r.name || "•").slice(0, 1)}</span>`;
+  renderIcon(slot) {
+    if (slot.image)
+      return html`<img src=${slot.image} alt="" loading="lazy" decoding="async" />`;
+    const isSicon = slot.icon.startsWith("sicon-");
+    return slot.icon ? isSicon ? html`<span class=${slot.icon}></span>` : html`<span>${slot.icon}</span>` : html`<span aria-hidden="true">${(slot.name || "•").slice(0, 1)}</span>`;
   }
-  renderDoor(r, e) {
-    const t = r.id === this.activeId;
-    return a`
+  renderDoor(slot, index) {
+    const active = slot.id === this.activeId;
+    return html`
       <button
         type="button"
-        class=${m({ "fwd-door": !0, "fs-tap": !0, "is-active": t })}
-        style=${g({ "--slot-color": r.color, "--door-i": String(e) })}
+        class=${classMap({ "fwd-door": !0, "fs-tap": !0, "is-active": active })}
+        style=${styleMap({ "--slot-color": slot.color, "--door-i": String(index) })}
         role="listitem"
-        aria-pressed=${t ? "true" : "false"}
+        aria-pressed=${active ? "true" : "false"}
         aria-controls="fwd-detail"
-        title=${r.name}
-        @click=${() => this.select(r.id)}
+        title=${slot.name}
+        @click=${() => this.select(slot.id)}
       >
         <span class="fwd-door__shine" aria-hidden="true"></span>
         <span class="fwd-door__handle" aria-hidden="true"></span>
-        <span class="fwd-door__icon">${this.renderIcon(r)}</span>
+        <span class="fwd-door__icon">${this.renderIcon(slot)}</span>
         <span class="fwd-door__meta">
-          <span class="fwd-door__name">${r.name || i("خزانة", "Drawer")}</span>
-          ${t ? a`<span class="fwd-door__badge">${i("مفتوح", "Open")}</span>` : a`<span class="fwd-door__hint">${i("اضغط للفتح", "Tap to open")}</span>`}
+          <span class="fwd-door__name">${slot.name || t("خزانة", "Drawer")}</span>
+          ${active ? html`<span class="fwd-door__badge">${t("مفتوح", "Open")}</span>` : html`<span class="fwd-door__hint">${t("اضغط للفتح", "Tap to open")}</span>`}
         </span>
       </button>
     `;
   }
-  renderDetail(r) {
-    const e = r.link ? A(r.link) : !1, t = this.slots.length > 1;
-    return a`
+  renderDetail(slot) {
+    const external = slot.link ? isExternalUrl(slot.link) : !1, showNav = this.slots.length > 1;
+    return html`
       <article
         class="fwd-detail fs-panel fs-fade-swap"
         id="fwd-detail"
         role="region"
         aria-live="polite"
-        style=${g({ "--slot-color": r.color })}
+        style=${styleMap({ "--slot-color": slot.color })}
       >
-        <div class=${m({ "fwd-detail__hero": !0, "fwd-detail__hero--media": !!r.image })}>
+        <div class=${classMap({ "fwd-detail__hero": !0, "fwd-detail__hero--media": !!slot.image })}>
           <div class="fwd-detail__body">
             <div class="fwd-detail__top">
-              <span class="fwd-detail__icon" aria-hidden="true">${this.renderIcon(r)}</span>
-              ${t ? a`<div class="fwd-detail__nav" role="group" aria-label=${i("تنقّل الخانات", "Browse slots")}>
+              <span class="fwd-detail__icon" aria-hidden="true">${this.renderIcon(slot)}</span>
+              ${showNav ? html`<div class="fwd-detail__nav" role="group" aria-label=${t("تنقّل الخانات", "Browse slots")}>
                     <button
                       type="button"
                       class="fs-icon-btn fs-tap"
-                      aria-label=${i("السابق", "Previous")}
+                      aria-label=${t("السابق", "Previous")}
                       @click=${() => this.step(-1)}
                     >
                       ‹
@@ -434,46 +437,46 @@ const v = class v extends x {
                     <button
                       type="button"
                       class="fs-icon-btn fs-tap"
-                      aria-label=${i("التالي", "Next")}
+                      aria-label=${t("التالي", "Next")}
                       @click=${() => this.step(1)}
                     >
                       ›
                     </button>
-                  </div>` : n}
+                  </div>` : nothing}
             </div>
-            <h3 class="fs-panel__title">${r.name || i("خانة عطرية", "Fragrance slot")}</h3>
-            ${r.desc ? a`<p class="fs-panel__desc">${r.desc}</p>` : n}
-            ${r.link ? a`<div class="fwd-detail__actions fs-actions">
+            <h3 class="fs-panel__title">${slot.name || t("خانة عطرية", "Fragrance slot")}</h3>
+            ${slot.desc ? html`<p class="fs-panel__desc">${slot.desc}</p>` : nothing}
+            ${slot.link ? html`<div class="fwd-detail__actions fs-actions">
                   <a
                     class="fs-btn fs-tap"
-                    href=${r.link}
-                    target=${e ? "_blank" : n}
-                    rel=${e ? "noopener noreferrer" : n}
+                    href=${slot.link}
+                    target=${external ? "_blank" : nothing}
+                    rel=${external ? "noopener noreferrer" : nothing}
                   >
                     ${this.exploreLabel}
                   </a>
-                </div>` : n}
+                </div>` : nothing}
           </div>
-          ${r.image ? a`<div class="fwd-detail__media">
-                <img src=${r.image} alt="" loading="lazy" decoding="async" />
-              </div>` : n}
+          ${slot.image ? html`<div class="fwd-detail__media">
+                <img src=${slot.image} alt="" loading="lazy" decoding="async" />
+              </div>` : nothing}
         </div>
       </article>
     `;
   }
   render() {
-    const r = this.config || {}, e = D(r, "fwd_"), t = e.animate && !E(), o = c(r.fwd_title), s = c(r.fwd_desc), d = this.slots, f = this.active;
-    return d.length ? a`
+    const c = this.config || {}, theme = readSectionTheme(c, "fwd_"), animate = theme.animate && !prefersReducedMotion(), title = localizedString(c.fwd_title), desc = localizedString(c.fwd_desc), slots = this.slots, active = this.active;
+    return slots.length ? html`
       <section
-        class=${m({ "fs-section": !0, "fs-animate": t })}
-        style=${g(h(e))}
-        aria-label=${o || i("خزانة العطور", "Fragrance wardrobe")}
+        class=${classMap({ "fs-section": !0, "fs-animate": animate })}
+        style=${styleMap(themeStyleMap(theme))}
+        aria-label=${title || t("خزانة العطور", "Fragrance wardrobe")}
       >
         <div class="fs-container">
-          ${o || s ? a`<div class="fs-header">
-                ${o ? a`<h2 class="fs-title">${o}</h2>` : n}
-                ${s ? a`<p class="fs-desc">${s}</p>` : n}
-              </div>` : n}
+          ${title || desc ? html`<div class="fs-header">
+                ${title ? html`<h2 class="fs-title">${title}</h2>` : nothing}
+                ${desc ? html`<p class="fs-desc">${desc}</p>` : nothing}
+              </div>` : nothing}
 
           <div class="fwd-shell">
             <p class="fs-coach">
@@ -486,42 +489,42 @@ const v = class v extends x {
               <div
                 class="fwd-grid"
                 role="list"
-                aria-label=${i("خانات الخزانة", "Wardrobe slots")}
+                aria-label=${t("خانات الخزانة", "Wardrobe slots")}
                 @keydown=${this.onKeyNav}
               >
-                ${d.map((w, u) => this.renderDoor(w, u))}
+                ${slots.map((slot, i) => this.renderDoor(slot, i))}
               </div>
             </div>
 
-            ${f ? k(f.id, this.renderDetail(f)) : n}
+            ${active ? keyed(active.id, this.renderDetail(active)) : nothing}
           </div>
 
-          ${N({
-      config: r,
+          ${renderCommerceOutcome({
+      config: c,
       prefix: "fwd_",
-      ready: !!f,
-      selection: f
+      ready: !!active,
+      selection: active
     })}
         </div>
       </section>
-    ` : a`
+    ` : html`
         <section
-          class=${m({ "fs-section": !0, "fs-animate": t })}
-          style=${g(h(e))}
-          aria-label=${o || i("خزانة العطور", "Fragrance wardrobe")}
+          class=${classMap({ "fs-section": !0, "fs-animate": animate })}
+          style=${styleMap(themeStyleMap(theme))}
+          aria-label=${title || t("خزانة العطور", "Fragrance wardrobe")}
         >
           <div class="fs-container">
-            ${o || s ? a`<div class="fs-header">
-                  ${o ? a`<h2 class="fs-title">${o}</h2>` : n}
-                  ${s ? a`<p class="fs-desc">${s}</p>` : n}
-                </div>` : n}
+            ${title || desc ? html`<div class="fs-header">
+                  ${title ? html`<h2 class="fs-title">${title}</h2>` : nothing}
+                  ${desc ? html`<p class="fs-desc">${desc}</p>` : nothing}
+                </div>` : nothing}
             <div class="fs-empty" role="status">
-              ${i(
+              ${t(
       "أضف خانات خزانة العطور من إعدادات العنصر.",
       "Add fragrance wardrobe slots in the element settings."
     )}
               <p class="fwd-empty-hint">
-                ${i(
+                ${t(
       "أفكار مقترحة: يومي، عمل، مساء، مناسبات، سفر، مواسم.",
       "Suggested slots: daily, work, evening, events, travel, seasons."
     )}
@@ -532,15 +535,15 @@ const v = class v extends x {
       `;
   }
 };
-v.styles = [j, O];
-let l = v;
-b([
-  y({ type: Object })
-], l.prototype, "config");
-b([
-  $()
-], l.prototype, "activeId");
-typeof l < "u" && l.registerSallaComponent("salla-fragrance-wardrobe");
+__name(_FragranceWardrobe, "FragranceWardrobe"), _FragranceWardrobe.styles = [sharedSectionCss, componentStyles];
+let FragranceWardrobe = _FragranceWardrobe;
+__decorateClass([
+  property({ type: Object })
+], FragranceWardrobe.prototype, "config");
+__decorateClass([
+  state()
+], FragranceWardrobe.prototype, "activeId");
+typeof FragranceWardrobe < "u" && FragranceWardrobe.registerSallaComponent("salla-fragrance-wardrobe");
 export {
-  l as default
+  FragranceWardrobe as default
 };

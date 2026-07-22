@@ -1,54 +1,57 @@
-import { css as S, html as s, LitElement as E, nothing as d } from "lit";
-import { property as C, state as z } from "lit/decorators.js";
-import { classMap as f } from "lit/directives/class-map.js";
-import { ref as D } from "lit/directives/ref.js";
-import { styleMap as h } from "lit/directives/style-map.js";
-import { t as i, g as P, n as I, e as T, l as p, a as j, s as M, i as q, r as A, p as G, b as H, c as R } from "./commerceOutcome-CCLcV5SW.js";
-const w = "__fsDragScrollCleanup", W = 6;
-function O(c) {
-  var y;
-  if (!c) return;
-  const e = c;
-  (y = e[w]) == null || y.call(e);
-  let r = null, a = 0, t = 0, o = !1;
-  const l = (n) => {
-    n.pointerType !== "mouse" || n.button !== 0 || e.scrollWidth <= e.clientWidth || (r = n.pointerId, a = n.clientX, t = e.scrollLeft, o = !1, e.style.scrollSnapType = "none", e.style.cursor = "grabbing");
-  }, _ = (n) => {
-    if (r === null || n.pointerId !== r) return;
-    const m = n.clientX - a;
-    if (!o && Math.abs(m) > W) {
-      o = !0;
+var __defProp = Object.defineProperty;
+var __name = (target, value) => __defProp(target, "name", { value, configurable: !0 });
+import { css, html, LitElement, nothing } from "lit";
+import { property, state } from "lit/decorators.js";
+import { classMap } from "lit/directives/class-map.js";
+import { ref } from "lit/directives/ref.js";
+import { styleMap } from "lit/directives/style-map.js";
+import { t, g as getRadioValue, n as normalizeCollection, e as extractLink, l as localizedString, a as extractImageUrl, s as sharedSectionCss, i as isExternalUrl, r as readSectionTheme, p as prefersReducedMotion, b as themeStyleMap, c as renderCommerceOutcome } from "./commerceOutcome-DYfJre3y.js";
+const CLEANUP_KEY = "__fsDragScrollCleanup", DRAG_THRESHOLD_PX = 6;
+function enableDragScroll(el) {
+  var _a;
+  if (!el) return;
+  const host = el;
+  (_a = host[CLEANUP_KEY]) == null || _a.call(host);
+  let pointerId = null, startX = 0, startScrollLeft = 0, dragged = !1;
+  const onPointerDown = /* @__PURE__ */ __name((event) => {
+    event.pointerType !== "mouse" || event.button !== 0 || host.scrollWidth <= host.clientWidth || (pointerId = event.pointerId, startX = event.clientX, startScrollLeft = host.scrollLeft, dragged = !1, host.style.scrollSnapType = "none", host.style.cursor = "grabbing");
+  }, "onPointerDown"), onPointerMove = /* @__PURE__ */ __name((event) => {
+    if (pointerId === null || event.pointerId !== pointerId) return;
+    const dx = event.clientX - startX;
+    if (!dragged && Math.abs(dx) > DRAG_THRESHOLD_PX) {
+      dragged = !0;
       try {
-        e.setPointerCapture(r);
+        host.setPointerCapture(pointerId);
       } catch {
       }
     }
-    o && (n.preventDefault(), e.scrollLeft = t - m);
-  }, u = (n) => {
-    if (!(r === null || n.pointerId !== r)) {
-      if (o)
+    dragged && (event.preventDefault(), host.scrollLeft = startScrollLeft - dx);
+  }, "onPointerMove"), endDrag = /* @__PURE__ */ __name((event) => {
+    if (!(pointerId === null || event.pointerId !== pointerId)) {
+      if (dragged)
         try {
-          e.releasePointerCapture(r);
+          host.releasePointerCapture(pointerId);
         } catch {
         }
-      if (r = null, e.style.scrollSnapType = "", e.style.cursor = "", o) {
-        const m = (k) => {
-          k.preventDefault(), k.stopPropagation();
-        };
-        e.addEventListener("click", m, { capture: !0, once: !0 }), window.setTimeout(() => {
-          e.removeEventListener("click", m, { capture: !0 });
+      if (pointerId = null, host.style.scrollSnapType = "", host.style.cursor = "", dragged) {
+        const suppressClick = /* @__PURE__ */ __name((clickEvent) => {
+          clickEvent.preventDefault(), clickEvent.stopPropagation();
+        }, "suppressClick");
+        host.addEventListener("click", suppressClick, { capture: !0, once: !0 }), window.setTimeout(() => {
+          host.removeEventListener("click", suppressClick, { capture: !0 });
         }, 0);
       }
-      o = !1;
+      dragged = !1;
     }
-  }, x = (n) => {
-    n.preventDefault();
-  };
-  e.addEventListener("pointerdown", l), e.addEventListener("pointermove", _), e.addEventListener("pointerup", u), e.addEventListener("pointercancel", u), e.addEventListener("dragstart", x, { capture: !0 }), e.style.touchAction = "pan-x pan-y", e.scrollWidth > e.clientWidth && (e.style.cursor = "grab"), e[w] = () => {
-    e.removeEventListener("pointerdown", l), e.removeEventListener("pointermove", _), e.removeEventListener("pointerup", u), e.removeEventListener("pointercancel", u), e.removeEventListener("dragstart", x, { capture: !0 });
+  }, "endDrag"), onDragStart = /* @__PURE__ */ __name((event) => {
+    event.preventDefault();
+  }, "onDragStart");
+  host.addEventListener("pointerdown", onPointerDown), host.addEventListener("pointermove", onPointerMove), host.addEventListener("pointerup", endDrag), host.addEventListener("pointercancel", endDrag), host.addEventListener("dragstart", onDragStart, { capture: !0 }), host.style.touchAction = "pan-x pan-y", host.scrollWidth > host.clientWidth && (host.style.cursor = "grab"), host[CLEANUP_KEY] = () => {
+    host.removeEventListener("pointerdown", onPointerDown), host.removeEventListener("pointermove", onPointerMove), host.removeEventListener("pointerup", endDrag), host.removeEventListener("pointercancel", endDrag), host.removeEventListener("dragstart", onDragStart, { capture: !0 });
   };
 }
-const U = S`
+__name(enableDragScroll, "enableDragScroll");
+const componentStyles = css`
   :host {
     direction: inherit;
   }
@@ -340,11 +343,11 @@ const U = S`
       transform: none;
     }
   }
-`, b = [
+`, DEFAULTS = [
   {
     id: "floral",
-    name: i("زهور", "Floral"),
-    description: i("باقات ناعمة وأنيقة", "Soft elegant bouquets"),
+    name: t("زهور", "Floral"),
+    description: t("باقات ناعمة وأنيقة", "Soft elegant bouquets"),
     image: "https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=800&q=80",
     color: "#9a7b4f",
     icon: "",
@@ -352,8 +355,8 @@ const U = S`
   },
   {
     id: "woody",
-    name: i("خشبي", "Woody"),
-    description: i("دفء الأخشاب والتوابل", "Warm woods & spice"),
+    name: t("خشبي", "Woody"),
+    description: t("دفء الأخشاب والتوابل", "Warm woods & spice"),
     image: "https://images.unsplash.com/photo-1615634260167-c8cdede054de?auto=format&fit=crop&w=800&q=80",
     color: "#9a7b4f",
     icon: "",
@@ -361,8 +364,8 @@ const U = S`
   },
   {
     id: "oriental",
-    name: i("شرقي", "Oriental"),
-    description: i("عنبر ومسك فاخر", "Amber & luxurious musk"),
+    name: t("شرقي", "Oriental"),
+    description: t("عنبر ومسك فاخر", "Amber & luxurious musk"),
     image: "https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&w=800&q=80",
     color: "#9a7b4f",
     icon: "",
@@ -370,173 +373,175 @@ const U = S`
   },
   {
     id: "fresh",
-    name: i("منعش", "Fresh"),
-    description: i("حمضيات ونسيم نظيف", "Citrus & clean breeze"),
+    name: t("منعش", "Fresh"),
+    description: t("حمضيات ونسيم نظيف", "Citrus & clean breeze"),
     image: "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=800&q=80",
     color: "#9a7b4f",
     icon: "",
     link: ""
   }
 ];
-function $(c) {
-  return P(c.scat_layout, "slider") === "grid" ? "grid" : "slider";
+function resolveLayout(config) {
+  return getRadioValue(config.scat_layout, "slider") === "grid" ? "grid" : "slider";
 }
-function B(c) {
-  const e = I(c).map((r, a) => ({
-    id: `category-${a}`,
-    name: p(r.name) || p(r.title),
-    description: p(r.description),
-    image: j(r.image),
-    color: p(r.color) || "#9a7b4f",
-    icon: p(r.icon),
-    link: T(r.link)
-  })).filter((r) => r.name || r.image);
-  return e.length ? e.map((r, a) => {
-    const t = b[a % b.length];
+__name(resolveLayout, "resolveLayout");
+function parseCategories(raw) {
+  const parsed = normalizeCollection(raw).map((row, index) => ({
+    id: `category-${index}`,
+    name: localizedString(row.name) || localizedString(row.title),
+    description: localizedString(row.description),
+    image: extractImageUrl(row.image),
+    color: localizedString(row.color) || "#9a7b4f",
+    icon: localizedString(row.icon),
+    link: extractLink(row.link)
+  })).filter((item) => item.name || item.image);
+  return parsed.length ? parsed.map((item, i) => {
+    const d = DEFAULTS[i % DEFAULTS.length];
     return {
-      ...r,
-      image: r.image || t.image,
-      name: r.name || t.name,
-      description: r.description || t.description
+      ...item,
+      image: item.image || d.image,
+      name: item.name || d.name,
+      description: item.description || d.description
     };
-  }) : b.map((r) => ({ ...r }));
+  }) : DEFAULTS.map((d) => ({ ...d }));
 }
-var X = Object.defineProperty, L = (c, e, r, a) => {
-  for (var t = void 0, o = c.length - 1, l; o >= 0; o--)
-    (l = c[o]) && (t = l(e, r, t) || t);
-  return t && X(e, r, t), t;
-};
-const F = s`<svg class="scat-toggle__icon" viewBox="0 0 16 16" aria-hidden="true"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>`, V = s`<svg class="scat-toggle__icon" viewBox="0 0 16 16" aria-hidden="true"><rect x="1" y="3" width="14" height="4" rx="1"/><rect x="1" y="9" width="14" height="4" rx="1"/></svg>`, v = class v extends E {
+__name(parseCategories, "parseCategories");
+var __defProp2 = Object.defineProperty, __decorateClass = /* @__PURE__ */ __name((decorators, target, key, kind) => {
+  for (var result = void 0, i = decorators.length - 1, decorator; i >= 0; i--)
+    (decorator = decorators[i]) && (result = decorator(target, key, result) || result);
+  return result && __defProp2(target, key, result), result;
+}, "__decorateClass");
+const GRID_SVG = html`<svg class="scat-toggle__icon" viewBox="0 0 16 16" aria-hidden="true"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg>`, SLIDER_SVG = html`<svg class="scat-toggle__icon" viewBox="0 0 16 16" aria-hidden="true"><rect x="1" y="3" width="14" height="4" rx="1"/><rect x="1" y="9" width="14" height="4" rx="1"/></svg>`, _ScentCategories = class _ScentCategories extends LitElement {
   constructor() {
     super(...arguments), this.config = {}, this.layout = "slider", this.boundLangHandler = () => this.requestUpdate();
   }
   connectedCallback() {
-    super.connectedCallback(), window.addEventListener("language-changed", this.boundLangHandler), this.layout = $(this.config || {});
+    super.connectedCallback(), window.addEventListener("language-changed", this.boundLangHandler), this.layout = resolveLayout(this.config || {});
   }
   disconnectedCallback() {
     window.removeEventListener("language-changed", this.boundLangHandler), super.disconnectedCallback();
   }
-  updated(e) {
-    e.has("config") && (this.layout = $(this.config || {}));
+  updated(changed) {
+    changed.has("config") && (this.layout = resolveLayout(this.config || {}));
   }
-  setLayout(e) {
-    this.layout = e;
+  setLayout(next) {
+    this.layout = next;
   }
   get categories() {
-    var e;
-    return B((e = this.config) == null ? void 0 : e.scat_categories);
+    var _a;
+    return parseCategories((_a = this.config) == null ? void 0 : _a.scat_categories);
   }
-  renderCard(e) {
-    const r = !!e.image, a = { "--cat-color": e.color || "var(--accent-color, var(--fs-store-primary))" }, t = e.link ? q(e.link) : !1, o = s`
-      <div class=${f({ "scat-card__media": !0, "scat-card__media--empty": !r })}>
-        ${r ? s`<img class="scat-card__img" src=${e.image} alt="" loading="lazy" decoding="async" />` : s`<span class="scat-card__fallback">${e.icon || (e.name || "•").slice(0, 1)}</span>`}
-        ${r ? s`<div class="scat-card__overlay" aria-hidden="true"></div>` : d}
-        ${e.icon ? s`<span class="scat-card__icon" aria-hidden="true">${e.icon}</span>` : d}
+  renderCard(cat) {
+    const hasImage = !!cat.image, cardStyle = { "--cat-color": cat.color || "var(--accent-color, var(--fs-store-primary))" }, external = cat.link ? isExternalUrl(cat.link) : !1, inner = html`
+      <div class=${classMap({ "scat-card__media": !0, "scat-card__media--empty": !hasImage })}>
+        ${hasImage ? html`<img class="scat-card__img" src=${cat.image} alt="" loading="lazy" decoding="async" />` : html`<span class="scat-card__fallback">${cat.icon || (cat.name || "•").slice(0, 1)}</span>`}
+        ${hasImage ? html`<div class="scat-card__overlay" aria-hidden="true"></div>` : nothing}
+        ${cat.icon ? html`<span class="scat-card__icon" aria-hidden="true">${cat.icon}</span>` : nothing}
       </div>
       <div class="scat-card__body">
-        <h3 class="scat-card__name">${e.name || i("تصنيف", "Category")}</h3>
-        ${e.description ? s`<p class="scat-card__desc">${e.description}</p>` : d}
-        ${e.link ? s`<span class="scat-card__cta">${i("استكشف", "Explore")}</span>` : d}
+        <h3 class="scat-card__name">${cat.name || t("تصنيف", "Category")}</h3>
+        ${cat.description ? html`<p class="scat-card__desc">${cat.description}</p>` : nothing}
+        ${cat.link ? html`<span class="scat-card__cta">${t("استكشف", "Explore")}</span>` : nothing}
       </div>
     `;
-    return e.link ? s`
+    return cat.link ? html`
         <a
           class="scat-card"
-          style=${h(a)}
-          href=${e.link}
-          target=${t ? "_blank" : d}
-          rel=${t ? "noopener noreferrer" : d}
+          style=${styleMap(cardStyle)}
+          href=${cat.link}
+          target=${external ? "_blank" : nothing}
+          rel=${external ? "noopener noreferrer" : nothing}
         >
-          ${o}
+          ${inner}
         </a>
-      ` : s`<div class="scat-card" style=${h(a)}>${o}</div>`;
+      ` : html`<div class="scat-card" style=${styleMap(cardStyle)}>${inner}</div>`;
   }
-  renderShell(e) {
-    const r = this.config || {}, a = A(r, "scat_"), t = a.animate && !G(), o = p(r.scat_title), l = p(r.scat_desc);
-    return s`
+  renderShell(body) {
+    const c = this.config || {}, theme = readSectionTheme(c, "scat_"), animate = theme.animate && !prefersReducedMotion(), title = localizedString(c.scat_title), desc = localizedString(c.scat_desc);
+    return html`
       <section
-        class=${f({ "fs-section": !0, "fs-animate": t })}
-        style=${h(H(a))}
-        aria-label=${o || i("تصنيفات العطور", "Scent categories")}
+        class=${classMap({ "fs-section": !0, "fs-animate": animate })}
+        style=${styleMap(themeStyleMap(theme))}
+        aria-label=${title || t("تصنيفات العطور", "Scent categories")}
       >
         <div class="fs-container">
-          ${o || l ? s`<div class="fs-header">
-                ${o ? s`<h2 class="fs-title">${o}</h2>` : d}
-                ${l ? s`<p class="fs-desc">${l}</p>` : d}
-              </div>` : d}
-          ${e}
+          ${title || desc ? html`<div class="fs-header">
+                ${title ? html`<h2 class="fs-title">${title}</h2>` : nothing}
+                ${desc ? html`<p class="fs-desc">${desc}</p>` : nothing}
+              </div>` : nothing}
+          ${body}
         </div>
       </section>
     `;
   }
   render() {
-    const e = this.config || {}, r = this.categories, a = this.layout === "slider";
-    return r.length ? this.renderShell(s`
+    const c = this.config || {}, categories = this.categories, isSlider = this.layout === "slider";
+    return categories.length ? this.renderShell(html`
       <div class="scat-shell">
         <div class="scat-toolbar">
           <p class="scat-toolbar__hint">
-            ${i("تصفّح التصنيفات واختر ما يناسب ذوقك", "Browse categories and pick what suits your taste")}
+            ${t("تصفّح التصنيفات واختر ما يناسب ذوقك", "Browse categories and pick what suits your taste")}
           </p>
-          <div class="scat-toggle" role="radiogroup" aria-label=${i("طريقة العرض", "Layout")}>
+          <div class="scat-toggle" role="radiogroup" aria-label=${t("طريقة العرض", "Layout")}>
             <button
               type="button"
-              class=${f({ "scat-toggle__btn": !0, "fs-tap": !0, "is-active": a })}
-              aria-pressed=${a ? "true" : "false"}
-              aria-label=${i("عرض منزلق", "Slider view")}
+              class=${classMap({ "scat-toggle__btn": !0, "fs-tap": !0, "is-active": isSlider })}
+              aria-pressed=${isSlider ? "true" : "false"}
+              aria-label=${t("عرض منزلق", "Slider view")}
               @click=${() => this.setLayout("slider")}
             >
-              ${V}
-              <span class="scat-toggle__label">${i("شريط", "Slider")}</span>
+              ${SLIDER_SVG}
+              <span class="scat-toggle__label">${t("شريط", "Slider")}</span>
             </button>
             <button
               type="button"
-              class=${f({ "scat-toggle__btn": !0, "fs-tap": !0, "is-active": !a })}
-              aria-pressed=${a ? "false" : "true"}
-              aria-label=${i("عرض شبكي", "Grid view")}
+              class=${classMap({ "scat-toggle__btn": !0, "fs-tap": !0, "is-active": !isSlider })}
+              aria-pressed=${isSlider ? "false" : "true"}
+              aria-label=${t("عرض شبكي", "Grid view")}
               @click=${() => this.setLayout("grid")}
             >
-              ${F}
-              <span class="scat-toggle__label">${i("شبكة", "Grid")}</span>
+              ${GRID_SVG}
+              <span class="scat-toggle__label">${t("شبكة", "Grid")}</span>
             </button>
           </div>
         </div>
 
         <div
-          class=${f({
+          class=${classMap({
       "scat-track": !0,
-      "scat-track--slider": a,
-      "scat-track--grid": !a,
-      "fs-scroll-x": a
+      "scat-track--slider": isSlider,
+      "scat-track--grid": !isSlider,
+      "fs-scroll-x": isSlider
     })}
           role="list"
-          aria-label=${i("تصنيفات العطور", "Scent categories")}
-          ${D((t) => {
-      t instanceof HTMLElement && a && O(t);
+          aria-label=${t("تصنيفات العطور", "Scent categories")}
+          ${ref((el) => {
+      el instanceof HTMLElement && isSlider && enableDragScroll(el);
     })}
         >
-          ${r.map(
-      (t) => s`<div class="scat-track__item" role="listitem">${this.renderCard(t)}</div>`
+          ${categories.map(
+      (cat) => html`<div class="scat-track__item" role="listitem">${this.renderCard(cat)}</div>`
     )}
         </div>
       </div>
 
-      ${R({ config: e, prefix: "scat_" })}
-    `) : this.renderShell(s`
+      ${renderCommerceOutcome({ config: c, prefix: "scat_" })}
+    `) : this.renderShell(html`
         <div class="fs-empty" role="status">
-          ${i("أضف تصنيفات من إعدادات العنصر.", "Add categories in the element settings.")}
+          ${t("أضف تصنيفات من إعدادات العنصر.", "Add categories in the element settings.")}
         </div>
       `);
   }
 };
-v.styles = [M, U];
-let g = v;
-L([
-  C({ type: Object })
-], g.prototype, "config");
-L([
-  z()
-], g.prototype, "layout");
-typeof g < "u" && g.registerSallaComponent("salla-scent-categories");
+__name(_ScentCategories, "ScentCategories"), _ScentCategories.styles = [sharedSectionCss, componentStyles];
+let ScentCategories = _ScentCategories;
+__decorateClass([
+  property({ type: Object })
+], ScentCategories.prototype, "config");
+__decorateClass([
+  state()
+], ScentCategories.prototype, "layout");
+typeof ScentCategories < "u" && ScentCategories.registerSallaComponent("salla-scent-categories");
 export {
-  g as default
+  ScentCategories as default
 };

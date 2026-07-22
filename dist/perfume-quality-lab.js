@@ -1,10 +1,12 @@
-import { css as q, LitElement as x, html as t, nothing as i } from "lit";
-import { property as y, state as $ } from "lit/decorators.js";
-import { classMap as f } from "lit/directives/class-map.js";
-import { keyed as w } from "lit/directives/keyed.js";
-import { styleMap as m } from "lit/directives/style-map.js";
-import { n as k, l as c, f as S, a as z, h as U, j as u, s as C, t as l, r as D, p as I, b as h, c as L } from "./commerceOutcome-CCLcV5SW.js";
-const j = q`
+var __defProp = Object.defineProperty;
+var __name = (target, value) => __defProp(target, "name", { value, configurable: !0 });
+import { css, LitElement, html, nothing } from "lit";
+import { property, state } from "lit/decorators.js";
+import { classMap } from "lit/directives/class-map.js";
+import { keyed } from "lit/directives/keyed.js";
+import { styleMap } from "lit/directives/style-map.js";
+import { n as normalizeCollection, l as localizedString, f as toNumber, a as extractImageUrl, h as sortByOrder, j as isDirectMediaUrl, s as sharedSectionCss, t, r as readSectionTheme, p as prefersReducedMotion, b as themeStyleMap, c as renderCommerceOutcome } from "./commerceOutcome-DYfJre3y.js";
+const componentStyles = css`
   :host {
     direction: inherit;
   }
@@ -251,44 +253,46 @@ const j = q`
     }
   }
 `;
-function A(n) {
-  const e = String(n ?? "").trim();
-  if (!e) return "";
-  const r = e.match(
+function resolveVideoEmbed(url) {
+  const trimmed = String(url ?? "").trim();
+  if (!trimmed) return "";
+  const ytMatch = trimmed.match(
     /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([\w-]+)/i
   );
-  if (r != null && r[1])
-    return `https://www.youtube.com/embed/${r[1]}`;
-  const o = e.match(/vimeo\.com\/(?:video\/)?(\d+)/i);
-  return o != null && o[1] ? `https://player.vimeo.com/video/${o[1]}` : u(e) ? e : "";
+  if (ytMatch != null && ytMatch[1])
+    return `https://www.youtube.com/embed/${ytMatch[1]}`;
+  const vimeoMatch = trimmed.match(/vimeo\.com\/(?:video\/)?(\d+)/i);
+  return vimeoMatch != null && vimeoMatch[1] ? `https://player.vimeo.com/video/${vimeoMatch[1]}` : isDirectMediaUrl(trimmed) ? trimmed : "";
 }
-function E(n) {
-  const e = k(n).map((r, o) => {
-    const a = c(r.name), s = String(r.video_url ?? r.videoUrl ?? "").trim();
+__name(resolveVideoEmbed, "resolveVideoEmbed");
+function parseStations(raw) {
+  const items = normalizeCollection(raw).map((item, i) => {
+    const name = localizedString(item.name), videoRaw = String(item.video_url ?? item.videoUrl ?? "").trim();
     return {
-      id: String(r.id ?? "").trim() || `station-${o + 1}`,
-      name: a,
-      shortDesc: c(r.short_desc),
-      detail: c(r.detail),
-      fact: c(r.fact),
-      certificate: c(r.certificate),
-      image: z(r.image),
-      videoUrl: A(s) || s,
-      color: String(r.color ?? "").trim() || "#9a7b4f",
-      icon: String(r.icon ?? "").trim(),
-      order: S(r.order, o + 1)
+      id: String(item.id ?? "").trim() || `station-${i + 1}`,
+      name,
+      shortDesc: localizedString(item.short_desc),
+      detail: localizedString(item.detail),
+      fact: localizedString(item.fact),
+      certificate: localizedString(item.certificate),
+      image: extractImageUrl(item.image),
+      videoUrl: resolveVideoEmbed(videoRaw) || videoRaw,
+      color: String(item.color ?? "").trim() || "#9a7b4f",
+      icon: String(item.icon ?? "").trim(),
+      order: toNumber(item.order, i + 1)
     };
   }).filter(
-    (r) => r.name || r.shortDesc || r.detail || r.fact || r.image
+    (station) => station.name || station.shortDesc || station.detail || station.fact || station.image
   );
-  return U(e, "order");
+  return sortByOrder(items, "order");
 }
-var O = Object.defineProperty, b = (n, e, r, o) => {
-  for (var a = void 0, s = n.length - 1, p; s >= 0; s--)
-    (p = n[s]) && (a = p(e, r, a) || a);
-  return a && O(e, r, a), a;
-};
-const g = class g extends x {
+__name(parseStations, "parseStations");
+var __defProp2 = Object.defineProperty, __decorateClass = /* @__PURE__ */ __name((decorators, target, key, kind) => {
+  for (var result = void 0, i = decorators.length - 1, decorator; i >= 0; i--)
+    (decorator = decorators[i]) && (result = decorator(target, key, result) || result);
+  return result && __defProp2(target, key, result), result;
+}, "__decorateClass");
+const _PerfumeQualityLab = class _PerfumeQualityLab extends LitElement {
   constructor() {
     super(...arguments), this.config = {}, this.activeId = "", this.boundLangHandler = () => this.requestUpdate();
   }
@@ -298,150 +302,150 @@ const g = class g extends x {
   disconnectedCallback() {
     window.removeEventListener("language-changed", this.boundLangHandler), super.disconnectedCallback();
   }
-  updated(e) {
-    e.has("config") && this.ensureActive();
+  updated(changed) {
+    changed.has("config") && this.ensureActive();
   }
   get stations() {
-    var e;
-    return E((e = this.config) == null ? void 0 : e.pql_stations);
+    var _a;
+    return parseStations((_a = this.config) == null ? void 0 : _a.pql_stations);
   }
   get factLabel() {
-    var e;
-    return c((e = this.config) == null ? void 0 : e.pql_fact_label) || l("حقيقة", "Fact");
+    var _a;
+    return localizedString((_a = this.config) == null ? void 0 : _a.pql_fact_label) || t("حقيقة", "Fact");
   }
   get certLabel() {
-    var e;
-    return c((e = this.config) == null ? void 0 : e.pql_cert_label) || l("شهادة الجودة", "Quality certificate");
+    var _a;
+    return localizedString((_a = this.config) == null ? void 0 : _a.pql_cert_label) || t("شهادة الجودة", "Quality certificate");
   }
   ensureActive() {
-    var r;
-    const e = this.stations;
-    e.some((o) => o.id === this.activeId) || (this.activeId = ((r = e[0]) == null ? void 0 : r.id) ?? "");
+    var _a;
+    const list = this.stations;
+    list.some((s) => s.id === this.activeId) || (this.activeId = ((_a = list[0]) == null ? void 0 : _a.id) ?? "");
   }
   get active() {
-    return this.stations.find((e) => e.id === this.activeId) ?? this.stations[0] ?? null;
+    return this.stations.find((s) => s.id === this.activeId) ?? this.stations[0] ?? null;
   }
-  select(e) {
-    this.activeId = e;
+  select(id) {
+    this.activeId = id;
   }
-  renderBadge(e) {
-    if (e.image)
-      return t`<img src=${e.image} alt="" loading="lazy" decoding="async" />`;
-    const r = e.icon.startsWith("sicon-");
-    return e.icon ? r ? t`<span class=${e.icon}></span>` : t`<span>${e.icon}</span>` : t`<span aria-hidden="true">${(e.name || "•").slice(0, 1)}</span>`;
+  renderBadge(station) {
+    if (station.image)
+      return html`<img src=${station.image} alt="" loading="lazy" decoding="async" />`;
+    const isSicon = station.icon.startsWith("sicon-");
+    return station.icon ? isSicon ? html`<span class=${station.icon}></span>` : html`<span>${station.icon}</span>` : html`<span aria-hidden="true">${(station.name || "•").slice(0, 1)}</span>`;
   }
-  renderVideo(e) {
-    return e.videoUrl ? u(e.videoUrl) && !e.videoUrl.includes("embed") ? t`
+  renderVideo(station) {
+    return station.videoUrl ? isDirectMediaUrl(station.videoUrl) && !station.videoUrl.includes("embed") ? html`
         <div class="pql-detail__media">
           <div class="pql-detail__video">
-            <video src=${e.videoUrl} controls playsinline preload="metadata"></video>
+            <video src=${station.videoUrl} controls playsinline preload="metadata"></video>
           </div>
         </div>
-      ` : t`
+      ` : html`
       <div class="pql-detail__media">
         <div class="pql-detail__video">
           <iframe
-            src=${e.videoUrl}
-            title=${e.name || l("فيديو المحطة", "Station video")}
+            src=${station.videoUrl}
+            title=${station.name || t("فيديو المحطة", "Station video")}
             loading="lazy"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen
           ></iframe>
         </div>
       </div>
-    ` : i;
+    ` : nothing;
   }
-  renderStep(e) {
-    const r = e.id === this.activeId;
-    return t`
+  renderStep(station) {
+    const active = station.id === this.activeId;
+    return html`
       <button
         type="button"
-        class=${f({ "pql-step": !0, "is-active": r, "fs-tap": !0 })}
-        style=${m({ "--station-color": e.color })}
-        aria-pressed=${r ? "true" : "false"}
+        class=${classMap({ "pql-step": !0, "is-active": active, "fs-tap": !0 })}
+        style=${styleMap({ "--station-color": station.color })}
+        aria-pressed=${active ? "true" : "false"}
         aria-controls="pql-detail"
-        @click=${() => this.select(e.id)}
+        @click=${() => this.select(station.id)}
       >
-        <span class="pql-step__badge">${this.renderBadge(e)}</span>
+        <span class="pql-step__badge">${this.renderBadge(station)}</span>
         <span>
-          <p class="pql-step__name">${e.name || l("محطة", "Station")}</p>
-          ${e.shortDesc ? t`<p class="pql-step__short">${e.shortDesc}</p>` : i}
+          <p class="pql-step__name">${station.name || t("محطة", "Station")}</p>
+          ${station.shortDesc ? html`<p class="pql-step__short">${station.shortDesc}</p>` : nothing}
         </span>
       </button>
     `;
   }
-  renderDetail(e) {
-    return t`
+  renderDetail(station) {
+    return html`
       <article
         id="pql-detail"
         class="pql-detail fs-panel fs-fade-swap"
-        style=${m({ "--station-color": e.color })}
+        style=${styleMap({ "--station-color": station.color })}
         role="region"
         aria-live="polite"
       >
-        <h3 class="fs-panel__title">${e.name || l("محطة الجودة", "Quality station")}</h3>
-        ${e.shortDesc ? t`<p class="fs-panel__desc pql-detail__short">${e.shortDesc}</p>` : i}
-        ${this.renderVideo(e)}
-        ${!e.videoUrl && e.image ? t`<div class="pql-detail__media">
-              <img src=${e.image} alt="" loading="lazy" decoding="async" />
-            </div>` : i}
-        ${e.detail ? t`<p class="pql-detail__body">${e.detail}</p>` : i}
-        ${e.fact ? t`<div class="pql-callout">
+        <h3 class="fs-panel__title">${station.name || t("محطة الجودة", "Quality station")}</h3>
+        ${station.shortDesc ? html`<p class="fs-panel__desc pql-detail__short">${station.shortDesc}</p>` : nothing}
+        ${this.renderVideo(station)}
+        ${!station.videoUrl && station.image ? html`<div class="pql-detail__media">
+              <img src=${station.image} alt="" loading="lazy" decoding="async" />
+            </div>` : nothing}
+        ${station.detail ? html`<p class="pql-detail__body">${station.detail}</p>` : nothing}
+        ${station.fact ? html`<div class="pql-callout">
               <p class="pql-callout__label">${this.factLabel}</p>
-              <p class="pql-callout__text">${e.fact}</p>
-            </div>` : i}
-        ${e.certificate ? t`<div class="pql-cert">
+              <p class="pql-callout__text">${station.fact}</p>
+            </div>` : nothing}
+        ${station.certificate ? html`<div class="pql-cert">
               <p class="pql-cert__label">${this.certLabel}</p>
-              <p class="pql-cert__text">${e.certificate}</p>
-            </div>` : i}
+              <p class="pql-cert__text">${station.certificate}</p>
+            </div>` : nothing}
       </article>
     `;
   }
   render() {
-    const e = this.config || {}, r = D(e, "pql_"), o = r.animate && !I(), a = c(e.pql_title), s = c(e.pql_desc), p = this.stations, v = this.active;
-    return p.length ? t`
+    const c = this.config || {}, theme = readSectionTheme(c, "pql_"), animate = theme.animate && !prefersReducedMotion(), title = localizedString(c.pql_title), desc = localizedString(c.pql_desc), stations = this.stations, active = this.active;
+    return stations.length ? html`
       <section
-        class=${f({ "fs-section": !0, "fs-animate": o })}
-        style=${m(h(r))}
-        aria-label=${a || l("مختبر الجودة العطرية", "Perfume quality lab")}
+        class=${classMap({ "fs-section": !0, "fs-animate": animate })}
+        style=${styleMap(themeStyleMap(theme))}
+        aria-label=${title || t("مختبر الجودة العطرية", "Perfume quality lab")}
       >
         <div class="fs-container">
-          ${a || s ? t`<div class="fs-header">
-                ${a ? t`<h2 class="fs-title">${a}</h2>` : i}
-                ${s ? t`<p class="fs-desc">${s}</p>` : i}
-              </div>` : i}
+          ${title || desc ? html`<div class="fs-header">
+                ${title ? html`<h2 class="fs-title">${title}</h2>` : nothing}
+                ${desc ? html`<p class="fs-desc">${desc}</p>` : nothing}
+              </div>` : nothing}
 
           <div class="pql-shell">
             <div
               class="pql-track"
               role="tablist"
-              aria-label=${l("محطات الجودة", "Quality stations")}
+              aria-label=${t("محطات الجودة", "Quality stations")}
             >
-              ${p.map((_) => this.renderStep(_))}
+              ${stations.map((station) => this.renderStep(station))}
             </div>
-            ${v ? w(v.id, this.renderDetail(v)) : i}
+            ${active ? keyed(active.id, this.renderDetail(active)) : nothing}
           </div>
-          ${L({ config: e, prefix: "pql_" })}
+          ${renderCommerceOutcome({ config: c, prefix: "pql_" })}
         </div>
       </section>
-    ` : t`
+    ` : html`
         <section
-          class=${f({ "fs-section": !0, "fs-animate": o })}
-          style=${m(h(r))}
-          aria-label=${a || l("مختبر الجودة العطرية", "Perfume quality lab")}
+          class=${classMap({ "fs-section": !0, "fs-animate": animate })}
+          style=${styleMap(themeStyleMap(theme))}
+          aria-label=${title || t("مختبر الجودة العطرية", "Perfume quality lab")}
         >
           <div class="fs-container">
-            ${a || s ? t`<div class="fs-header">
-                  ${a ? t`<h2 class="fs-title">${a}</h2>` : i}
-                  ${s ? t`<p class="fs-desc">${s}</p>` : i}
-                </div>` : i}
+            ${title || desc ? html`<div class="fs-header">
+                  ${title ? html`<h2 class="fs-title">${title}</h2>` : nothing}
+                  ${desc ? html`<p class="fs-desc">${desc}</p>` : nothing}
+                </div>` : nothing}
             <div class="fs-empty" role="status">
-              ${l(
+              ${t(
       "أضف محطات مختبر الجودة من إعدادات العنصر.",
       "Add quality lab stations in the element settings."
     )}
               <p class="pql-empty-hint">
-                ${l(
+                ${t(
       "أفكار مقترحة: مكونات، تركيز، مزج، تعتيق، عبوة، ثبات.",
       "Suggested stations: ingredients, concentration, blending, aging, packaging, longevity."
     )}
@@ -452,15 +456,15 @@ const g = class g extends x {
       `;
   }
 };
-g.styles = [C, j];
-let d = g;
-b([
-  y({ type: Object })
-], d.prototype, "config");
-b([
-  $()
-], d.prototype, "activeId");
-typeof d < "u" && d.registerSallaComponent("salla-perfume-quality-lab");
+__name(_PerfumeQualityLab, "PerfumeQualityLab"), _PerfumeQualityLab.styles = [sharedSectionCss, componentStyles];
+let PerfumeQualityLab = _PerfumeQualityLab;
+__decorateClass([
+  property({ type: Object })
+], PerfumeQualityLab.prototype, "config");
+__decorateClass([
+  state()
+], PerfumeQualityLab.prototype, "activeId");
+typeof PerfumeQualityLab < "u" && PerfumeQualityLab.registerSallaComponent("salla-perfume-quality-lab");
 export {
-  d as default
+  PerfumeQualityLab as default
 };

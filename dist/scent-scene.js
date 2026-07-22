@@ -1,10 +1,12 @@
-import { css as $, LitElement as y, html as r, nothing as c } from "lit";
-import { property as w, state as k } from "lit/decorators.js";
-import { classMap as m } from "lit/directives/class-map.js";
-import { keyed as C } from "lit/directives/keyed.js";
-import { styleMap as d } from "lit/directives/style-map.js";
-import { n as S, e as z, a as h, k as I, l as p, s as L, t as i, i as A, p as b, r as E, b as u, c as M } from "./commerceOutcome-CCLcV5SW.js";
-const T = $`
+var __defProp = Object.defineProperty;
+var __name = (target, value) => __defProp(target, "name", { value, configurable: !0 });
+import { css, LitElement, html, nothing } from "lit";
+import { property, state } from "lit/decorators.js";
+import { classMap } from "lit/directives/class-map.js";
+import { keyed } from "lit/directives/keyed.js";
+import { styleMap } from "lit/directives/style-map.js";
+import { n as normalizeCollection, e as extractLink, a as extractImageUrl, k as parseTags, l as localizedString, s as sharedSectionCss, t, i as isExternalUrl, p as prefersReducedMotion, r as readSectionTheme, b as themeStyleMap, c as renderCommerceOutcome } from "./commerceOutcome-DYfJre3y.js";
+const componentStyles = css`
   .ssc-shell {
     display: grid;
     gap: 1rem;
@@ -204,25 +206,26 @@ const T = $`
     }
   }
 `;
-function H(g) {
-  return S(g).map((s, a) => ({
-    id: String(s.id ?? s.scene_id ?? "").trim() || `scene-${a + 1}`,
-    name: p(s.name),
-    desc: p(s.desc),
-    scentCharacter: p(s.scent_character),
-    moodTags: I(s.mood_tags ?? s.tags),
-    image: h(s.image) || h(s.bg),
-    color: String(s.color ?? "").trim(),
-    accent: String(s.accent ?? s.accent_color ?? "").trim(),
-    link: z(s.link)
+function parseScenes(raw) {
+  return normalizeCollection(raw).map((item, i) => ({
+    id: String(item.id ?? item.scene_id ?? "").trim() || `scene-${i + 1}`,
+    name: localizedString(item.name),
+    desc: localizedString(item.desc),
+    scentCharacter: localizedString(item.scent_character),
+    moodTags: parseTags(item.mood_tags ?? item.tags),
+    image: extractImageUrl(item.image) || extractImageUrl(item.bg),
+    color: String(item.color ?? "").trim(),
+    accent: String(item.accent ?? item.accent_color ?? "").trim(),
+    link: extractLink(item.link)
   })).filter((s) => s.name || s.desc || s.image);
 }
-var O = Object.defineProperty, x = (g, s, a, o) => {
-  for (var e = void 0, t = g.length - 1, n; t >= 0; t--)
-    (n = g[t]) && (e = n(s, a, e) || e);
-  return e && O(s, a, e), e;
-};
-const v = class v extends y {
+__name(parseScenes, "parseScenes");
+var __defProp2 = Object.defineProperty, __decorateClass = /* @__PURE__ */ __name((decorators, target, key, kind) => {
+  for (var result = void 0, i = decorators.length - 1, decorator; i >= 0; i--)
+    (decorator = decorators[i]) && (result = decorator(target, key, result) || result);
+  return result && __defProp2(target, key, result), result;
+}, "__decorateClass");
+const _ScentScene = class _ScentScene extends LitElement {
   constructor() {
     super(...arguments), this.config = {}, this.activeId = "", this.boundLangHandler = () => this.requestUpdate();
   }
@@ -232,139 +235,139 @@ const v = class v extends y {
   disconnectedCallback() {
     window.removeEventListener("language-changed", this.boundLangHandler), super.disconnectedCallback();
   }
-  updated(s) {
-    s.has("config") && this.ensureActive();
+  updated(changed) {
+    changed.has("config") && this.ensureActive();
   }
   get scenes() {
-    var s;
-    return H((s = this.config) == null ? void 0 : s.ssc_scenes);
+    var _a;
+    return parseScenes((_a = this.config) == null ? void 0 : _a.ssc_scenes);
   }
   ensureActive() {
-    var a;
-    const s = this.scenes;
-    s.some((o) => o.id === this.activeId) || (this.activeId = ((a = s[0]) == null ? void 0 : a.id) ?? "");
+    var _a;
+    const list = this.scenes;
+    list.some((scene) => scene.id === this.activeId) || (this.activeId = ((_a = list[0]) == null ? void 0 : _a.id) ?? "");
   }
   get active() {
-    return this.scenes.find((s) => s.id === this.activeId) ?? this.scenes[0] ?? null;
+    return this.scenes.find((scene) => scene.id === this.activeId) ?? this.scenes[0] ?? null;
   }
-  select(s) {
-    this.activeId = s;
+  select(id) {
+    this.activeId = id;
   }
-  renderChip(s) {
-    const a = s.id === this.activeId, o = s.accent || s.color || "#9a7b4f";
-    return r`
+  renderChip(scene) {
+    const active = scene.id === this.activeId, accent = scene.accent || scene.color || "#9a7b4f";
+    return html`
       <button
         type="button"
-        class=${m({ "ssc-chip": !0, "fs-tap": !0, "is-active": a })}
-        style=${d({ "--chip-accent": o })}
-        aria-pressed=${a ? "true" : "false"}
+        class=${classMap({ "ssc-chip": !0, "fs-tap": !0, "is-active": active })}
+        style=${styleMap({ "--chip-accent": accent })}
+        aria-pressed=${active ? "true" : "false"}
         aria-controls="ssc-stage"
-        @click=${() => this.select(s.id)}
+        @click=${() => this.select(scene.id)}
       >
         <span class="ssc-chip__swatch" aria-hidden="true"></span>
-        <span class="ssc-chip__name">${s.name || i("مشهد", "Scene")}</span>
+        <span class="ssc-chip__name">${scene.name || t("مشهد", "Scene")}</span>
       </button>
     `;
   }
-  renderStage(s) {
-    const a = s.color || "#1f1a14", o = s.accent || s.color || "#9a7b4f", e = s.link ? A(s.link) : !1, t = !b();
-    return r`
+  renderStage(scene) {
+    const sceneColor = scene.color || "#1f1a14", sceneAccent = scene.accent || scene.color || "#9a7b4f", external = scene.link ? isExternalUrl(scene.link) : !1, animate = !prefersReducedMotion();
+    return html`
       <div
         id="ssc-stage"
         class="ssc-stage fs-fade-swap"
         role="region"
         aria-live="polite"
-        style=${d({
-      "--scene-color": a,
-      "--scene-accent": o
+        style=${styleMap({
+      "--scene-color": sceneColor,
+      "--scene-accent": sceneAccent
     })}
       >
-        ${s.image ? r`<div
-              class=${m({ "ssc-stage__bg": !0, "is-visible": !0 })}
-              style=${d({
-      backgroundImage: `url("${s.image}")`,
-      opacity: t ? "1" : "0.92"
+        ${scene.image ? html`<div
+              class=${classMap({ "ssc-stage__bg": !0, "is-visible": !0 })}
+              style=${styleMap({
+      backgroundImage: `url("${scene.image}")`,
+      opacity: animate ? "1" : "0.92"
     })}
               aria-hidden="true"
-            ></div>` : c}
+            ></div>` : nothing}
         <div class="ssc-stage__overlay" aria-hidden="true"></div>
         <div class="ssc-stage__content">
-          <p class="ssc-stage__eyebrow">${i("مشهد الرائحة", "Scent scene")}</p>
-          <h3 class="ssc-stage__title">${s.name || i("مشهد عطري", "Fragrance scene")}</h3>
-          ${s.scentCharacter ? r`<p class="ssc-stage__character">${s.scentCharacter}</p>` : c}
-          ${s.desc ? r`<p class="ssc-stage__desc">${s.desc}</p>` : r`<p class="ssc-stage__desc">
-                ${i("اختر مشهداً لاستكشاف أجوائه العطرية.", "Pick a scene to explore its scent mood.")}
+          <p class="ssc-stage__eyebrow">${t("مشهد الرائحة", "Scent scene")}</p>
+          <h3 class="ssc-stage__title">${scene.name || t("مشهد عطري", "Fragrance scene")}</h3>
+          ${scene.scentCharacter ? html`<p class="ssc-stage__character">${scene.scentCharacter}</p>` : nothing}
+          ${scene.desc ? html`<p class="ssc-stage__desc">${scene.desc}</p>` : html`<p class="ssc-stage__desc">
+                ${t("اختر مشهداً لاستكشاف أجوائه العطرية.", "Pick a scene to explore its scent mood.")}
               </p>`}
-          ${s.moodTags.length ? r`<div class="ssc-tags" aria-label=${i("وسوم المزاج", "Mood tags")}>
-                ${s.moodTags.map(
-      (n) => r`<span class="ssc-tag">${n}</span>`
+          ${scene.moodTags.length ? html`<div class="ssc-tags" aria-label=${t("وسوم المزاج", "Mood tags")}>
+                ${scene.moodTags.map(
+      (tag) => html`<span class="ssc-tag">${tag}</span>`
     )}
-              </div>` : c}
-          ${s.link ? r`<div class="ssc-stage__actions">
+              </div>` : nothing}
+          ${scene.link ? html`<div class="ssc-stage__actions">
                 <a
                   class="fs-btn fs-tap"
-                  href=${s.link}
-                  target=${e ? "_blank" : "_self"}
-                  rel=${e ? "noopener noreferrer" : c}
+                  href=${scene.link}
+                  target=${external ? "_blank" : "_self"}
+                  rel=${external ? "noopener noreferrer" : nothing}
                 >
-                  ${i("استكشف المشهد", "Explore scene")}
+                  ${t("استكشف المشهد", "Explore scene")}
                 </a>
-              </div>` : c}
+              </div>` : nothing}
         </div>
       </div>
     `;
   }
   render() {
-    const s = this.config || {}, a = E(s, "ssc_"), o = a.animate && !b(), e = p(s.ssc_title), t = p(s.ssc_desc), n = this.scenes, f = this.active;
-    return n.length ? r`
+    const c = this.config || {}, theme = readSectionTheme(c, "ssc_"), animate = theme.animate && !prefersReducedMotion(), title = localizedString(c.ssc_title), desc = localizedString(c.ssc_desc), scenes = this.scenes, active = this.active;
+    return scenes.length ? html`
       <section
-        class=${m({ "fs-section": !0, "fs-animate": o })}
-        style=${d(u(a))}
-        aria-label=${e || i("مشهد الرائحة", "Scent scene")}
+        class=${classMap({ "fs-section": !0, "fs-animate": animate })}
+        style=${styleMap(themeStyleMap(theme))}
+        aria-label=${title || t("مشهد الرائحة", "Scent scene")}
       >
         <div class="fs-container">
-          ${e || t ? r`<div class="fs-header">
-                ${e ? r`<h2 class="fs-title">${e}</h2>` : c}
-                ${t ? r`<p class="fs-desc">${t}</p>` : c}
-              </div>` : c}
+          ${title || desc ? html`<div class="fs-header">
+                ${title ? html`<h2 class="fs-title">${title}</h2>` : nothing}
+                ${desc ? html`<p class="fs-desc">${desc}</p>` : nothing}
+              </div>` : nothing}
 
           <div class="ssc-shell">
-            ${f ? C(f.id, this.renderStage(f)) : c}
-            <div class="ssc-chips" role="tablist" aria-label=${i("المشاهد", "Scenes")}>
-              ${n.map((_) => this.renderChip(_))}
+            ${active ? keyed(active.id, this.renderStage(active)) : nothing}
+            <div class="ssc-chips" role="tablist" aria-label=${t("المشاهد", "Scenes")}>
+              ${scenes.map((scene) => this.renderChip(scene))}
             </div>
           </div>
-          ${M({ config: s, prefix: "ssc_" })}
+          ${renderCommerceOutcome({ config: c, prefix: "ssc_" })}
         </div>
       </section>
-    ` : r`
+    ` : html`
         <section
-          class=${m({ "fs-section": !0, "fs-animate": o })}
-          style=${d(u(a))}
-          aria-label=${e || i("مشهد الرائحة", "Scent scene")}
+          class=${classMap({ "fs-section": !0, "fs-animate": animate })}
+          style=${styleMap(themeStyleMap(theme))}
+          aria-label=${title || t("مشهد الرائحة", "Scent scene")}
         >
           <div class="fs-container">
-            ${e || t ? r`<div class="fs-header">
-                  ${e ? r`<h2 class="fs-title">${e}</h2>` : c}
-                  ${t ? r`<p class="fs-desc">${t}</p>` : c}
-                </div>` : c}
+            ${title || desc ? html`<div class="fs-header">
+                  ${title ? html`<h2 class="fs-title">${title}</h2>` : nothing}
+                  ${desc ? html`<p class="fs-desc">${desc}</p>` : nothing}
+                </div>` : nothing}
             <div class="fs-empty" role="status">
-              ${i("أضف مشاهد عطرية من إعدادات العنصر.", "Add scent scenes in the element settings.")}
+              ${t("أضف مشاهد عطرية من إعدادات العنصر.", "Add scent scenes in the element settings.")}
             </div>
           </div>
         </section>
       `;
   }
 };
-v.styles = [L, T];
-let l = v;
-x([
-  w({ type: Object })
-], l.prototype, "config");
-x([
-  k()
-], l.prototype, "activeId");
-typeof l < "u" && l.registerSallaComponent("salla-scent-scene");
+__name(_ScentScene, "ScentScene"), _ScentScene.styles = [sharedSectionCss, componentStyles];
+let ScentScene = _ScentScene;
+__decorateClass([
+  property({ type: Object })
+], ScentScene.prototype, "config");
+__decorateClass([
+  state()
+], ScentScene.prototype, "activeId");
+typeof ScentScene < "u" && ScentScene.registerSallaComponent("salla-scent-scene");
 export {
-  l as default
+  ScentScene as default
 };

@@ -1,9 +1,11 @@
-import { css as y, LitElement as $, html as s, nothing as o } from "lit";
-import { property as x, state as w } from "lit/decorators.js";
-import { classMap as g } from "lit/directives/class-map.js";
-import { styleMap as m } from "lit/directives/style-map.js";
-import { n as k, l, e as S, a as h, s as C, i as I, t as i, r as z, p as L, b as v, c as E } from "./commerceOutcome-CCLcV5SW.js";
-const Y = y`
+var __defProp = Object.defineProperty;
+var __name = (target, value) => __defProp(target, "name", { value, configurable: !0 });
+import { css, LitElement, html, nothing } from "lit";
+import { property, state } from "lit/decorators.js";
+import { classMap } from "lit/directives/class-map.js";
+import { styleMap } from "lit/directives/style-map.js";
+import { n as normalizeCollection, l as localizedString, e as extractLink, a as extractImageUrl, s as sharedSectionCss, i as isExternalUrl, t, r as readSectionTheme, p as prefersReducedMotion, b as themeStyleMap, c as renderCommerceOutcome } from "./commerceOutcome-DYfJre3y.js";
+const componentStyles = css`
   .spf-shell {
     display: grid;
     gap: 1.35rem;
@@ -177,28 +179,29 @@ const Y = y`
     }
   }
 `;
-function M(p) {
-  return k(p).map((e, r) => {
-    const t = l(e.name);
+function parsePersonalities(raw) {
+  return normalizeCollection(raw).map((item, i) => {
+    const name = localizedString(item.name);
     return {
-      id: String(e.id ?? e.personality_id ?? "").trim() || `personality-${r + 1}`,
-      name: t,
-      desc: l(e.desc),
-      icon: String(e.icon ?? "").trim(),
-      image: h(e.image) || h(e.icon),
-      color: String(e.color ?? "").trim(),
-      resultFamily: l(e.result_family),
-      resultDesc: l(e.result_desc),
-      link: S(e.link)
+      id: String(item.id ?? item.personality_id ?? "").trim() || `personality-${i + 1}`,
+      name,
+      desc: localizedString(item.desc),
+      icon: String(item.icon ?? "").trim(),
+      image: extractImageUrl(item.image) || extractImageUrl(item.icon),
+      color: String(item.color ?? "").trim(),
+      resultFamily: localizedString(item.result_family),
+      resultDesc: localizedString(item.result_desc),
+      link: extractLink(item.link)
     };
-  }).filter((e) => e.name || e.desc);
+  }).filter((p) => p.name || p.desc);
 }
-var j = Object.defineProperty, b = (p, e, r, t) => {
-  for (var a = void 0, n = p.length - 1, c; n >= 0; n--)
-    (c = p[n]) && (a = c(e, r, a) || a);
-  return a && j(e, r, a), a;
-};
-const u = class u extends $ {
+__name(parsePersonalities, "parsePersonalities");
+var __defProp2 = Object.defineProperty, __decorateClass = /* @__PURE__ */ __name((decorators, target, key, kind) => {
+  for (var result = void 0, i = decorators.length - 1, decorator; i >= 0; i--)
+    (decorator = decorators[i]) && (result = decorator(target, key, result) || result);
+  return result && __defProp2(target, key, result), result;
+}, "__decorateClass");
+const _ScentPersonalityFinder = class _ScentPersonalityFinder extends LitElement {
   constructor() {
     super(...arguments), this.config = {}, this.selectedId = "", this.boundLangHandler = () => this.requestUpdate();
   }
@@ -208,123 +211,123 @@ const u = class u extends $ {
   disconnectedCallback() {
     window.removeEventListener("language-changed", this.boundLangHandler), super.disconnectedCallback();
   }
-  updated(e) {
-    e.has("config") && (this.selectedId = "");
+  updated(changed) {
+    changed.has("config") && (this.selectedId = "");
   }
   get personalities() {
-    var e;
-    return M((e = this.config) == null ? void 0 : e.spf_personalities);
+    var _a;
+    return parsePersonalities((_a = this.config) == null ? void 0 : _a.spf_personalities);
   }
-  resolveSelected(e) {
-    if (!e.length) return null;
+  resolveSelected(items) {
+    if (!items.length) return null;
     if (this.selectedId) {
-      const r = e.find((t) => t.id === this.selectedId);
-      if (r) return r;
+      const found = items.find((p) => p.id === this.selectedId);
+      if (found) return found;
     }
     return null;
   }
-  select(e) {
-    this.selectedId = this.selectedId === e ? "" : e;
+  select(id) {
+    this.selectedId = this.selectedId === id ? "" : id;
   }
-  renderIcon(e) {
-    const r = e.icon.startsWith("sicon-");
-    return e.image ? s`<img src=${e.image} alt="" loading="lazy" decoding="async" />` : e.icon ? r ? s`<span class=${e.icon}></span>` : s`<span>${e.icon}</span>` : s`<span aria-hidden="true">◆</span>`;
+  renderIcon(item) {
+    const isSicon = item.icon.startsWith("sicon-");
+    return item.image ? html`<img src=${item.image} alt="" loading="lazy" decoding="async" />` : item.icon ? isSicon ? html`<span class=${item.icon}></span>` : html`<span>${item.icon}</span>` : html`<span aria-hidden="true">◆</span>`;
   }
-  renderCard(e) {
-    const r = this.selectedId === e.id, t = e.color ? { "--item-color": e.color } : {};
-    return s`
+  renderCard(item) {
+    const active = this.selectedId === item.id, style = item.color ? { "--item-color": item.color } : {};
+    return html`
       <button
         type="button"
-        class=${g({ "spf-card": !0, "fs-tap": !0, "is-active": r })}
-        style=${m(t)}
-        aria-pressed=${r ? "true" : "false"}
+        class=${classMap({ "spf-card": !0, "fs-tap": !0, "is-active": active })}
+        style=${styleMap(style)}
+        aria-pressed=${active ? "true" : "false"}
         aria-controls="spf-result"
-        @click=${() => this.select(e.id)}
+        @click=${() => this.select(item.id)}
       >
-        <span class="spf-card__icon">${this.renderIcon(e)}</span>
-        <span class="spf-card__name">${e.name}</span>
-        ${e.desc ? s`<p class="spf-card__desc">${e.desc}</p>` : o}
+        <span class="spf-card__icon">${this.renderIcon(item)}</span>
+        <span class="spf-card__name">${item.name}</span>
+        ${item.desc ? html`<p class="spf-card__desc">${item.desc}</p>` : nothing}
       </button>
     `;
   }
-  renderResult(e) {
-    const r = e.color ? { "--item-color": e.color } : {}, t = e.link ? I(e.link) : !1;
-    return s`
+  renderResult(item) {
+    const style = item.color ? { "--item-color": item.color } : {}, external = item.link ? isExternalUrl(item.link) : !1;
+    return html`
       <article
         id="spf-result"
         class="spf-result"
-        style=${m(r)}
+        style=${styleMap(style)}
         role="region"
         aria-live="polite"
       >
-        <p class="spf-result__eyebrow">${i("عائلتك العطرية", "Your fragrance family")}</p>
-        <h3 class="spf-result__title">${e.resultFamily || e.name}</h3>
-        ${e.resultDesc ? s`<p class="spf-result__desc">${e.resultDesc}</p>` : e.desc ? s`<p class="spf-result__desc">${e.desc}</p>` : o}
-        ${e.link ? s`<div class="spf-result__actions">
+        <p class="spf-result__eyebrow">${t("عائلتك العطرية", "Your fragrance family")}</p>
+        <h3 class="spf-result__title">${item.resultFamily || item.name}</h3>
+        ${item.resultDesc ? html`<p class="spf-result__desc">${item.resultDesc}</p>` : item.desc ? html`<p class="spf-result__desc">${item.desc}</p>` : nothing}
+        ${item.link ? html`<div class="spf-result__actions">
               <a
                 class="fs-btn fs-tap"
-                href=${e.link}
-                target=${t ? "_blank" : "_self"}
-                rel=${t ? "noopener noreferrer" : o}
+                href=${item.link}
+                target=${external ? "_blank" : "_self"}
+                rel=${external ? "noopener noreferrer" : nothing}
               >
-                ${i("استكشف العائلة", "Explore this family")}
+                ${t("استكشف العائلة", "Explore this family")}
               </a>
-            </div>` : o}
+            </div>` : nothing}
       </article>
     `;
   }
   render() {
-    const e = this.config || {}, r = z(e, "spf_"), t = r.animate && !L(), a = l(e.spf_title), n = l(e.spf_desc), c = this.personalities, f = this.resolveSelected(c);
-    return c.length ? s`
+    const c = this.config || {}, theme = readSectionTheme(c, "spf_"), animate = theme.animate && !prefersReducedMotion(), title = localizedString(c.spf_title), desc = localizedString(c.spf_desc), personalities = this.personalities, selected = this.resolveSelected(personalities);
+    return personalities.length ? html`
       <section
-        class=${g({ "fs-section": !0, "fs-animate": t })}
-        style=${m(v(r))}
-        aria-label=${a || i("مستكشف الشخصية العطرية", "Scent personality finder")}
+        class=${classMap({ "fs-section": !0, "fs-animate": animate })}
+        style=${styleMap(themeStyleMap(theme))}
+        aria-label=${title || t("مستكشف الشخصية العطرية", "Scent personality finder")}
       >
         <div class="fs-container">
-          ${a || n ? s`<div class="fs-header">
-                ${a ? s`<h2 class="fs-title">${a}</h2>` : o}
-                ${n ? s`<p class="fs-desc">${n}</p>` : o}
-              </div>` : o}
+          ${title || desc ? html`<div class="fs-header">
+                ${title ? html`<h2 class="fs-title">${title}</h2>` : nothing}
+                ${desc ? html`<p class="fs-desc">${desc}</p>` : nothing}
+              </div>` : nothing}
 
           <div class="spf-shell">
-            <p class="spf-selector__label">${i("اختر شخصيتك", "Choose your personality")}</p>
-            <div class="spf-grid" role="group" aria-label=${i("الشخصيات العطرية", "Scent personalities")}>
-              ${c.map((_) => this.renderCard(_))}
+            <p class="spf-selector__label">${t("اختر شخصيتك", "Choose your personality")}</p>
+            <div class="spf-grid" role="group" aria-label=${t("الشخصيات العطرية", "Scent personalities")}>
+              ${personalities.map((item) => this.renderCard(item))}
             </div>
-            ${f ? this.renderResult(f) : o}
+            ${selected ? this.renderResult(selected) : nothing}
           </div>
-          ${E({ config: e, prefix: "spf_", ready: !!f, selection: f })}
+          ${renderCommerceOutcome({ config: c, prefix: "spf_", ready: !!selected, selection: selected })}
         </div>
       </section>
-    ` : s`
+    ` : html`
         <section
-          class=${g({ "fs-section": !0, "fs-animate": t })}
-          style=${m(v(r))}
-          aria-label=${a || i("مستكشف الشخصية العطرية", "Scent personality finder")}
+          class=${classMap({ "fs-section": !0, "fs-animate": animate })}
+          style=${styleMap(themeStyleMap(theme))}
+          aria-label=${title || t("مستكشف الشخصية العطرية", "Scent personality finder")}
         >
           <div class="fs-container">
-            ${a || n ? s`<div class="fs-header">
-                  ${a ? s`<h2 class="fs-title">${a}</h2>` : o}
-                  ${n ? s`<p class="fs-desc">${n}</p>` : o}
-                </div>` : o}
+            ${title || desc ? html`<div class="fs-header">
+                  ${title ? html`<h2 class="fs-title">${title}</h2>` : nothing}
+                  ${desc ? html`<p class="fs-desc">${desc}</p>` : nothing}
+                </div>` : nothing}
             <div class="fs-empty" role="status">
-              ${i("أضف شخصيات عطرية من إعدادات العنصر.", "Add scent personalities in the element settings.")}
+              ${t("أضف شخصيات عطرية من إعدادات العنصر.", "Add scent personalities in the element settings.")}
             </div>
           </div>
         </section>
       `;
   }
 };
-u.styles = [C, Y];
-let d = u;
-b([
-  x({ type: Object })
-], d.prototype, "config");
-b([
-  w()
-], d.prototype, "selectedId");
-typeof d < "u" && d.registerSallaComponent("salla-scent-personality-finder");
+__name(_ScentPersonalityFinder, "ScentPersonalityFinder"), _ScentPersonalityFinder.styles = [sharedSectionCss, componentStyles];
+let ScentPersonalityFinder = _ScentPersonalityFinder;
+__decorateClass([
+  property({ type: Object })
+], ScentPersonalityFinder.prototype, "config");
+__decorateClass([
+  state()
+], ScentPersonalityFinder.prototype, "selectedId");
+typeof ScentPersonalityFinder < "u" && ScentPersonalityFinder.registerSallaComponent("salla-scent-personality-finder");
 export {
-  d as default
+  ScentPersonalityFinder as default
 };

@@ -99,13 +99,17 @@ const seedDemoDefaultsJs = `
 `;
 
 export default defineConfig({
+  // Keep localizedString readable in dist for Salla review scanners
+  esbuild: {
+    keepNames: true,
+    minifyIdentifiers: false,
+  },
   plugins: [
     sallaTransformPlugin(),
     sallaBuildPlugin(),
     sallaDemoPlugin({
       js: seedDemoDefaultsJs,
     }),
-    },
     {
       name: 'no-cache-headers',
       configureServer(server) {

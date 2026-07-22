@@ -1,10 +1,12 @@
-import { css as y, LitElement as $, html as r, nothing as t } from "lit";
-import { property as x, state as w } from "lit/decorators.js";
-import { classMap as f } from "lit/directives/class-map.js";
-import { keyed as k } from "lit/directives/keyed.js";
-import { styleMap as h } from "lit/directives/style-map.js";
-import { n as C, l as i, a as I, g as z, s as S, t as c, r as L, p as T, b as M, c as O } from "./commerceOutcome-CCLcV5SW.js";
-const P = y`
+var __defProp = Object.defineProperty;
+var __name = (target, value) => __defProp(target, "name", { value, configurable: !0 });
+import { css, LitElement, html, nothing } from "lit";
+import { property, state } from "lit/decorators.js";
+import { classMap } from "lit/directives/class-map.js";
+import { keyed } from "lit/directives/keyed.js";
+import { styleMap } from "lit/directives/style-map.js";
+import { n as normalizeCollection, l as localizedString, a as extractImageUrl, g as getRadioValue, s as sharedSectionCss, t, r as readSectionTheme, p as prefersReducedMotion, b as themeStyleMap, c as renderCommerceOutcome } from "./commerceOutcome-DYfJre3y.js";
+const componentStyles = css`
   :host {
     direction: inherit;
   }
@@ -150,31 +152,33 @@ const P = y`
     }
   }
 `;
-function j(l) {
-  return z(l.igs_layout, "grid") === "list" ? "list" : "grid";
+function resolveLayout(config) {
+  return getRadioValue(config.igs_layout, "grid") === "list" ? "list" : "grid";
 }
-function B(l) {
-  return C(l).map((e, s) => ({
-    id: `ingredient-${s}`,
-    name: i(e.name),
-    shortTeaser: i(e.short_teaser),
-    story: i(e.story),
-    origin: i(e.origin),
-    character: i(e.character),
-    mood: i(e.mood),
-    image: I(e.image),
-    color: i(e.color) || "#9a7b4f",
-    icon: i(e.icon)
+__name(resolveLayout, "resolveLayout");
+function parseIngredients(raw) {
+  return normalizeCollection(raw).map((row, index) => ({
+    id: `ingredient-${index}`,
+    name: localizedString(row.name),
+    shortTeaser: localizedString(row.short_teaser),
+    story: localizedString(row.story),
+    origin: localizedString(row.origin),
+    character: localizedString(row.character),
+    mood: localizedString(row.mood),
+    image: extractImageUrl(row.image),
+    color: localizedString(row.color) || "#9a7b4f",
+    icon: localizedString(row.icon)
   })).filter(
-    (e) => e.name || e.shortTeaser || e.story || e.image
+    (item) => item.name || item.shortTeaser || item.story || item.image
   );
 }
-var E = Object.defineProperty, b = (l, e, s, p) => {
-  for (var a = void 0, n = l.length - 1, g; n >= 0; n--)
-    (g = l[n]) && (a = g(e, s, a) || a);
-  return a && E(e, s, a), a;
-};
-const u = class u extends $ {
+__name(parseIngredients, "parseIngredients");
+var __defProp2 = Object.defineProperty, __decorateClass = /* @__PURE__ */ __name((decorators, target, key, kind) => {
+  for (var result = void 0, i = decorators.length - 1, decorator; i >= 0; i--)
+    (decorator = decorators[i]) && (result = decorator(target, key, result) || result);
+  return result && __defProp2(target, key, result), result;
+}, "__decorateClass");
+const _IngredientStories = class _IngredientStories extends LitElement {
   constructor() {
     super(...arguments), this.config = {}, this.selectedId = "", this.boundLangHandler = () => this.requestUpdate();
   }
@@ -184,113 +188,113 @@ const u = class u extends $ {
   disconnectedCallback() {
     window.removeEventListener("language-changed", this.boundLangHandler), super.disconnectedCallback();
   }
-  updated(e) {
-    e.has("config") && this.ensureSelection();
+  updated(changed) {
+    changed.has("config") && this.ensureSelection();
   }
   get ingredients() {
-    var e;
-    return B((e = this.config) == null ? void 0 : e.igs_ingredients);
+    var _a;
+    return parseIngredients((_a = this.config) == null ? void 0 : _a.igs_ingredients);
   }
   ensureSelection() {
-    var s;
-    const e = this.ingredients;
-    e.some((p) => p.id === this.selectedId) || (this.selectedId = ((s = e[0]) == null ? void 0 : s.id) ?? "");
+    var _a;
+    const list = this.ingredients;
+    list.some((i) => i.id === this.selectedId) || (this.selectedId = ((_a = list[0]) == null ? void 0 : _a.id) ?? "");
   }
   get selected() {
-    return this.ingredients.find((e) => e.id === this.selectedId) ?? null;
+    return this.ingredients.find((i) => i.id === this.selectedId) ?? null;
   }
-  select(e) {
-    this.selectedId = e;
+  select(id) {
+    this.selectedId = id;
   }
-  renderBadge(e) {
-    if (e.image)
-      return r`<span class="igs-card__badge">
-        <img src=${e.image} alt="" loading="lazy" decoding="async" />
+  renderBadge(item) {
+    if (item.image)
+      return html`<span class="igs-card__badge">
+        <img src=${item.image} alt="" loading="lazy" decoding="async" />
       </span>`;
-    const s = e.icon.startsWith("sicon-");
-    return r`<span class="igs-card__badge" style=${h({ background: e.color })}>
-      ${e.icon ? s ? r`<span class=${e.icon}></span>` : e.icon : (e.name || "•").slice(0, 1)}
+    const isSicon = item.icon.startsWith("sicon-");
+    return html`<span class="igs-card__badge" style=${styleMap({ background: item.color })}>
+      ${item.icon ? isSicon ? html`<span class=${item.icon}></span>` : item.icon : (item.name || "•").slice(0, 1)}
     </span>`;
   }
-  renderPanel(e) {
-    return r`
+  renderPanel(item) {
+    return html`
       <div class="igs-panel fs-panel fs-fade-swap" id="igs-detail" role="region" aria-live="polite">
         <div class="igs-panel__head">
-          ${this.renderBadge(e)}
-          <h3 class="fs-panel__title">${e.name || c("مكوّن", "Ingredient")}</h3>
+          ${this.renderBadge(item)}
+          <h3 class="fs-panel__title">${item.name || t("مكوّن", "Ingredient")}</h3>
         </div>
-        ${e.story ? r`<p class="igs-panel__story fs-panel__desc">${e.story}</p>` : e.shortTeaser ? r`<p class="igs-panel__story fs-panel__desc">${e.shortTeaser}</p>` : t}
+        ${item.story ? html`<p class="igs-panel__story fs-panel__desc">${item.story}</p>` : item.shortTeaser ? html`<p class="igs-panel__story fs-panel__desc">${item.shortTeaser}</p>` : nothing}
         <div class="igs-meta">
-          ${e.origin ? r`<p class="igs-meta__row"><span class="igs-meta__label">${c("الأصل", "Origin")}</span> ${e.origin}</p>` : t}
-          ${e.character ? r`<p class="igs-meta__row"><span class="igs-meta__label">${c("الطابع", "Character")}</span> ${e.character}</p>` : t}
-          ${e.mood ? r`<p class="igs-meta__row"><span class="igs-meta__label">${c("المزاج", "Mood")}</span> ${e.mood}</p>` : t}
+          ${item.origin ? html`<p class="igs-meta__row"><span class="igs-meta__label">${t("الأصل", "Origin")}</span> ${item.origin}</p>` : nothing}
+          ${item.character ? html`<p class="igs-meta__row"><span class="igs-meta__label">${t("الطابع", "Character")}</span> ${item.character}</p>` : nothing}
+          ${item.mood ? html`<p class="igs-meta__row"><span class="igs-meta__label">${t("المزاج", "Mood")}</span> ${item.mood}</p>` : nothing}
         </div>
       </div>
     `;
   }
   render() {
-    const e = this.config || {}, s = L(e, "igs_"), p = s.animate && !T(), a = i(e.igs_title), n = i(e.igs_desc), g = this.ingredients, _ = j(e), m = this.selected;
-    return g.length ? r`
+    const c = this.config || {}, theme = readSectionTheme(c, "igs_"), animate = theme.animate && !prefersReducedMotion(), title = localizedString(c.igs_title), desc = localizedString(c.igs_desc), ingredients = this.ingredients, layout = resolveLayout(c), selected = this.selected;
+    return ingredients.length ? html`
       <section
-        class=${f({ "fs-section": !0, "fs-animate": p })}
-        style=${h(M(s))}
-        aria-label=${a || c("مكتبة المكونات العطرية", "Fragrance ingredient library")}
+        class=${classMap({ "fs-section": !0, "fs-animate": animate })}
+        style=${styleMap(themeStyleMap(theme))}
+        aria-label=${title || t("مكتبة المكونات العطرية", "Fragrance ingredient library")}
       >
         <div class="fs-container">
-          ${a || n ? r`<div class="fs-header">
-                ${a ? r`<h2 class="fs-title">${a}</h2>` : t}
-                ${n ? r`<p class="fs-desc">${n}</p>` : t}
-              </div>` : t}
+          ${title || desc ? html`<div class="fs-header">
+                ${title ? html`<h2 class="fs-title">${title}</h2>` : nothing}
+                ${desc ? html`<p class="fs-desc">${desc}</p>` : nothing}
+              </div>` : nothing}
 
           <div class="igs-layout">
             <div
-              class=${f({
+              class=${classMap({
       "igs-grid": !0,
-      "igs-grid--list": _ === "list"
+      "igs-grid--list": layout === "list"
     })}
               role="list"
             >
-              ${g.map((o) => {
-      const v = o.id === this.selectedId;
-      return r`
+              ${ingredients.map((item) => {
+      const active = item.id === this.selectedId;
+      return html`
                   <button
                     type="button"
-                    class=${f({ "igs-card": !0, "is-active": v, "fs-tap": !0 })}
-                    style=${h({ "--ing-color": o.color })}
+                    class=${classMap({ "igs-card": !0, "is-active": active, "fs-tap": !0 })}
+                    style=${styleMap({ "--ing-color": item.color })}
                     role="listitem"
-                    aria-pressed=${v ? "true" : "false"}
+                    aria-pressed=${active ? "true" : "false"}
                     aria-controls="igs-detail"
-                    @click=${() => this.select(o.id)}
+                    @click=${() => this.select(item.id)}
                   >
-                    ${this.renderBadge(o)}
-                    <h3 class="igs-card__name">${o.name || c("مكوّن", "Ingredient")}</h3>
-                    ${o.shortTeaser ? r`<p class="igs-card__teaser">${o.shortTeaser}</p>` : t}
+                    ${this.renderBadge(item)}
+                    <h3 class="igs-card__name">${item.name || t("مكوّن", "Ingredient")}</h3>
+                    ${item.shortTeaser ? html`<p class="igs-card__teaser">${item.shortTeaser}</p>` : nothing}
                   </button>
                 `;
     })}
             </div>
-            ${m ? k(m.id, this.renderPanel(m)) : t}
+            ${selected ? keyed(selected.id, this.renderPanel(selected)) : nothing}
           </div>
-          ${O({ config: e, prefix: "igs_" })}
+          ${renderCommerceOutcome({ config: c, prefix: "igs_" })}
         </div>
       </section>
-    ` : r`<div class="fs-empty" role="status">
-        ${c(
+    ` : html`<div class="fs-empty" role="status">
+        ${t(
       "أضف مكونات عطرية من إعدادات العنصر.",
       "Add fragrance ingredients in the element settings."
     )}
       </div>`;
   }
 };
-u.styles = [S, P];
-let d = u;
-b([
-  x({ type: Object })
-], d.prototype, "config");
-b([
-  w()
-], d.prototype, "selectedId");
-typeof d < "u" && d.registerSallaComponent("salla-ingredient-stories");
+__name(_IngredientStories, "IngredientStories"), _IngredientStories.styles = [sharedSectionCss, componentStyles];
+let IngredientStories = _IngredientStories;
+__decorateClass([
+  property({ type: Object })
+], IngredientStories.prototype, "config");
+__decorateClass([
+  state()
+], IngredientStories.prototype, "selectedId");
+typeof IngredientStories < "u" && IngredientStories.registerSallaComponent("salla-ingredient-stories");
 export {
-  d as default
+  IngredientStories as default
 };

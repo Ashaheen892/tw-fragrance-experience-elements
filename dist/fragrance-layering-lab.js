@@ -1,9 +1,11 @@
-import { css as v, LitElement as u, nothing as n, html as a } from "lit";
-import { property as h } from "lit/decorators.js";
-import { classMap as b } from "lit/directives/class-map.js";
-import { styleMap as m } from "lit/directives/style-map.js";
-import { n as _, l as s, s as x, t as i, r as $, p as y, b as w, c as C } from "./commerceOutcome-CCLcV5SW.js";
-const S = v`
+var __defProp = Object.defineProperty;
+var __name = (target, value) => __defProp(target, "name", { value, configurable: !0 });
+import { css, LitElement, nothing, html } from "lit";
+import { property } from "lit/decorators.js";
+import { classMap } from "lit/directives/class-map.js";
+import { styleMap } from "lit/directives/style-map.js";
+import { n as normalizeCollection, l as localizedString, s as sharedSectionCss, t, r as readSectionTheme, p as prefersReducedMotion, b as themeStyleMap, c as renderCommerceOutcome } from "./commerceOutcome-DYfJre3y.js";
+const componentStyles = css`
   .fll-grid {
     display: grid;
     gap: 0.85rem;
@@ -119,28 +121,29 @@ const S = v`
     }
   }
 `;
-function k(d) {
-  return _(d).map((e, l) => {
-    const f = s(e.title), r = s(e.note_a), o = s(e.note_b), t = s(e.result);
+function parseRecipes(raw) {
+  return normalizeCollection(raw).map((item, i) => {
+    const title = localizedString(item.title), noteA = localizedString(item.note_a), noteB = localizedString(item.note_b), result = localizedString(item.result);
     return {
-      id: String(e.id ?? e.recipe_id ?? "").trim() || `recipe-${l + 1}`,
-      title: f,
-      noteA: r,
-      noteB: o,
-      noteC: s(e.note_c),
-      result: t,
-      occasion: s(e.occasion),
-      howTo: s(e.how_to),
-      color: String(e.color ?? e.accent_color ?? "").trim()
+      id: String(item.id ?? item.recipe_id ?? "").trim() || `recipe-${i + 1}`,
+      title,
+      noteA,
+      noteB,
+      noteC: localizedString(item.note_c),
+      result,
+      occasion: localizedString(item.occasion),
+      howTo: localizedString(item.how_to),
+      color: String(item.color ?? item.accent_color ?? "").trim()
     };
-  }).filter((e) => e.title || e.noteA || e.noteB || e.result);
+  }).filter((r) => r.title || r.noteA || r.noteB || r.result);
 }
-var z = Object.defineProperty, A = (d, e, l, f) => {
-  for (var r = void 0, o = d.length - 1, t; o >= 0; o--)
-    (t = d[o]) && (r = t(e, l, r) || r);
-  return r && z(e, l, r), r;
-};
-const p = class p extends u {
+__name(parseRecipes, "parseRecipes");
+var __defProp2 = Object.defineProperty, __decorateClass = /* @__PURE__ */ __name((decorators, target, key, kind) => {
+  for (var result = void 0, i = decorators.length - 1, decorator; i >= 0; i--)
+    (decorator = decorators[i]) && (result = decorator(target, key, result) || result);
+  return result && __defProp2(target, key, result), result;
+}, "__decorateClass");
+const _FragranceLayeringLab = class _FragranceLayeringLab extends LitElement {
   constructor() {
     super(...arguments), this.config = {}, this.boundLangHandler = () => this.requestUpdate();
   }
@@ -151,74 +154,74 @@ const p = class p extends u {
     window.removeEventListener("language-changed", this.boundLangHandler), super.disconnectedCallback();
   }
   get recipes() {
-    var e;
-    return k((e = this.config) == null ? void 0 : e.fll_recipes);
+    var _a;
+    return parseRecipes((_a = this.config) == null ? void 0 : _a.fll_recipes);
   }
-  renderFormula(e) {
-    return a`
-      <div class="fll-formula" aria-label=${i("تركيبة الدمج", "Layering formula")}>
-        <span class="fll-note">${e.noteA}</span>
+  renderFormula(recipe) {
+    return html`
+      <div class="fll-formula" aria-label=${t("تركيبة الدمج", "Layering formula")}>
+        <span class="fll-note">${recipe.noteA}</span>
         <span class="fll-op">+</span>
-        <span class="fll-note">${e.noteB}</span>
-        ${e.noteC ? a`
+        <span class="fll-note">${recipe.noteB}</span>
+        ${recipe.noteC ? html`
               <span class="fll-op">+</span>
-              <span class="fll-note">${e.noteC}</span>
-            ` : n}
+              <span class="fll-note">${recipe.noteC}</span>
+            ` : nothing}
         <span class="fll-op">=</span>
-        <span class="fll-result">${e.result}</span>
+        <span class="fll-result">${recipe.result}</span>
       </div>
     `;
   }
-  renderCard(e) {
-    const l = e.color ? { "--recipe-color": e.color } : {};
-    return a`
-      <article class="fll-card" style=${m(l)}>
-        ${e.title ? a`<h3 class="fll-card__title">${e.title}</h3>` : n}
-        ${this.renderFormula(e)}
+  renderCard(recipe) {
+    const style = recipe.color ? { "--recipe-color": recipe.color } : {};
+    return html`
+      <article class="fll-card" style=${styleMap(style)}>
+        ${recipe.title ? html`<h3 class="fll-card__title">${recipe.title}</h3>` : nothing}
+        ${this.renderFormula(recipe)}
         <div class="fll-meta">
-          ${e.occasion ? a`<div class="fll-meta__row">
-                <span class="fll-meta__label">${i("المناسبة", "Occasion")}</span>
-                <p class="fll-meta__value">${e.occasion}</p>
-              </div>` : n}
-          ${e.howTo ? a`<div class="fll-meta__row">
-                <span class="fll-meta__label">${i("طريقة الاستخدام", "How to apply")}</span>
-                <p class="fll-meta__value">${e.howTo}</p>
-              </div>` : n}
+          ${recipe.occasion ? html`<div class="fll-meta__row">
+                <span class="fll-meta__label">${t("المناسبة", "Occasion")}</span>
+                <p class="fll-meta__value">${recipe.occasion}</p>
+              </div>` : nothing}
+          ${recipe.howTo ? html`<div class="fll-meta__row">
+                <span class="fll-meta__label">${t("طريقة الاستخدام", "How to apply")}</span>
+                <p class="fll-meta__value">${recipe.howTo}</p>
+              </div>` : nothing}
         </div>
       </article>
     `;
   }
   render() {
-    const e = this.config || {}, l = $(e, "fll_"), f = l.animate && !y(), r = s(e.fll_title), o = s(e.fll_desc), t = this.recipes;
-    return a`
+    const c = this.config || {}, theme = readSectionTheme(c, "fll_"), animate = theme.animate && !prefersReducedMotion(), title = localizedString(c.fll_title), desc = localizedString(c.fll_desc), recipes = this.recipes;
+    return html`
       <section
-        class=${b({ "fs-section": !0, "fs-animate": f })}
-        style=${m(w(l))}
-        aria-label=${r || i("مختبر دمج العطور", "Fragrance layering lab")}
+        class=${classMap({ "fs-section": !0, "fs-animate": animate })}
+        style=${styleMap(themeStyleMap(theme))}
+        aria-label=${title || t("مختبر دمج العطور", "Fragrance layering lab")}
       >
         <div class="fs-container">
-          ${r || o ? a`<div class="fs-header">
-                ${r ? a`<h2 class="fs-title">${r}</h2>` : n}
-                ${o ? a`<p class="fs-desc">${o}</p>` : n}
-              </div>` : n}
+          ${title || desc ? html`<div class="fs-header">
+                ${title ? html`<h2 class="fs-title">${title}</h2>` : nothing}
+                ${desc ? html`<p class="fs-desc">${desc}</p>` : nothing}
+              </div>` : nothing}
 
-          ${t.length ? a`<div class="fll-grid" role="list">
-                ${t.map((g) => this.renderCard(g))}
-              </div>` : a`<div class="fs-empty" role="status">
-                ${i("أضف وصفات دمج من إعدادات العنصر.", "Add layering recipes in the element settings.")}
+          ${recipes.length ? html`<div class="fll-grid" role="list">
+                ${recipes.map((recipe) => this.renderCard(recipe))}
+              </div>` : html`<div class="fs-empty" role="status">
+                ${t("أضف وصفات دمج من إعدادات العنصر.", "Add layering recipes in the element settings.")}
               </div>`}
-          ${C({ config: e, prefix: "fll_" })}
+          ${renderCommerceOutcome({ config: c, prefix: "fll_" })}
         </div>
       </section>
     `;
   }
 };
-p.styles = [x, S];
-let c = p;
-A([
-  h({ type: Object })
-], c.prototype, "config");
-typeof c < "u" && c.registerSallaComponent("salla-fragrance-layering-lab");
+__name(_FragranceLayeringLab, "FragranceLayeringLab"), _FragranceLayeringLab.styles = [sharedSectionCss, componentStyles];
+let FragranceLayeringLab = _FragranceLayeringLab;
+__decorateClass([
+  property({ type: Object })
+], FragranceLayeringLab.prototype, "config");
+typeof FragranceLayeringLab < "u" && FragranceLayeringLab.registerSallaComponent("salla-fragrance-layering-lab");
 export {
-  c as default
+  FragranceLayeringLab as default
 };

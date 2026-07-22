@@ -1,10 +1,12 @@
-import { css as $, LitElement as y, html as a, nothing as s } from "lit";
-import { property as k, state as S } from "lit/decorators.js";
-import { classMap as h } from "lit/directives/class-map.js";
-import { keyed as C } from "lit/directives/keyed.js";
-import { styleMap as p } from "lit/directives/style-map.js";
-import { n as I, l as g, e as z, a as L, g as j, s as Y, i as A, t as l, r as E, p as O, b as u, c as U } from "./commerceOutcome-CCLcV5SW.js";
-const H = $`
+var __defProp = Object.defineProperty;
+var __name = (target, value) => __defProp(target, "name", { value, configurable: !0 });
+import { css, LitElement, html, nothing } from "lit";
+import { property, state } from "lit/decorators.js";
+import { classMap } from "lit/directives/class-map.js";
+import { keyed } from "lit/directives/keyed.js";
+import { styleMap } from "lit/directives/style-map.js";
+import { n as normalizeCollection, l as localizedString, e as extractLink, a as extractImageUrl, g as getRadioValue, s as sharedSectionCss, i as isExternalUrl, t, r as readSectionTheme, p as prefersReducedMotion, b as themeStyleMap, c as renderCommerceOutcome } from "./commerceOutcome-DYfJre3y.js";
+const componentStyles = css`
   .ffm-shell {
     display: grid;
     gap: 1rem;
@@ -253,31 +255,33 @@ const H = $`
         rotate(calc(-1 * var(--i-angle, 0deg)));
     }
   }
-`, M = ["wheel", "grid"];
-function P(d) {
-  return I(d).map((e, t) => {
-    const o = g(e.name);
+`, LAYOUTS = ["wheel", "grid"];
+function parseFamilies(raw) {
+  return normalizeCollection(raw).map((item, i) => {
+    const name = localizedString(item.name);
     return {
-      id: String(e.id ?? e.family_id ?? "").trim() || `family-${t + 1}`,
-      name: o,
-      desc: g(e.desc),
-      color: String(e.color ?? "").trim(),
-      icon: String(e.icon ?? "").trim(),
-      image: L(e.image),
-      link: z(e.link)
+      id: String(item.id ?? item.family_id ?? "").trim() || `family-${i + 1}`,
+      name,
+      desc: localizedString(item.desc),
+      color: String(item.color ?? "").trim(),
+      icon: String(item.icon ?? "").trim(),
+      image: extractImageUrl(item.image),
+      link: extractLink(item.link)
     };
-  }).filter((e) => e.name || e.desc);
+  }).filter((f) => f.name || f.desc);
 }
-function D(d) {
-  const e = j(d.ffm_layout, "grid");
-  return M.includes(e) ? e : "grid";
+__name(parseFamilies, "parseFamilies");
+function resolveLayout(config) {
+  const value = getRadioValue(config.ffm_layout, "grid");
+  return LAYOUTS.includes(value) ? value : "grid";
 }
-var R = Object.defineProperty, b = (d, e, t, o) => {
-  for (var r = void 0, i = d.length - 1, n; i >= 0; i--)
-    (n = d[i]) && (r = n(e, t, r) || r);
-  return r && R(e, t, r), r;
-};
-const v = class v extends y {
+__name(resolveLayout, "resolveLayout");
+var __defProp2 = Object.defineProperty, __decorateClass = /* @__PURE__ */ __name((decorators, target, key, kind) => {
+  for (var result = void 0, i = decorators.length - 1, decorator; i >= 0; i--)
+    (decorator = decorators[i]) && (result = decorator(target, key, result) || result);
+  return result && __defProp2(target, key, result), result;
+}, "__decorateClass");
+const _FragranceFamilyMap = class _FragranceFamilyMap extends LitElement {
   constructor() {
     super(...arguments), this.config = {}, this.activeId = "", this.boundLangHandler = () => this.requestUpdate();
   }
@@ -287,144 +291,144 @@ const v = class v extends y {
   disconnectedCallback() {
     window.removeEventListener("language-changed", this.boundLangHandler), super.disconnectedCallback();
   }
-  updated(e) {
-    e.has("config") && (this.activeId = "");
+  updated(changed) {
+    changed.has("config") && (this.activeId = "");
   }
   get families() {
-    var e;
-    return P((e = this.config) == null ? void 0 : e.ffm_families);
+    var _a;
+    return parseFamilies((_a = this.config) == null ? void 0 : _a.ffm_families);
   }
-  resolveActive(e) {
-    var o;
-    if (!e.length) return null;
+  resolveActive(families) {
+    var _a;
+    if (!families.length) return null;
     if (this.activeId) {
-      const r = e.find((i) => i.id === this.activeId);
-      if (r) return r;
+      const found = families.find((f) => f.id === this.activeId);
+      if (found) return found;
     }
-    const t = String(((o = this.config) == null ? void 0 : o.ffm_default_family) ?? "").trim();
-    if (t) {
-      const r = e.find((i) => i.id === t);
-      if (r) return r;
+    const preset = String(((_a = this.config) == null ? void 0 : _a.ffm_default_family) ?? "").trim();
+    if (preset) {
+      const found = families.find((f) => f.id === preset);
+      if (found) return found;
     }
-    return e[0];
+    return families[0];
   }
-  select(e) {
-    this.activeId = e;
+  select(id) {
+    this.activeId = id;
   }
-  renderIcon(e, t) {
-    const o = e.icon.startsWith("sicon-");
-    return e.image ? a`<img src=${e.image} alt="" loading="lazy" decoding="async" />` : e.icon ? o ? a`<span class=${e.icon}></span>` : a`<span>${e.icon}</span>` : a`<span class=${t} aria-hidden="true">✦</span>`;
+  renderIcon(family, className) {
+    const isSicon = family.icon.startsWith("sicon-");
+    return family.image ? html`<img src=${family.image} alt="" loading="lazy" decoding="async" />` : family.icon ? isSicon ? html`<span class=${family.icon}></span>` : html`<span>${family.icon}</span>` : html`<span class=${className} aria-hidden="true">✦</span>`;
   }
-  renderChip(e, t, o, r) {
-    var c;
-    const i = ((c = this.resolveActive(this.families)) == null ? void 0 : c.id) === e.id, n = e.color ? { "--fam-color": e.color } : {};
-    return t === "wheel" && (n["--i-angle"] = `${360 / Math.max(r, 1) * o}deg`), a`
+  renderChip(family, layout, index, total) {
+    var _a;
+    const active = ((_a = this.resolveActive(this.families)) == null ? void 0 : _a.id) === family.id, chipStyle = family.color ? { "--fam-color": family.color } : {};
+    return layout === "wheel" && (chipStyle["--i-angle"] = `${360 / Math.max(total, 1) * index}deg`), html`
       <button
         type="button"
-        class=${h({ "ffm-chip": !0, "fs-tap": !0, "is-active": i })}
-        style=${p(n)}
-        aria-pressed=${i ? "true" : "false"}
+        class=${classMap({ "ffm-chip": !0, "fs-tap": !0, "is-active": active })}
+        style=${styleMap(chipStyle)}
+        aria-pressed=${active ? "true" : "false"}
         aria-controls="ffm-detail"
-        @click=${() => this.select(e.id)}
+        @click=${() => this.select(family.id)}
       >
-        <span class="ffm-chip__swatch">${this.renderIcon(e, "")}</span>
-        <span class="ffm-chip__name">${e.name}</span>
-        ${t !== "wheel" ? a`<span class="ffm-chip__dot" aria-hidden="true"></span>` : s}
+        <span class="ffm-chip__swatch">${this.renderIcon(family, "")}</span>
+        <span class="ffm-chip__name">${family.name}</span>
+        ${layout !== "wheel" ? html`<span class="ffm-chip__dot" aria-hidden="true"></span>` : nothing}
       </button>
     `;
   }
-  renderDetail(e) {
-    const t = e.color ? { "--fam-color": e.color } : {}, o = e.link ? A(e.link) : !1;
-    return a`
+  renderDetail(family) {
+    const style = family.color ? { "--fam-color": family.color } : {}, external = family.link ? isExternalUrl(family.link) : !1;
+    return html`
       <article
         id="ffm-detail"
         class="ffm-detail fs-panel fs-fade-swap"
-        style=${p(t)}
+        style=${styleMap(style)}
         role="region"
         aria-live="polite"
       >
-        <div class="ffm-detail__icon">${this.renderIcon(e, "")}</div>
-        <h3 class="fs-panel__title">${e.name}</h3>
-        ${e.desc ? a`<p class="fs-panel__desc">${e.desc}</p>` : s}
-        ${e.image ? a`<div class="ffm-detail__media">
-              <img src=${e.image} alt="" loading="lazy" decoding="async" />
-            </div>` : s}
-        ${e.link ? a`<div class="ffm-detail__actions">
+        <div class="ffm-detail__icon">${this.renderIcon(family, "")}</div>
+        <h3 class="fs-panel__title">${family.name}</h3>
+        ${family.desc ? html`<p class="fs-panel__desc">${family.desc}</p>` : nothing}
+        ${family.image ? html`<div class="ffm-detail__media">
+              <img src=${family.image} alt="" loading="lazy" decoding="async" />
+            </div>` : nothing}
+        ${family.link ? html`<div class="ffm-detail__actions">
               <a
                 class="fs-btn fs-tap"
-                href=${e.link}
-                target=${o ? "_blank" : "_self"}
-                rel=${o ? "noopener noreferrer" : s}
+                href=${family.link}
+                target=${external ? "_blank" : "_self"}
+                rel=${external ? "noopener noreferrer" : nothing}
               >
-                ${l("استكشف العائلة", "Explore family")}
+                ${t("استكشف العائلة", "Explore family")}
               </a>
-            </div>` : s}
+            </div>` : nothing}
       </article>
     `;
   }
   render() {
-    const e = this.config || {}, t = E(e, "ffm_"), o = t.animate && !O(), r = g(e.ffm_title), i = g(e.ffm_desc), n = this.families, c = D(e), m = this.resolveActive(n), x = n.length;
-    return n.length ? a`
+    const c = this.config || {}, theme = readSectionTheme(c, "ffm_"), animate = theme.animate && !prefersReducedMotion(), title = localizedString(c.ffm_title), desc = localizedString(c.ffm_desc), families = this.families, layout = resolveLayout(c), active = this.resolveActive(families), total = families.length;
+    return families.length ? html`
       <section
-        class=${h({ "fs-section": !0, "fs-animate": o })}
-        style=${p(u(t))}
-        aria-label=${r || l("خريطة العائلات العطرية", "Fragrance family map")}
+        class=${classMap({ "fs-section": !0, "fs-animate": animate })}
+        style=${styleMap(themeStyleMap(theme))}
+        aria-label=${title || t("خريطة العائلات العطرية", "Fragrance family map")}
       >
         <div class="fs-container">
-          ${r || i ? a`<div class="fs-header">
-                ${r ? a`<h2 class="fs-title">${r}</h2>` : s}
-                ${i ? a`<p class="fs-desc">${i}</p>` : s}
-              </div>` : s}
+          ${title || desc ? html`<div class="fs-header">
+                ${title ? html`<h2 class="fs-title">${title}</h2>` : nothing}
+                ${desc ? html`<p class="fs-desc">${desc}</p>` : nothing}
+              </div>` : nothing}
 
           <div class="ffm-shell">
             <aside class="ffm-selector">
-              <p class="ffm-selector__label">${l("اختَر عائلة", "Pick a family")}</p>
+              <p class="ffm-selector__label">${t("اختَر عائلة", "Pick a family")}</p>
               <div
-                class=${h({
+                class=${classMap({
       "ffm-chips": !0,
-      [`ffm-chips--${c}`]: !0
+      [`ffm-chips--${layout}`]: !0
     })}
                 role="group"
-                aria-label=${l("عائلات العطر", "Fragrance families")}
-                style=${p(c === "wheel" ? { "--wheel-r": "110px" } : {})}
+                aria-label=${t("عائلات العطر", "Fragrance families")}
+                style=${styleMap(layout === "wheel" ? { "--wheel-r": "110px" } : {})}
               >
-                ${c === "wheel" ? a`<div class="ffm-wheel-core">${l("عائلات", "Families")}</div>` : s}
-                ${n.map((w, _) => this.renderChip(w, c, _, x))}
+                ${layout === "wheel" ? html`<div class="ffm-wheel-core">${t("عائلات", "Families")}</div>` : nothing}
+                ${families.map((family, i) => this.renderChip(family, layout, i, total))}
               </div>
             </aside>
-            ${m ? C(m.id, this.renderDetail(m)) : s}
+            ${active ? keyed(active.id, this.renderDetail(active)) : nothing}
           </div>
-          ${U({ config: e, prefix: "ffm_", ready: !!m, selection: m })}
+          ${renderCommerceOutcome({ config: c, prefix: "ffm_", ready: !!active, selection: active })}
         </div>
       </section>
-    ` : a`
+    ` : html`
         <section
-          class=${h({ "fs-section": !0, "fs-animate": o })}
-          style=${p(u(t))}
-          aria-label=${r || l("خريطة العائلات العطرية", "Fragrance family map")}
+          class=${classMap({ "fs-section": !0, "fs-animate": animate })}
+          style=${styleMap(themeStyleMap(theme))}
+          aria-label=${title || t("خريطة العائلات العطرية", "Fragrance family map")}
         >
           <div class="fs-container">
-            ${r || i ? a`<div class="fs-header">
-                  ${r ? a`<h2 class="fs-title">${r}</h2>` : s}
-                  ${i ? a`<p class="fs-desc">${i}</p>` : s}
-                </div>` : s}
+            ${title || desc ? html`<div class="fs-header">
+                  ${title ? html`<h2 class="fs-title">${title}</h2>` : nothing}
+                  ${desc ? html`<p class="fs-desc">${desc}</p>` : nothing}
+                </div>` : nothing}
             <div class="fs-empty" role="status">
-              ${l("أضف عائلات عطرية من إعدادات العنصر.", "Add fragrance families in the element settings.")}
+              ${t("أضف عائلات عطرية من إعدادات العنصر.", "Add fragrance families in the element settings.")}
             </div>
           </div>
         </section>
       `;
   }
 };
-v.styles = [Y, H];
-let f = v;
-b([
-  k({ type: Object })
-], f.prototype, "config");
-b([
-  S()
-], f.prototype, "activeId");
-typeof f < "u" && f.registerSallaComponent("salla-fragrance-family-map");
+__name(_FragranceFamilyMap, "FragranceFamilyMap"), _FragranceFamilyMap.styles = [sharedSectionCss, componentStyles];
+let FragranceFamilyMap = _FragranceFamilyMap;
+__decorateClass([
+  property({ type: Object })
+], FragranceFamilyMap.prototype, "config");
+__decorateClass([
+  state()
+], FragranceFamilyMap.prototype, "activeId");
+typeof FragranceFamilyMap < "u" && FragranceFamilyMap.registerSallaComponent("salla-fragrance-family-map");
 export {
-  f as default
+  FragranceFamilyMap as default
 };
